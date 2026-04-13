@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>64 Interactive, LLC — Software Engineering & AI Consulting</title>
+    <meta name="description" content="64 Interactive builds modern software and delivers AI-driven engineering solutions. Based in Hellertown, PA.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root { --bg: #0a0e17; --bg-card: #111827; --border: #1e293b; --text: #e2e8f0; --text-muted: #94a3b8; --accent: #3b82f6; --accent-glow: rgba(59, 130, 246, 0.15); --green: #22c55e; }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; inset: 0; background-image: linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px); background-size: 60px 60px; pointer-events: none; z-index: 0; }
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+        nav { padding: 24px 0; display: flex; align-items: center; justify-content: space-between; }
+        .logo { font-family: 'JetBrains Mono', monospace; font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; letter-spacing: -0.5px; }
+        .logo span { color: var(--accent); }
+        .nav-contact { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--text-muted); text-decoration: none; padding: 8px 16px; border: 1px solid var(--border); border-radius: 6px; transition: all 0.2s; }
+        .nav-contact:hover { border-color: var(--accent); color: var(--accent); }
+        .hero { padding: 100px 0 80px; max-width: 720px; }
+        .hero .tag { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: var(--green); margin-bottom: 24px; display: flex; align-items: center; gap: 8px; }
+        .hero .tag::before { content: ''; width: 8px; height: 8px; background: var(--green); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+        h1 { font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 600; line-height: 1.1; letter-spacing: -1.5px; margin-bottom: 24px; }
+        h1 .highlight { color: var(--accent); }
+        .hero p { font-size: 1.15rem; color: var(--text-muted); max-width: 540px; line-height: 1.7; }
+        .hero-cta { margin-top: 40px; display: flex; gap: 16px; align-items: center; }
+        .btn { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 14px 28px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; transition: all 0.2s; display: inline-block; }
+        .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 0 20px var(--accent-glow); }
+        .btn-primary:hover { background: #2563eb; transform: translateY(-1px); box-shadow: 0 0 30px var(--accent-glow); }
+        .services { padding: 80px 0; border-top: 1px solid var(--border); }
+        .section-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-muted); margin-bottom: 48px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 32px; transition: all 0.25s; }
+        .card:hover { border-color: var(--accent); box-shadow: 0 0 30px var(--accent-glow); transform: translateY(-2px); }
+        .card h3 { font-family: 'JetBrains Mono', monospace; font-size: 1rem; margin-bottom: 12px; color: var(--text); }
+        .card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; }
+        .card .icon { font-size: 1.5rem; margin-bottom: 16px; display: block; }
+        footer { padding: 48px 0; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+        footer .copyright { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
+        footer .contact-line { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--text-muted); }
+        footer .contact-line a { color: var(--accent); text-decoration: none; }
+        footer .contact-line a:hover { text-decoration: underline; }
+        @media (max-width: 640px) { .hero { padding: 60px 0 48px; } .cards { grid-template-columns: 1fr; } footer { flex-direction: column; text-align: center; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo">64<span>i</span>.dev</a>
+            <a href="mailto:info@64i.dev" class="nav-contact">info@64i.dev</a>
+        </nav>
+        <section class="hero">
+            <div class="tag">Available for projects</div>
+            <h1>We build software<br>that <span class="highlight">ships.</span></h1>
+            <p>64 Interactive is a software engineering and AI consulting studio. We partner with companies to design, build, and launch products that work — from MVPs to production systems.</p>
+            <div class="hero-cta">
+                <a href="mailto:info@64i.dev" class="btn btn-primary">Get in touch ››</a>
+            </div>
+        </section>
+        <section class="services">
+            <div class="section-label">// What we do</div>
+            <div class="cards">
+                <div class="card">
+                    <span class="icon">&lt;/&gt;</span>
+                    <h3>Product Engineering</h3>
+                    <p>Full-stack development from concept to launch. React, Node, Python, and modern cloud infrastructure — built to scale from day one.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">⚙</span>
+                    <h3>AI Integration</h3>
+                    <p>Practical AI implementation for real business outcomes. We help teams adopt AI tools, build custom integrations, and automate workflows.</p>
+                </div>
+                <div class="card">
+                    <span class="icon">⚡</span>
+                    <h3>Technical Strategy</h3>
+                    <p>Architecture reviews, team audits, and technology roadmaps. We help engineering orgs move faster with less friction.</p>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <div class="copyright">© 2026 64 Interactive, LLC — Hellertown, PA</div>
+            <div class="contact-line"><a href="mailto:info@64i.dev">info@64i.dev</a></div>
+        </footer>
+    </div>
+</body>
+</html>
