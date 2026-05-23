@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix C — Infrastructure Options &amp; the Hybrid CDK Case</title>
+    <meta name="description" content="Three structural options for where SA's infrastructure code lives, weighed against the framework's goals.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo" aria-label="64 Interactive">
+                <svg viewBox="0 0 295 420" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M166.266,286.816c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-4.842,147.318-4.842,119.307,23.17c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,291.83,159.486,288.67,166.266,286.816"/>
+                    <path fill="#333333" d="M166.266,284.656c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-7.002,147.318-7.002,119.307,21.01c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,289.67,159.486,286.51,166.266,284.656"/>
+                    <path fill="#FFFFFF" d="M186.188,92.802c0,3.687-0.948,16.748-14.852,16.748s-14.852-13.061-14.852-16.748V48.773 c0-5.477,0.632-18.328,14.852-18.328s14.852,12.851,14.852,18.328v4.845h-11.376c0-10.428-0.21-13.271-3.476-13.271 c-2.844,0-3.476,2.528-3.476,8.426v13.798c1.896-1.159,3.687-1.896,5.688-1.896c11.692,0,12.64,12.008,12.64,16.327V92.802z M171.335,99.648c2.423,0,3.476-2.528,3.476-3.476V73c0-0.948-1.053-3.476-3.476-3.476c-2.422,0-3.371,2.106-3.476,3.16v23.489 C167.86,97.121,168.702,99.648,171.335,99.648z"/>
+                    <path fill="#FFFFFF" d="M223.683,263.639h-17.591v-10.006l16.643-50.559h11.376v50.559h5.267v10.006h-5.267v16.854h-10.428 V263.639z M215.782,253.633h7.9v-24.227v-2.317h-0.632l-0.632,2.317L215.782,253.633z"/>
+                    <path fill="#FFFFFF" d="M66.622,304.591H77.26v10.639H66.622V304.591z M66.622,382.01v-57.616H77.26v57.616H66.622z"/>
+                </svg>
+            </a>
+            <a href="proposal.html" class="back-link">← Back to proposal</a>
+        </nav>
+
+        <section class="hero">
+            <div class="doc-meta">
+                <span>Appendix C</span>
+                <span>Supporting analysis</span>
+            </div>
+            <h1>Infrastructure options<br>&amp; the hybrid CDK case</h1>
+            <p class="hero-lede">Three structural options for where SA's infrastructure code lives, weighed against the framework's two compression levers. Final direction needs Cloud Engineering's input — this is the framing for that conversation.</p>
+        </section>
+
+        <section class="appendix-section">
+            <div class="phase-marker">Appendix C</div>
+            <div class="section-label">Why This Matters</div>
+            <h2 class="section-title">Why infrastructure is load-bearing</h2>
+            <p class="section-lede">The AI Engineering → Cloud Engineering handoff is one of the two compression points the framework exists to fix. Where infrastructure code lives — and how it's structured — is the most direct lever on that handoff.</p>
+
+            <div class="subsection">
+                <p><strong>Today:</strong> AI Engineering ships a sandbox-shaped app to Cloud Engineering. Cloud Engineering writes Terraform in the central <code>infrastructure</code> repo. The handoff is high-effort because the IaC is being written from scratch <em>after</em> the app is done.</p>
+                <p><strong>Target:</strong> the IaC for an app exists from the moment the framework provisions the repo. The handoff becomes a PR that touches finalized infra alongside finalized app code.</p>
+                <p>The structural choice — central monorepo, with-app, or hybrid — determines what that target actually looks like in practice. Each option below is real; each has costs that are real; the choice depends on Cloud Engineering's appetite for change.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Option A</div>
+            <h2 class="section-title">Status quo: centralized Terraform</h2>
+            <p class="section-lede">What SA does today. The central <code>infrastructure</code> repo owns all IaC across multiple teams, organized as <code>teams/&lt;team&gt;/environments/&lt;env&gt;/</code> with a shared <code>modules/</code> library. Cloud Engineering owns it.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's good about it</h3>
+                <ul>
+                    <li><strong>Single audit surface.</strong> Every piece of cloud infrastructure SA owns has one place to be reviewed, security-scanned, and inventoried. Real value when compliance asks "where do we use KMS?" or "show me every public-facing ALB."</li>
+                    <li><strong>Shared modules library is genuinely reusable.</strong> The <code>modules/</code> directory has 40+ entries covering common AWS primitives and per-app modules. New apps that fit existing patterns can wire up infra in a few hundred lines of wrapper.</li>
+                    <li><strong>Conventions enforced centrally.</strong> Tagging, IAM patterns, network topology, security tooling — all consistently applied because they all flow through the same module library.</li>
+                    <li><strong>Mature tooling.</strong> Terraform with S3-backed state, GitHub Actions for CI, golden-image base images, security-scanner integration. A real platform, not ad-hoc.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's bad about it for the framework</h3>
+                <ul>
+                    <li><strong>The repo is a heavyweight cross-team coordination point.</strong> AI Engineering has to coordinate with Cloud Engineering to land a change. Today's friction is exactly that.</li>
+                    <li><strong>Infra and app code are physically separated.</strong> To understand "what does this app look like in prod?" a developer reads the app repo for code and the central infra repo for infra. Two repos, two PRs, two review trails. Easy to drift.</li>
+                    <li><strong>Cloud Engineering's scope is broader than this project.</strong> The central repo also contains data-warehouse infra, RPA infra, and so on. Blast radius of a change is bigger than it needs to be.</li>
+                    <li><strong>Module + wrapper is clever but heavy.</strong> A developer reading an environment's app config has to mentally hold the module's variables, the wrapper's locals, and the module's resources simultaneously. Effective once internalized; steep on-ramp.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What this would look like under the framework</h3>
+                <p>Cloud Engineering keeps <code>infrastructure</code> as the source of truth. The framework's contribution is to <strong>pre-write the wrapper</strong> a new app needs, so the AI Engineering → Cloud Engineering handoff becomes "review and merge this PR" instead of "write that file from scratch."</p>
+                <p>This is the <em>least disruptive</em> path forward. Doesn't fix the infra-and-app-in-different-repos issue; does meaningfully shrink the handoff effort.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">How it could be improved — even without changing tools</h3>
+                <p>A lot of the per-app modules in the existing repo are doing the same job with the variable names changed. Compare <code>modules/saai-field-lookup</code> and <code>modules/saai-idea-generator</code>: both ~485 lines of Terraform, both standing up the same Supabase-on-EC2 stack (security groups, EC2 + IAM, ALB + listeners + target groups, Secrets Manager wiring, Route 53), with mostly resource-name changes between them. Five other <code>saai-*</code> modules in the repo follow the same shape at the same length.</p>
+
+                <div class="callout">
+                    <p><strong>Concrete numbers.</strong> Diffing the two modules side-by-side, roughly <strong>85% of each file is structurally identical</strong> to the other. The differences are largely: which resource label gets which app's name, a handful of per-app port and FQDN values, and minor tagging variations. The actual <em>architectural shape</em> is one shape, copied five-plus times.</p>
+                </div>
+
+                <p>Most of that duplication can be removed by extracting <strong>higher-level reusable modules</strong> — what AWS docs call "L3 constructs" in CDK terminology, or just "opinionated wrapper modules" in Terraform terms. The shape would be:</p>
+                <ul>
+                    <li><strong>An <code>sa_app_stack</code> module</strong> that takes a small set of parameters — app name, domain, instance type, whether the app needs Studio access, etc. — and renders the full security-group / EC2 / IAM / ALB / Secrets-Manager / Route-53 graph internally. Per-app modules become 30–50-line callers instead of 500-line copies.</li>
+                    <li><strong>Optional features as flags.</strong> "This app needs an S3 bucket" becomes <code>files_bucket = true</code>, not 80 lines of bucket + policy + encryption resources copy-pasted into yet another module. Same for "this app needs RDS access," "this app needs a Lambda for scheduled work," and so on.</li>
+                    <li><strong>The "shape" of an SA app becomes a single source of truth.</strong> When Cloud Engineering wants to add a new tagging rule or a new security baseline, they edit the L3 module once and every consumer picks it up at next apply. Today the same change requires touching each <code>saai-*</code> module independently — and forgetting one is silent drift.</li>
+                </ul>
+
+                <p><strong>This works in Terraform.</strong> A nested-module pattern (<code>modules/sa-app-stack/</code> calling into smaller <code>modules/sa-app-stack-alb/</code>, <code>modules/sa-app-stack-ec2/</code>, etc., with the right outputs threaded through) achieves most of the same consolidation. It's not as elegant as CDK constructs but it's real, and it can land without changing the tool stack at all.</p>
+
+                <p><strong>It works <em>better</em> in CDK.</strong> A CDK <code>SaAppStack</code> construct can use ordinary TypeScript — conditional logic, computed values, helper functions — to decide what to include based on a configuration object. The "if this app needs a files bucket, build one and wire its ARN into the task's IAM policy" pattern is one <code>if</code> in TypeScript, versus a <code>count = var.files_bucket_enabled ? 1 : 0</code> dance threaded through every dependent resource in Terraform. This is the strongest argument for Option C below — but the consolidation win above is available either way.</p>
+
+                <div class="callout">
+                    <p><strong>Either way, the win is real.</strong> Cutting five 500-line modules down to a single 500-line L3 plus five 50-line wrappers isn't a 5x reduction in lines of code — it's a 5x reduction in <em>places conventions can drift</em>. Every audit, every patch, every new tagging rule, every observability default gets simpler. This is true regardless of which option SA picks; it's a refactor worth doing before the framework's per-app handoff pattern starts producing the sixth, seventh, and eighth copy.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Option B</div>
+            <h2 class="section-title">Per-app infra, no central repo</h2>
+            <p class="section-lede">Each app's repo owns its own IaC. No central infrastructure repo (or one used only for shared foundational infra like VPCs).</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's good about it</h3>
+                <ul>
+                    <li><strong>Locality.</strong> Read one repo, see the whole picture: app code, tests, Dockerfile, IaC, CI. PRs that change app behavior also change the infra in the same review.</li>
+                    <li><strong>No cross-team coordination tax for routine work.</strong> AI Engineering can iterate on infra without involving Cloud Engineering for every change.</li>
+                    <li><strong>Smaller blast radius.</strong> A bad merge affects one app, not "everything in <code>infrastructure</code>."</li>
+                    <li><strong>Matches modern developer mental model.</strong> Most engineering-grown developers expect infra-with-app; this is the default in modern AWS shops with CDK / Pulumi / SAM.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's bad about it</h3>
+                <ul>
+                    <li><strong>Convention enforcement gets harder.</strong> Every app's IaC could wander off. Networking, IAM, tagging, observability — without something pulling these together, you accumulate N slightly-different versions and Cloud Engineering loses the central audit point.</li>
+                    <li><strong>Cross-app shared resources are awkward.</strong> VPCs, transit gateways, shared KMS keys — these live somewhere; if every app owns its own infra, the shared substrate has to live in some additional repo, partway back to where we started.</li>
+                    <li><strong>Cloud Engineering loses leverage.</strong> Today they touch every app's infra by definition. Under per-app, they only see what teams choose to involve them in.</li>
+                    <li><strong>Compliance and audit story degrades.</strong> "Show me every public-facing endpoint" goes from <code>grep</code> in one repo to crawling N repos.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <p>For SA specifically, <strong>this is probably not the right destination at any phase</strong> — Cloud Engineering's role depends on a level of central oversight that pure per-app gives up. Useful as a thought experiment; not viable as a target. Worth considering as a <em>component</em> of the hybrid below.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Option C — Recommended Direction</div>
+            <h2 class="section-title">Hybrid: per-app infra + shared CDK constructs</h2>
+            <p class="section-lede">The shape the framework is drawn to. App repos own their own IaC code, but the IaC depends on a shared infrastructure package — likely CDK — that Cloud Engineering owns and ships.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">How it would work</h3>
+                <ul>
+                    <li>Cloud Engineering publishes a versioned package — <code>@sa/infra</code> or similar — exposing opinionated constructs for the SA-blessed primitives: a standard ECS Fargate service (tagging, log groups, IAM, security groups, ALB, monitoring all wired in); a standard Aurora cluster; a standard API Gateway endpoint; a scheduled task (ECS scheduled task or Lambda + EventBridge) with cross-cutting defaults.</li>
+                    <li>App repos consume this package in their own <code>infra/</code> directory. The app's IaC says "I want one of these, with these app-specific parameters" — much shorter and more readable than today's wrapper-calls-module.</li>
+                    <li>Cloud Engineering owns the <em>constructs</em> (and their conventions); app teams own the <em>composition</em> (which constructs, with what parameters).</li>
+                    <li>Cross-app shared substrate — VPCs, KMS, hosted zones, ECR, account-level IAM baselines — stays in a small central repo Cloud Engineering owns directly.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Why CDK rather than Terraform for this</h3>
+                <p>Plausibly the technical choice that makes the hybrid actually work cleanly:</p>
+                <ul>
+                    <li><strong>Native package semantics.</strong> CDK is TypeScript / Python; "shared package" is <code>npm install</code> or <code>pip install</code>. No Terraform module-source path gymnastics, no relative paths into a sibling repo, no submodule hell. Versioning is semver; breaking changes are signaled by major-version bumps.</li>
+                    <li><strong>Constructs are higher-leverage than modules.</strong> A CDK construct can wrap multiple AWS resources with conditional logic, cross-reference, and computation in a way Terraform modules can but more awkwardly. The existing per-app Terraform modules are doing this today; CDK would do it more naturally.</li>
+                    <li><strong>App developers already know TypeScript.</strong> AI Engineering is mostly TS/Python. Reading and modifying TS infrastructure code is closer to their daily skill than HCL.</li>
+                    <li><strong>It compounds with the rest of the framework.</strong> The template's <code>infra/</code> directory becomes consistent with the rest of the codebase — same language, same toolchain, same ecosystem.</li>
+                </ul>
+
+                <div class="callout">
+                    <p><strong>The honest counter-argument.</strong> Cloud Engineering's existing investment is in Terraform — modules, state management, golden Docker images, security scanners. Switching to CDK isn't a small retraining ask. This is the biggest argument against, and it's a real one. Worth direct discussion with Ketan and Cloud Engineering rather than assumed.</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's good about the hybrid</h3>
+                <ul>
+                    <li><strong>Locality preserved.</strong> App developers see infra alongside app code.</li>
+                    <li><strong>Conventions preserved.</strong> Cloud Engineering owns the constructs; consistency is enforced at the package level, not at the merge-review level.</li>
+                    <li><strong>Coordination tax shrinks.</strong> Day-to-day changes don't go through Cloud Engineering. Cross-cutting changes (a new tagging rule, a fix to the standard ECS wiring) are made once in the package; app repos pick them up at upgrade time.</li>
+                    <li><strong>Compliance story stays strong.</strong> Cloud Engineering can require apps to be on a minimum package version for audit purposes. The package itself becomes the audit point.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's bad about the hybrid</h3>
+                <ul>
+                    <li><strong>Versioning becomes a real concern.</strong> When <code>@sa/infra</code> ships a breaking change, every app needs to upgrade. Same coordination problem the centralized repo currently absorbs, spread across N PRs. Mitigated by long deprecation windows and codemods, not eliminated.</li>
+                    <li><strong>Cloud Engineering's tooling investment changes substantially.</strong> Maintaining a TypeScript package in addition to (or instead of) Terraform modules is a real change for the team.</li>
+                    <li><strong>Drift between apps becomes possible.</strong> App A on v3.2, App B on v3.4 — different from the centralized repo's "everything is on the same commit at all times."</li>
+                    <li><strong>Cross-stack references are harder.</strong> Today a Terraform wrapper can reference module outputs directly; CDK across repos has to either pass IDs as strings (via SSM Parameter Store / CloudFormation outputs) or use a shared deployment construct.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Sandbox vs. Pre-Prod &amp; Prod</div>
+            <h2 class="section-title">Sandbox is in scope; prod is a separate conversation</h2>
+            <p class="section-lede">The proposal commits the framework to sandbox infrastructure baked into the template. Pre-prod and prod are a different conversation with Cloud Engineering — different security posture, different network topology, different release controls.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What we'd build for sandbox</h3>
+                <ul>
+                    <li><strong>CDK <code>infra/</code> in every project repo.</strong> Same template, same shape, same constructs.</li>
+                    <li><strong>Shared sandbox database.</strong> Hosted Postgres; each project creates its own schema rather than provisioning fresh RDS.</li>
+                    <li><strong>CI/CD via <code>.github/workflows</code>.</strong> First push deploys to a sandbox URL automatically.</li>
+                    <li><strong>The minimum substrate to make it work.</strong> A sandbox AWS account (or sub-account), a shared VPC, baseline IAM roles for the deploy pipeline, log/metric collection.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What's an open conversation</h3>
+                <ul>
+                    <li><strong>Does the same <code>infra/</code> code carry into pre-prod and prod?</strong> Probably yes for the shape; almost certainly not for the values (different VPC, different secrets, different scaling). Whether that's a multi-environment CDK app or separate stacks is a design choice we'd make with Cloud Engineering.</li>
+                    <li><strong>Who owns the prod deploy decision?</strong> Sandbox is automatic. Prod isn't. The framework needs a clean gate — manual approval, change-management ticket, scheduled-release window — that fits Cloud Engineering's existing process.</li>
+                    <li><strong>How does <code>@sa/infra</code> (if we adopt it) get versioned for prod?</strong> Major-version upgrades may need a different cadence in prod than in sandbox.</li>
+                    <li><strong>Security review and audit hooks.</strong> Whatever scanners and policies Cloud Engineering runs against the existing <code>infrastructure</code> repo today need to apply to the new shape too. The format of "where Cloud Engineering presses 'go'" stays consistent.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Headline Take</div>
+            <h2 class="section-title">What we'd recommend bringing to Cloud Engineering</h2>
+            <p class="section-lede">The choice between options needs Cloud Engineering's voice, not just ours. Here's the framing we'd bring to that conversation.</p>
+
+            <div class="subsection">
+                <p><strong>For sandbox-tier work in the framework's first iteration:</strong> Option C (hybrid CDK) is the natural fit. It compounds with the template's TypeScript-first stack, gives AI Engineering ownership of routine infra changes, and keeps Cloud Engineering's audit hooks in place via the construct package.</p>
+                <p><strong>For pre-prod and prod:</strong> Option A (Cloud Engineering's existing Terraform) is the realistic starting point — it asks nothing of Cloud Engineering's tooling. Option C as a longer-term direction (6–12 months) if Cloud Engineering wants to pull production into the same model.</p>
+                <p><strong>Option B</strong> isn't on the table at any phase — Cloud Engineering's role depends on the central audit and convention point that pure per-app gives up.</p>
+
+                <div class="callout">
+                    <p><strong>What we need from Cloud Engineering to lock this in:</strong> their reaction to receiving AI-Eng-originated PRs against infrastructure code (whether centrally or per-app), any prior CDK consideration, comfort level with the versioning model of <code>@sa/infra</code>, and the existing PR/CI flow for the central <code>infrastructure</code> repo. We'd want this conversation early in the engagement.</p>
+                </div>
+            </div>
+
+            <div class="sources">
+                <div class="sources-label">References</div>
+                <ul>
+                    <li>Main proposal: <a href="proposal.html">Success Academy — Architecture Sprint Proposal</a>, §2.7 (Sandbox infra and CI/CD, baked in)</li>
+                    <li>Related: <a href="appendix-d-deployment-architecture.html">Appendix D — Recommended deployment architecture</a> (covers <em>what the IaC deploys</em>; this appendix covers <em>where the IaC code lives</em>)</li>
+                    <li>Source doc: <code>INFRASTRUCTURE_OPTIONS.md</code> in this project</li>
+                    <li>Existing infra repo: <code>sa-repos/infrastructure</code></li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <div class="copyright">&copy; 2026 64 Interactive, LLC &mdash; Hellertown, PA</div>
+            <div class="contact-line">Questions on this draft: <a href="mailto:info@64i.dev">info@64i.dev</a></div>
+        </footer>
+    </div>
+</body>
+</html>

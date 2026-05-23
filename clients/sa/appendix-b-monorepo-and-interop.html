@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix B — Monorepo Structure &amp; Lovable Interop Testing</title>
+    <meta name="description" content="The monorepo template's structure, the rules Lovable follows, the dual-runtime adapter pattern, and what we tested in the prototype.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo" aria-label="64 Interactive">
+                <svg viewBox="0 0 295 420" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M166.266,286.816c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-4.842,147.318-4.842,119.307,23.17c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,291.83,159.486,288.67,166.266,286.816"/>
+                    <path fill="#333333" d="M166.266,284.656c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-7.002,147.318-7.002,119.307,21.01c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,289.67,159.486,286.51,166.266,284.656"/>
+                    <path fill="#FFFFFF" d="M186.188,92.802c0,3.687-0.948,16.748-14.852,16.748s-14.852-13.061-14.852-16.748V48.773 c0-5.477,0.632-18.328,14.852-18.328s14.852,12.851,14.852,18.328v4.845h-11.376c0-10.428-0.21-13.271-3.476-13.271 c-2.844,0-3.476,2.528-3.476,8.426v13.798c1.896-1.159,3.687-1.896,5.688-1.896c11.692,0,12.64,12.008,12.64,16.327V92.802z M171.335,99.648c2.423,0,3.476-2.528,3.476-3.476V73c0-0.948-1.053-3.476-3.476-3.476c-2.422,0-3.371,2.106-3.476,3.16v23.489 C167.86,97.121,168.702,99.648,171.335,99.648z"/>
+                    <path fill="#FFFFFF" d="M223.683,263.639h-17.591v-10.006l16.643-50.559h11.376v50.559h5.267v10.006h-5.267v16.854h-10.428 V263.639z M215.782,253.633h7.9v-24.227v-2.317h-0.632l-0.632,2.317L215.782,253.633z"/>
+                    <path fill="#FFFFFF" d="M66.622,304.591H77.26v10.639H66.622V304.591z M66.622,382.01v-57.616H77.26v57.616H66.622z"/>
+                </svg>
+            </a>
+            <a href="proposal.html" class="back-link">← Back to proposal</a>
+        </nav>
+
+        <section class="hero">
+            <div class="doc-meta">
+                <span>Appendix B</span>
+                <span>Supporting analysis</span>
+            </div>
+            <h1>Monorepo structure<br>&amp; Lovable interop testing</h1>
+            <p class="hero-lede">What we've built, what we've proven, and what we still need to test. The technical detail behind the tier ladder in §2.5 of the main proposal.</p>
+        </section>
+
+        <section class="appendix-section">
+            <div class="phase-marker">Appendix B</div>
+            <div class="section-label">The Monorepo</div>
+            <h2 class="section-title">The template's structure</h2>
+            <p class="section-lede">A working prototype lives at <code>sa-ai-loveable-monorepo</code>. The shape below is what's in it today — not aspirational, not a wireframe. The rest of this section walks through why each piece exists and what it does.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">The shape</h3>
+                <pre><code>sa-&lt;project&gt;/
+├── CLAUDE.md                            <span class="c"># Root context for Claude Code</span>
+├── RULES.md                             <span class="c"># Shared rules — every agent reads</span>
+├── README.md
+├── package.json                         <span class="c"># Bun workspaces</span>
+├── bunfig.toml                          <span class="c"># bun config (hoisted linker)</span>
+│
+├── .claude/                             <span class="c"># Claude Code surface</span>
+│   ├── agents/                          <span class="c">#   specialized subagents</span>
+│   └── skills/                          <span class="c">#   documented patterns</span>
+│
+├── .lovable/                            <span class="c"># Lovable surface</span>
+│   ├── RULES.md                         <span class="c">#   Lovable-only rules</span>
+│   ├── system.md                        <span class="c">#   design-system system prompt</span>
+│   └── rules/                           <span class="c">#   per-component &amp; per-pattern rules</span>
+│
+├── apps/
+│   ├── web/                             <span class="c"># React + Vite (Lovable target)</span>
+│   │   ├── src/lib/api/                 <span class="c">#   adapter pattern lives here</span>
+│   │   └── eslint.config.js             <span class="c">#   bans @supabase/* imports</span>
+│   ├── api/                             <span class="c"># Fastify — CRUD &amp; general backend</span>
+│   │   └── src/modules/&lt;feature&gt;/
+│   └── python-api/                      <span class="c"># FastAPI — LLM &amp; AI-specific</span>
+│
+├── packages/
+│   ├── api-sdk/                         <span class="c"># Runtime-agnostic business logic</span>
+│   │   └── src/&lt;feature&gt;/
+│   └── ui/                              <span class="c"># @sa/ui — design system</span>
+│       └── lovable/                     <span class="c">#   source for .lovable/system.md + rules/</span>
+│
+├── supabase/
+│   └── functions/                       <span class="c"># Edge Functions (Lovable backend)</span>
+│       ├── _shared/sa-api-sdk/          <span class="c">#   vendored mirror of @sa/api-sdk</span>
+│       └── &lt;feature&gt;-&lt;action&gt;/
+│
+└── infra/                               <span class="c"># Project IaC — CDK</span>
+    ├── CLAUDE.md
+    └── stacks/</code></pre>
+
+                <p>A few things worth pointing out:</p>
+                <ul>
+                    <li><strong>Two rule surfaces, one source of truth.</strong> <code>RULES.md</code> is shared. <code>.lovable/RULES.md</code> is Lovable-only. <code>.lovable/system.md</code> and <code>.lovable/rules/</code> are <em>generated</em> from <code>packages/ui/lovable/</code> via <code>bun run sync:ui-rules</code>, with <code>check:ui-rules-sync</code> enforcing zero drift in CI. Same pattern for <code>supabase/functions/_shared/sa-api-sdk/</code>, which mirrors <code>packages/api-sdk/src/</code>.</li>
+                    <li><strong>Same endpoint name, two runtimes.</strong> A feature like <code>demo-personal</code> exists in Fastify (<code>apps/api/src/modules/demo/</code>) and in Supabase Functions (<code>supabase/functions/demo-personal/</code>). Both call into <code>@sa/api-sdk</code>. The web client targets either backend by swapping only the base URL.</li>
+                    <li><strong>Bun is the only package manager.</strong> Matches Lovable's harness and gives us workspaces out of the box. The <code>bunfig.toml</code> at the root forces the <code>hoisted</code> linker so Vite + Rollup can resolve transitive dependencies inside the workspace.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Initial stack picks</h3>
+                <p>The picks below are starting points, not commitments. Where there's a credible alternative, the engagement is the place to evaluate it on real work.</p>
+
+                <div class="grid">
+                    <div class="pkg">
+                        <div class="name">apps/web — Vite + React</div>
+                        <div class="desc">Lovable's native target. Fast HMR, lean. Alternative: Vercel / Next.js if Saroj prefers the deploy story.</div>
+                    </div>
+                    <div class="pkg">
+                        <div class="name">apps/api — Fastify</div>
+                        <div class="desc">Lean, fast, ergonomic. Alternative: NestJS if SA wants the heavier opinionated framework with built-in DI.</div>
+                    </div>
+                    <div class="pkg">
+                        <div class="name">apps/python-api — FastAPI</div>
+                        <div class="desc">Default for LLM calls, embeddings, agent orchestration. Stable choice.</div>
+                    </div>
+                    <div class="pkg">
+                        <div class="name">Package manager — Bun</div>
+                        <div class="desc">Matches Lovable's harness. Workspace support out of the box. <code>npm</code> / <code>pnpm</code> / <code>yarn</code> are actively banned in <code>RULES.md</code>.</div>
+                    </div>
+                </div>
+
+                <p class="footnote">Stack selections should be re-evaluated as Lovable updates their default stack or as engineering requirements evolve. <code>apps/web</code> in particular tracks whatever Lovable generates on SA's plan today; if that default shifts (e.g., from React + Vite SPA to an SSR framework like TanStack Start), the template's web slot is the first thing to revisit.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">The Rules</div>
+            <h2 class="section-title">What Lovable is told to do</h2>
+            <p class="section-lede">The biggest lever on the Product → Engineering handoff isn't where Lovable's code lives — it's what Lovable is told to write. The layered ruleset below is what makes Tier 1 possible.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">The layered ruleset</h3>
+                <p>Four mechanisms working together, each enforcing different things:</p>
+                <ul>
+                    <li><strong><code>RULES.md</code></strong> at the repo root — shared rules every agent reads: package manager, portability rules, business-logic location, endpoint naming, design-system policy.</li>
+                    <li><strong><code>.lovable/RULES.md</code></strong> — Lovable-only rules: which directories are in scope vs. out of scope, the banned-import list, the env-var contract, agent behavior (don't run package commands, don't run stateful git).</li>
+                    <li><strong><code>.lovable/system.md</code> + <code>.lovable/rules/</code></strong> — full design-system guidance (Atlas tokens, per-component, per-pattern), generated from <code>packages/ui/lovable/</code> and CI-checked for drift.</li>
+                    <li><strong>ESLint enforcement</strong> for rules that can be enforced mechanically — <code>no-restricted-imports</code> blocks <code>@supabase/*</code> anywhere in <code>apps/web/src/</code>, so even if Lovable tries to add the dependency back, the lint step catches it.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">The rules that matter most</h3>
+                <p>Every rule below shrinks engineering's eventual rebuild surface area. Each one in the prototype today:</p>
+
+                <div class="block">
+                    <div class="block-label">Calling backend services</div>
+                    <p>UI/component code accesses backends <em>only</em> through the adapter at <code>apps/web/src/lib/api/</code>. Components never call <code>fetch</code> directly. No file in the web app imports <code>@supabase/*</code> — Edge Functions are reachable over plain HTTPS through the adapter. This means engineering never has to rip out Supabase SDK calls; the swap to a Fastify backend is a base-URL change, nothing else.</p>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">Business logic location</div>
+                    <p>Cross-runtime business logic lives in <code>packages/api-sdk/</code>. It must be runtime-agnostic: no Deno, AWS SDK, Supabase SDK, or <code>process.env</code> imports. Anything that does I/O takes its adapter as an injected dependency. Per-runtime wrappers stay thin — parse runtime-specific inputs (HTTP, JWT, headers), call into the SDK, format the response.</p>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">Endpoint naming</div>
+                    <p>Backend endpoints use flat kebab-case names: <code>&lt;feature&gt;-&lt;action&gt;</code>. The Fastify route path and the Supabase function directory name MUST match exactly. Same suffix, different base URL — that's what lets one client target either backend.</p>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">Design system</div>
+                    <p><code>@sa/ui</code> is the canonical source of components and design tokens. Use the primitives that exist; if a primitive is missing, add it to <code>@sa/ui</code> rather than to the consuming app. Don't recreate <code>apps/web/src/components/ui/</code> — that's the shadcn-dump pattern the design system retired.</p>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">Evolving API contracts</div>
+                    <p>For a project running in both runtimes during the Product phase: <strong>additive changes are cheap</strong> (a new function, a new optional parameter, a new SDK module merges cleanly). <strong>Breaking changes are fine when the feature needs them</strong> — Engineering absorbs the change at merge time. <strong>Gratuitous churn (renaming for taste, swapping shapes with no feature reason) is what to avoid</strong> — pure work for engineering, no product payoff.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">The Adapter Pattern</div>
+            <h2 class="section-title">How one piece of logic runs in both runtimes</h2>
+            <p class="section-lede">The technical mechanism that makes Tier 2+ viable: dependency-injected adapters around a runtime-agnostic SDK. Same business logic, two thin wrappers — no divergence trap.</p>
+
+            <div class="subsection">
+                <p>A worked example from the prototype: a "personal greeting" endpoint that looks up a user by ID, then returns a hello-by-name message. The shape generalizes to any endpoint that needs to do I/O.</p>
+
+                <div class="block">
+                    <div class="block-label">1 · The SDK function (runtime-agnostic)</div>
+<pre><code><span class="c">// packages/api-sdk/src/demo/composePersonalGreeting.ts</span>
+
+export interface ComposePersonalGreetingDeps {
+  lookupUser: UserLookup;
+}
+
+export async function composePersonalGreeting(
+  input: { userId: string },
+  deps: ComposePersonalGreetingDeps,
+): Promise&lt;Result&lt;{ message: string }&gt;&gt; {
+  if (typeof input.userId !== "string" || input.userId.length === 0) {
+    return { ok: false, status: 400, error: "userId required" };
+  }
+
+  const user = await deps.lookupUser(input.userId);
+  if (!user) return { ok: false, status: 404, error: "user not found" };
+
+  return { ok: true, value: { message: `Hello, ${user.displayName}!` } };
+}</code></pre>
+                    <p>The orchestration — validate, look up, format — lives here. <code>lookupUser</code> is the runtime-specific piece, injected by the caller.</p>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">2 · The Fastify wrapper (engineering's runtime)</div>
+<pre><code><span class="c">// apps/api/src/modules/demo/demo.service.ts</span>
+
+import { composePersonalGreeting, type UserLookup } from "@sa/api-sdk";
+
+<span class="c">// In production this is a postgres query against SA's hosted DB.</span>
+const lookupUser: UserLookup = async (id) =&gt; pgClient.findUser(id);
+
+export function buildPersonalGreeting(userId: string) {
+  return composePersonalGreeting({ userId }, { lookupUser });
+}</code></pre>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">3 · The Supabase Edge Function wrapper (Lovable's runtime)</div>
+<pre><code><span class="c">// supabase/functions/demo-personal/index.ts</span>
+
+import { composePersonalGreeting, type UserLookup } from "@sa/api-sdk";
+import { corsPreflight, json } from "../_shared/http.ts";
+
+<span class="c">// In production this is a supabase.from("users").select(...) call.</span>
+const lookupUser: UserLookup = (id) =&gt; supabaseClient.findUser(id);
+
+Deno.serve(async (req) =&gt; {
+  if (req.method === "OPTIONS") return corsPreflight();
+  const userId = new URL(req.url).searchParams.get("userId") ?? "";
+  const result = await composePersonalGreeting({ userId }, { lookupUser });
+  if (!result.ok) return json(result.status, { error: result.error });
+  return json(200, result.value);
+});</code></pre>
+                </div>
+
+                <div class="callout">
+                    <p><strong>What this buys.</strong> When engineering changes how the lookup behaves — caching, a different table, a join — they edit only the adapter. When the business logic changes — a new validation rule, a different formatting decision — they edit only the SDK. The two runtimes can't drift in their behavior because there is only one implementation of the behavior.</p>
+                </div>
+
+                <p>This is the answer to the "divergence trap" that historically makes dual-runtime work expensive. It doesn't make Tier 3+ free, but it makes the marginal cost of keeping both runtimes working scale with adapter complexity rather than with logic complexity.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">The Tier Ladder, Revisited</div>
+            <h2 class="section-title">What we've proven, per tier</h2>
+            <p class="section-lede">The tiers from §2.5 with the testing detail filled in. Each row is: what's already validated in the prototype, what remains an open question, and what we'd test during the engagement.</p>
+
+            <div class="subsection">
+                <div class="tiers">
+                    <div class="tier">
+                        <div class="tier-num">00</div>
+                        <div class="tier-body">
+                            <h4>Template / starting structure</h4>
+                            <p><strong>Validated:</strong> the monorepo layout works end-to-end. Lovable's in-editor preview builds against it. Bun workspaces resolve correctly. The harness reports some cosmetic false positives (documented in <code>.lovable/plan.md</code>) but the actual build is healthy.</p>
+                            <p><strong>Open:</strong> none — already working.</p>
+                        </div>
+                        <div class="tier-status"><span class="label">Proven</span></div>
+                    </div>
+
+                    <div class="tier">
+                        <div class="tier-num">01</div>
+                        <div class="tier-body">
+                            <h4>Rules Lovable follows</h4>
+                            <p><strong>Validated:</strong> in focused testing, Lovable followed the in-scope/out-of-scope rules, the banned-import list, the adapter pattern, the design-system rules, and the kebab-case endpoint naming. UI work in <code>packages/ui</code> followed the rules well once the rules + structure were in place.</p>
+                            <p><strong>Open:</strong> sustained adherence under real product-team workload. A multi-week run with several different feature shapes will tell us much more than a focused test.</p>
+                        </div>
+                        <div class="tier-status"><span class="label">Proven in initial testing</span></div>
+                    </div>
+
+                    <div class="tier">
+                        <div class="tier-num">02</div>
+                        <div class="tier-body">
+                            <h4>Clean handoff</h4>
+                            <p><strong>Validated:</strong> architecturally proven. The SDK + adapter pattern means engineering's takeover is "swap stub adapters for real ones" — surgical, not a rebuild. The endpoint-naming and base-URL discipline mean the web client doesn't need to change.</p>
+                            <p><strong>Open:</strong> what to automate. A Claude Code skill or subagent that runs the conversion (provisioning real DB credentials, wiring SA auth, replacing stub adapters) would compress this further. We'd scope and build that during the engagement.</p>
+                        </div>
+                        <div class="tier-status"><span class="label">Architecturally proven</span></div>
+                    </div>
+
+                    <div class="tier">
+                        <div class="tier-num">03</div>
+                        <div class="tier-body">
+                            <h4>Dual-runtime through the Product phase</h4>
+                            <p><strong>Validated:</strong> the parallel-branch workflow is documented (additive changes merge cheaply; breaking changes are fine but absorbed at merge time; gratuitous churn is what to avoid). The SDK pattern keeps logic from diverging.</p>
+                            <p><strong>Open:</strong> real-world cost. How often does Product change shape during active iteration? How much engineering time goes to merging breaking changes vs. additive ones? Measured on a real project, not estimated.</p>
+                        </div>
+                        <div class="tier-status"><span class="label">Architecturally proven</span></div>
+                    </div>
+
+                    <div class="tier">
+                        <div class="tier-num">04</div>
+                        <div class="tier-body">
+                            <h4>Dual-runtime for the project's life</h4>
+                            <p><strong>Validated:</strong> nothing here is technically blocked. Both runtimes can coexist indefinitely.</p>
+                            <p><strong>Open:</strong> the maintenance economics. Every API change engineering makes has to be mirrored on the Supabase side. Probably not worth it for most products, but might be worth it for specific high-touch products where Product wants to keep prototyping against a real production system. Per-product judgment, not a blanket framework decision.</p>
+                        </div>
+                        <div class="tier-status"><span class="label">Architecturally possible</span></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Open Questions</div>
+            <h2 class="section-title">What we still need to test</h2>
+            <p class="section-lede">The honest list of things this prototype hasn't yet stressed. Each is something the engagement would put through real use, not the kind of question we'd resolve in advance from first principles.</p>
+
+            <div class="subsection">
+                <ul>
+                    <li><strong>Rule adherence at scale.</strong> Focused testing showed Lovable follows the rules well. Sustained adherence — across many feature shapes, over weeks, under real product-team iteration — is the real test.</li>
+                    <li><strong>Complex Lovable workflows.</strong> The testing so far has been "is the shape preserved?" We haven't yet pushed Lovable through complex multi-step features with the rules in place. Some rules may turn out to be brittle under that load.</li>
+                    <li><strong>Cost of keeping the Lovable preview working long-term.</strong> Today the in-editor preview works on the prototype branch. Future Lovable harness changes could break it; how much engineering effort goes into keeping it green is unknown.</li>
+                    <li><strong>The shape and depth of handoff automation.</strong> Whether the Tier 2 conversion is best as a Claude Code skill, a CLI script, a subagent, or a documented manual flow — and how much it can do automatically vs. how much still requires engineering judgment.</li>
+                    <li><strong>How <code>@sa/auth</code> and the data-warehouse SDKs are consumed in Lovable.</strong> The prototype proves <code>@sa/ui</code> works as a workspace package; we expect the same to be true for <code>@sa/auth</code> and the service SDKs, but they haven't been built yet.</li>
+                    <li><strong>Lovable's ability to start from a vendored repo.</strong> Lovable's official position is that projects can only be started by prompt or by remixing a Lovable-side template. We have a working repo today; how to make that the default starting point for new SA projects (vs. having to re-create it inside Lovable every time) is an open mechanism question.</li>
+                </ul>
+            </div>
+
+            <div class="sources">
+                <div class="sources-label">References</div>
+                <ul>
+                    <li>Prototype repo: <code>sa-repos/sa-ai-loveable-monorepo</code> in this project</li>
+                    <li>Main proposal: <a href="proposal.html">Success Academy — Architecture Sprint Proposal</a></li>
+                    <li>Related: <a href="appendix-a-lovable-analysis.html">Appendix A — Lovable: how it works &amp; where it collides with SA's needs</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <div class="copyright">&copy; 2026 64 Interactive, LLC &mdash; Hellertown, PA</div>
+            <div class="contact-line">Questions on this draft: <a href="mailto:info@64i.dev">info@64i.dev</a></div>
+        </footer>
+    </div>
+</body>
+</html>

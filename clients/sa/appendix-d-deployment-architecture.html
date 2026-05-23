@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix D — Recommended Deployment Architecture</title>
+    <meta name="description" content="What the running thing looks like in AWS: shared Aurora, ECS for APIs, CloudFront+S3 for the frontend, per-project S3 buckets, and a Lambda pattern for scheduled and async work.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo" aria-label="64 Interactive">
+                <svg viewBox="0 0 295 420" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M166.266,286.816c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-4.842,147.318-4.842,119.307,23.17c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,291.83,159.486,288.67,166.266,286.816"/>
+                    <path fill="#333333" d="M166.266,284.656c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-7.002,147.318-7.002,119.307,21.01c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,289.67,159.486,286.51,166.266,284.656"/>
+                    <path fill="#FFFFFF" d="M186.188,92.802c0,3.687-0.948,16.748-14.852,16.748s-14.852-13.061-14.852-16.748V48.773 c0-5.477,0.632-18.328,14.852-18.328s14.852,12.851,14.852,18.328v4.845h-11.376c0-10.428-0.21-13.271-3.476-13.271 c-2.844,0-3.476,2.528-3.476,8.426v13.798c1.896-1.159,3.687-1.896,5.688-1.896c11.692,0,12.64,12.008,12.64,16.327V92.802z M171.335,99.648c2.423,0,3.476-2.528,3.476-3.476V73c0-0.948-1.053-3.476-3.476-3.476c-2.422,0-3.371,2.106-3.476,3.16v23.489 C167.86,97.121,168.702,99.648,171.335,99.648z"/>
+                    <path fill="#FFFFFF" d="M223.683,263.639h-17.591v-10.006l16.643-50.559h11.376v50.559h5.267v10.006h-5.267v16.854h-10.428 V263.639z M215.782,253.633h7.9v-24.227v-2.317h-0.632l-0.632,2.317L215.782,253.633z"/>
+                    <path fill="#FFFFFF" d="M66.622,304.591H77.26v10.639H66.622V304.591z M66.622,382.01v-57.616H77.26v57.616H66.622z"/>
+                </svg>
+            </a>
+            <a href="proposal.html" class="back-link">← Back to proposal</a>
+        </nav>
+
+        <section class="hero">
+            <div class="doc-meta">
+                <span>Appendix D</span>
+                <span>Supporting analysis</span>
+            </div>
+            <h1>Recommended<br>deployment architecture</h1>
+            <p class="hero-lede">What the running thing looks like in AWS. Appendix C covered where the IaC code lives and which tool writes it; this appendix is about what that IaC actually deploys.</p>
+        </section>
+
+        <section class="appendix-section">
+            <div class="phase-marker">Appendix D</div>
+            <div class="section-label">Where We Are Today</div>
+            <h2 class="section-title">Today's deployment shape</h2>
+            <p class="section-lede">SA's in-scope apps have a mix of deployment shapes today. The most common pattern — and the one that's most worth replacing — is a single EC2 instance with the application <em>and</em> a bundled Supabase stack running on it.</p>
+
+            <div class="subsection">
+                <p>That shape isn't anyone's preference. It exists because Lovable generates a codebase tightly coupled to Supabase, and the engineering team isn't given enough time during the handoff to rework things — so dumping Supabase onto an EC2 instance in SA's AWS becomes the fastest path to a deployed app. That's a process problem expressing itself as an infrastructure problem. Phase 1 of this proposal directly addresses the time-budget side (the parallel engineering head start, the project briefing, the requirements doc); the deploy architecture below is what becomes possible once engineering isn't forced into the corner-cutting path.</p>
+                <p>The current shape carries three concrete costs that the framework's recommended architecture is designed to remove.</p>
+
+                <div class="grid">
+                    <div class="pkg">
+                        <div class="name">Increased cost</div>
+                        <div class="desc">Each instance runs the application <em>plus</em> Postgres, the Supabase API gateway, auth, storage, edge-function runtime, and the rest of the bundled stack. That's a lot of overhead per app — multiplied across every app SA runs.</div>
+                    </div>
+                    <div class="pkg">
+                        <div class="name">No horizontal scaling</div>
+                        <div class="desc">Because the database lives on the instance, the app can only run one instance. Adding a second instance means two independent databases. There's no path to scale out for traffic, no path to zero-downtime deploys, no path to multi-AZ redundancy without restructuring the deploy entirely.</div>
+                    </div>
+                    <div class="pkg">
+                        <div class="name">Maintenance burden</div>
+                        <div class="desc">Every instance is a unique mini-stack to keep patched, upgraded, and monitored. The blast radius of an instance going down is total — app, DB, auth, and storage all gone together. Every app reinvents the same operational concerns.</div>
+                    </div>
+                </div>
+
+                <p>These aren't criticisms of how SA got here — bundled-Supabase-on-EC2 is a reasonable answer to "get this thing running fast." But it doesn't scale to "we want to run dozens of apps reliably, in a way the team can support." The recommendation below is what SA's deploy shape looks like when the operational model is the priority instead.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">The Recommendation</div>
+            <h2 class="section-title">The shape we'd build toward</h2>
+            <p class="section-lede">A small set of AWS primitives, used the same way in every project. The result: any SA engineer who has worked on one project knows how to operate any other.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">The runtime topology</h3>
+
+                <div class="diagram" aria-label="Recommended runtime topology: CloudFront and S3 for the SPA, ALB into two ECS services, shared Aurora, per-project S3, Lambdas for scheduled work">
+                    <svg viewBox="0 0 880 540" xmlns="http://www.w3.org/2000/svg" role="img">
+                        <title>Recommended deployment architecture</title>
+
+                        <!-- Users at top -->
+                        <text x="440" y="30" font-family="League Gothic, sans-serif" font-size="22" fill="#333333" letter-spacing="1" text-anchor="middle">USERS</text>
+                        <line x1="440" y1="42" x2="440" y2="70" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="436,70 444,70 440,78" fill="#8a8279"/>
+
+                        <!-- CloudFront -->
+                        <rect x="320" y="84" width="240" height="58" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="440" y="110" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">CloudFront</text>
+                        <text x="440" y="127" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">SA's CDN · TLS · caching</text>
+
+                        <!-- Branch down: S3 for SPA on left, ALB on right -->
+                        <line x1="380" y1="142" x2="380" y2="172" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="376,172 384,172 380,180" fill="#8a8279"/>
+                        <line x1="500" y1="142" x2="500" y2="172" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="496,172 504,172 500,180" fill="#8a8279"/>
+
+                        <!-- S3 SPA bucket -->
+                        <rect x="280" y="184" width="200" height="56" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="380" y="208" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">S3 — static SPA</text>
+                        <text x="380" y="225" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">Vite build output</text>
+
+                        <!-- ALB -->
+                        <rect x="500" y="184" width="200" height="56" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="600" y="208" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">Application Load Balancer</text>
+                        <text x="600" y="225" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">/v1/api/* · /v1/python/*</text>
+
+                        <!-- ALB branches to two ECS services -->
+                        <line x1="560" y1="240" x2="560" y2="266" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="556,266 564,266 560,274" fill="#8a8279"/>
+                        <line x1="640" y1="240" x2="640" y2="266" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="636,266 644,266 640,274" fill="#8a8279"/>
+
+                        <!-- ECS — Node API -->
+                        <rect x="460" y="278" width="200" height="64" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="560" y="302" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">ECS — Node API</text>
+                        <text x="560" y="319" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">Fastify · Fargate</text>
+                        <text x="560" y="333" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">autoscaled</text>
+
+                        <!-- ECS — Python API -->
+                        <rect x="680" y="278" width="200" height="64" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="780" y="302" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">ECS — Python API</text>
+                        <text x="780" y="319" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">FastAPI · Fargate</text>
+                        <text x="780" y="333" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">autoscaled · LLM work</text>
+
+                        <!-- Both ECS services point down to Aurora -->
+                        <line x1="560" y1="342" x2="560" y2="380" stroke="#8a8279" stroke-width="1.5"/>
+                        <line x1="780" y1="342" x2="780" y2="362" stroke="#8a8279" stroke-width="1.5"/>
+                        <path d="M 780 362 Q 780 380 700 380 L 600 380" fill="none" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="600,376 592,380 600,384" fill="#8a8279"/>
+                        <polygon points="556,380 564,380 560,388" fill="#8a8279"/>
+
+                        <!-- Aurora -->
+                        <rect x="380" y="394" width="360" height="60" rx="10" fill="#333333" stroke="#333333" stroke-width="1"/>
+                        <text x="560" y="418" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#FAF7F2" text-anchor="middle">Shared Aurora cluster</text>
+                        <text x="560" y="436" font-family="Outfit, sans-serif" font-size="11" fill="#c4bdb3" text-anchor="middle">project_a schema · project_b schema · …</text>
+
+                        <!-- S3 per-project files bucket on the left -->
+                        <rect x="40" y="278" width="200" height="64" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="140" y="302" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">S3 — project files</text>
+                        <text x="140" y="319" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">one bucket per project</text>
+                        <text x="140" y="333" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">encrypted at rest</text>
+
+                        <!-- Arrow from Node API to S3 files (dashed - optional) -->
+                        <line x1="460" y1="310" x2="244" y2="310" stroke="#8a8279" stroke-width="1.5" stroke-dasharray="4,4"/>
+                        <polygon points="244,306 236,310 244,314" fill="#8a8279"/>
+                        <text x="352" y="302" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle" font-style="italic">if files needed</text>
+
+                        <!-- Lambda + EventBridge inset, lower left -->
+                        <rect x="40" y="394" width="200" height="60" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="140" y="418" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">Lambda + EventBridge</text>
+                        <text x="140" y="436" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">scheduled · async · per-project</text>
+
+                        <!-- Arrow from Lambda to Aurora -->
+                        <line x1="240" y1="424" x2="370" y2="424" stroke="#8a8279" stroke-width="1.5"/>
+                        <polygon points="370,420 378,424 370,428" fill="#8a8279"/>
+
+                        <!-- Footnote at bottom -->
+                        <text x="440" y="495" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle" font-style="italic">Same shape in every project. Same VPC and account model in sandbox.</text>
+                        <text x="440" y="512" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle" font-style="italic">Pre-prod / prod use the same shape with different config — see §"Sandbox vs. prod" below.</text>
+                    </svg>
+                </div>
+
+                <p>The rest of this section walks through each piece and the rationale.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Per-Primitive</div>
+            <h2 class="section-title">What each piece does and why</h2>
+            <p class="section-lede">Six pieces, each one solving a specific problem the bundled-Supabase-on-EC2 shape doesn't solve well. Stack picks below are starting points — Cloud Engineering's input refines them.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Database — shared Aurora (or RDS), project-scoped schemas</h3>
+                <p>Every project that needs a database gets its own <strong>schema</strong> inside a shared Aurora cluster, rather than its own database instance. The application connects with credentials that grant access to its schema only — isolation enforced at the role level.</p>
+                <p><strong>What this buys:</strong></p>
+                <ul>
+                    <li><strong>One thing to back up, patch, monitor, and tune.</strong> Per-project RDS instances multiply operational work by the number of projects; one shared cluster doesn't.</li>
+                    <li><strong>Drops the per-project provisioning tax to near zero.</strong> Creating a new project means running a migration to create a schema, not provisioning AWS resources.</li>
+                    <li><strong>Encryption, multi-AZ, snapshots, and audit are configured once.</strong> Every project inherits them automatically.</li>
+                    <li><strong>Real horizontal scaling for the apps.</strong> Once the database is no longer co-located with the app, multiple ECS tasks can serve traffic against the same data — the single-instance ceiling disappears.</li>
+                </ul>
+                <p><strong>Aurora vs. RDS</strong> — an evaluation for Cloud Engineering. Aurora's storage model (separating compute from storage, fast scale-out reads) is the right answer if SA expects significant read traffic or wants serverless-v2-style autoscaling on the DB itself. Plain RDS Postgres is cheaper and simpler if the workload doesn't warrant Aurora's premium. We'd land on one with Ketan's team.</p>
+
+                <div class="callout">
+                    <p><strong>What the framework expects from the schema model.</strong> The template's CDK includes a small migration step that creates the project's schema and a least-privilege application role on first deploy. The app's connection string targets that schema. No project ever directly creates an RDS instance; all DB provisioning runs through the shared-cluster substrate Cloud Engineering owns.</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">APIs — ECS Fargate with autoscaling</h3>
+                <p>Both the Node API (Fastify) and the Python API (FastAPI, when present) deploy to ECS Fargate. One task definition per service. Application Load Balancer in front, routing by path. Target-tracking autoscaling on CPU and request count.</p>
+                <p><strong>What this buys:</strong></p>
+                <ul>
+                    <li><strong>No instance management.</strong> Fargate runs the container; SA doesn't run the EC2 host underneath. One less operational concern per project.</li>
+                    <li><strong>Real horizontal scaling.</strong> The same task definition can run 1 task or 50, scaled by traffic. Zero-downtime deploys via ECS's rolling update.</li>
+                    <li><strong>Same operational shape across projects.</strong> Every project's APIs look identical in CloudWatch, in IAM, in the deploy pipeline. Engineering knows how to operate any project from day one.</li>
+                    <li><strong>Python and Node coexist cleanly.</strong> They're different task definitions in the same cluster; the ALB routes between them. Projects that don't need the Python API just don't deploy that task.</li>
+                </ul>
+                <p><strong>What ships in the template's CDK:</strong> the ECS service, task definition, ALB listener rules, target groups, log group, IAM execution role, and the autoscaling policy — all parameterized by project. The numbers (CPU/memory/min-max instance count) start at sensible defaults and are tuned per project as real traffic shows up.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Frontend — S3 behind CloudFront (or SA's CDN)</h3>
+                <p>The Vite build output goes to a per-project S3 bucket. CloudFront (or whatever CDN SA already uses) sits in front with TLS, caching, and the project's custom domain.</p>
+                <p><strong>What this buys:</strong></p>
+                <ul>
+                    <li><strong>Cheapest possible static hosting.</strong> S3 storage costs are trivial; CloudFront handles the request load.</li>
+                    <li><strong>No application server for the SPA.</strong> The browser fetches an immutable bundle; backend traffic goes straight to the ALB.</li>
+                    <li><strong>Cache-bust on deploy.</strong> The deploy pipeline invalidates the CloudFront distribution after pushing new assets to S3. The user gets the new version on the next page load.</li>
+                </ul>
+                <p>If Cloud Engineering already has a frontend hosting story they prefer (Amplify, a different CDN, a shared distribution model), we'd align to that during the engagement. The shape above is the default; it isn't a hard requirement.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">File storage — per-project S3 buckets</h3>
+                <p>When a project needs file storage — uploads, generated artifacts, document attachments — it gets its own dedicated S3 bucket. Naming convention along the lines of <code>saai-&lt;project&gt;-files-&lt;env&gt;</code>. Encryption at rest, versioning enabled, lifecycle rules for cost control where appropriate.</p>
+                <p><strong>Why per-project rather than shared:</strong> bucket-level access control is the cleanest isolation primitive AWS offers. Per-project buckets mean each project's IAM role only needs access to its own bucket; cross-project blast radius is zero. The cost difference between one shared bucket and N per-project buckets is essentially nothing.</p>
+                <p>Access from the Node API and Python API is via the AWS SDK using the task's IAM role — no static credentials, no per-project secrets management for storage.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Scheduled and async work — Lambda + EventBridge</h3>
+                <p>Today the monorepo template doesn't have a slot for Lambda functions. Adding one is straightforward; the question worth being honest about is <strong>how Lambdas are used in a project</strong>, and that decision is one we'd make per-use-case rather than committing to a single pattern in advance.</p>
+
+                <p>Two patterns we'd evaluate when the first project needs them:</p>
+
+                <div class="block">
+                    <div class="block-label">Pattern A — Lambda invoked from the API via the AWS SDK</div>
+                    <p>The Node or Python API invokes a Lambda directly (synchronously or asynchronously) for jobs that are heavier or longer-running than a request handler should hold open. The Lambda has its own IAM role, runs in isolation, and reports back via SDK response or by writing to a queue/DB. The API stays in front; the Lambda is implementation detail.</p>
+                    <p><strong>When this is the right pattern:</strong> "I want my API to kick off a job and not wait" — file processing, report generation, embedding generation, anything bounded but not request-shaped. Lighter to set up; the Lambda doesn't need to be addressable from outside.</p>
+                </div>
+
+                <div class="block">
+                    <div class="block-label">Pattern B — Lambda behind API Gateway</div>
+                    <p>The Lambda is exposed as an HTTP endpoint via API Gateway. Useful when something genuinely needs to be HTTP-callable from outside the SA stack — webhooks from third parties, scheduled jobs that are easier to debug as a request, callable endpoints that shouldn't go through the always-on ECS API.</p>
+                    <p><strong>When this is the right pattern:</strong> when "this needs a URL of its own" is part of the requirement. Heavier to set up than Pattern A; warranted when the requirement actually demands it.</p>
+                </div>
+
+                <p>Plus the obvious third — <strong>scheduled Lambdas via EventBridge rules</strong> — for cron-style work (a nightly report, a periodic data refresh, a cleanup job). This is the lowest-ceremony slot and the one most projects will reach for first.</p>
+
+                <p><strong>What we'd add to the monorepo template during the engagement:</strong> a slot at <code>apps/lambdas/</code> (or similar) for the Lambda code, a CDK construct in <code>infra/</code> for deploying it, and a <code>RULES.md</code> entry covering when to use Pattern A vs. Pattern B vs. EventBridge-only. The patterns become reusable from there; future projects pick the slot up for free.</p>
+
+                <div class="callout">
+                    <p><strong>Status: roadmap.</strong> The Lambda pattern isn't in today's prototype. We'd build the first one against a real project's needs during the engagement, and let the actual use case shape the construct rather than over-designing in advance.</p>
+                </div>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Observability — CloudWatch (or whatever Cloud Engineering uses today)</h3>
+                <p>Logs, metrics, and traces from every primitive above land in CloudWatch by default. If SA has a different observability target (Datadog, New Relic, a custom Grafana stack), we'd point things there instead — the framework's job is to wire up the integration consistently, not to dictate the destination.</p>
+                <p>The template's CDK creates the log groups, sets retention policies, and emits the standard application metrics (request count, error rate, latency percentiles, task CPU/memory utilization). Per-project dashboards are a small follow-on; the data is there from day one.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Sandbox vs. Prod</div>
+            <h2 class="section-title">What carries forward and what doesn't</h2>
+            <p class="section-lede">The shape above is what the framework commits to for sandbox. Pre-prod and prod use the same shape with different configuration — but the gap between "sandbox is designed" and "prod is decided" is real and worth being explicit about.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What carries forward unchanged</h3>
+                <ul>
+                    <li><strong>The primitives.</strong> Aurora, ECS, ALB, S3, CloudFront, Lambda, EventBridge. Same set of building blocks in every environment.</li>
+                    <li><strong>The project's shape.</strong> An app that has a Node API, a Python API, and a frontend in sandbox has the same three things in prod. Engineers operate it the same way.</li>
+                    <li><strong>The IaC structure.</strong> Same CDK app, same constructs, same deploy pipeline — just pointed at different environments.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">What changes between environments</h3>
+                <ul>
+                    <li><strong>VPC and account model.</strong> Sandbox can share a VPC across many projects; prod likely has stricter isolation, possibly per-account separation for blast-radius reasons. To work out with Cloud Engineering.</li>
+                    <li><strong>Scaling minimums.</strong> Sandbox can run a single task at idle; prod usually wants at least two for redundancy.</li>
+                    <li><strong>Deploy gate.</strong> Sandbox deploys on every push. Prod has a manual approval, a release window, a change-management ticket — whatever Cloud Engineering's existing release model requires.</li>
+                    <li><strong>The shared Aurora cluster itself.</strong> Whether prod uses one shared cluster the same way sandbox does, or each "tier" of app gets its own cluster, or some apps justify their own dedicated cluster — that's a Cloud Engineering decision.</li>
+                    <li><strong>Secrets and config.</strong> Sandbox can use sensible defaults; prod uses Secrets Manager / Parameter Store with proper rotation. The template can wire this up consistently as long as we know what's expected.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Open Questions</div>
+            <h2 class="section-title">For Cloud Engineering</h2>
+            <p class="section-lede">The shape above is a defensible default. The decisions below specifically need Cloud Engineering's voice — they all touch operational concerns we're not in a position to commit to without them.</p>
+
+            <div class="subsection">
+                <ul>
+                    <li><strong>Aurora vs. RDS Postgres</strong> for the shared cluster, and whether that cluster is a new dedicated thing for AI Engineering apps or an extension of something Cloud Engineering already runs.</li>
+                    <li><strong>ECS cluster shape</strong> — one cluster per environment with all projects' services running inside it, or one cluster per project? Both are defensible; the trade-off is operational simplicity vs. blast-radius isolation.</li>
+                    <li><strong>CDN choice and the custom-domain story.</strong> CloudFront is the default assumption; if SA's existing distribution model is different, the template should match it.</li>
+                    <li><strong>Observability target.</strong> CloudWatch by default; whatever Cloud Engineering already uses, ideally.</li>
+                    <li><strong>Account topology.</strong> One sandbox account, one prod account; per-environment accounts; per-team accounts. The template's CDK assumes one but isn't locked to it.</li>
+                    <li><strong>The prod deploy gate.</strong> What flavor of approval / change management does prod require — and where should the framework's pipeline plug into it.</li>
+                </ul>
+            </div>
+
+            <div class="sources">
+                <div class="sources-label">References</div>
+                <ul>
+                    <li>Main proposal: <a href="proposal.html">Success Academy — Architecture Sprint Proposal</a>, §2.7 (Sandbox infra and CI/CD, baked in)</li>
+                    <li>Related: <a href="appendix-c-infrastructure-options.html">Appendix C — Infrastructure options &amp; the hybrid CDK case</a> (covers <em>where the IaC code lives</em>; this appendix covers <em>what it deploys</em>)</li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <div class="copyright">&copy; 2026 64 Interactive, LLC &mdash; Hellertown, PA</div>
+            <div class="contact-line">Questions on this draft: <a href="mailto:info@64i.dev">info@64i.dev</a></div>
+        </footer>
+    </div>
+</body>
+</html>

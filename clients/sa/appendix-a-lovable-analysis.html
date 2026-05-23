@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appendix A — Lovable: How It Works &amp; Where It Collides With SA's Needs</title>
+    <meta name="description" content="An educational walk-through of how Lovable builds applications, and where its architecture meets — or collides with — Success Academy's production needs.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="shared.css">
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="/" class="logo" aria-label="64 Interactive">
+                <svg viewBox="0 0 295 420" xmlns="http://www.w3.org/2000/svg">
+                    <path fill="#FFFFFF" d="M166.266,286.816c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-4.842,147.318-4.842,119.307,23.17c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,291.83,159.486,288.67,166.266,286.816"/>
+                    <path fill="#333333" d="M166.266,284.656c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-7.002,147.318-7.002,119.307,21.01c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,289.67,159.486,286.51,166.266,284.656"/>
+                    <path fill="#FFFFFF" d="M186.188,92.802c0,3.687-0.948,16.748-14.852,16.748s-14.852-13.061-14.852-16.748V48.773 c0-5.477,0.632-18.328,14.852-18.328s14.852,12.851,14.852,18.328v4.845h-11.376c0-10.428-0.21-13.271-3.476-13.271 c-2.844,0-3.476,2.528-3.476,8.426v13.798c1.896-1.159,3.687-1.896,5.688-1.896c11.692,0,12.64,12.008,12.64,16.327V92.802z M171.335,99.648c2.423,0,3.476-2.528,3.476-3.476V73c0-0.948-1.053-3.476-3.476-3.476c-2.422,0-3.371,2.106-3.476,3.16v23.489 C167.86,97.121,168.702,99.648,171.335,99.648z"/>
+                    <path fill="#FFFFFF" d="M223.683,263.639h-17.591v-10.006l16.643-50.559h11.376v50.559h5.267v10.006h-5.267v16.854h-10.428 V263.639z M215.782,253.633h7.9v-24.227v-2.317h-0.632l-0.632,2.317L215.782,253.633z"/>
+                    <path fill="#FFFFFF" d="M66.622,304.591H77.26v10.639H66.622V304.591z M66.622,382.01v-57.616H77.26v57.616H66.622z"/>
+                </svg>
+            </a>
+            <a href="proposal.html" class="back-link">← Back to proposal</a>
+        </nav>
+
+        <section class="hero">
+            <div class="doc-meta">
+                <span>Appendix A</span>
+                <span>Supporting analysis</span>
+            </div>
+            <h1>Lovable<br>How it works &amp; where it collides<br>with SA's needs</h1>
+            <p class="hero-lede">An educational walk-through of Lovable's architecture and where it meets — or doesn't meet — Success Academy's production needs. Not a tooling review; the goal is a shared, accurate mental model.</p>
+        </section>
+
+        <section class="appendix-section">
+            <div class="phase-marker">Appendix A</div>
+            <div class="section-label">How Lovable Works</div>
+            <h2 class="section-title">What Lovable actually builds</h2>
+            <p class="section-lede">Every Lovable project, regardless of the prompt that created it, ships the same architectural shape. Understanding that shape — and what it can and can't host — is the prerequisite to deciding how SA works with it.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">The shape of a Lovable app</h3>
+                <p>A Lovable application is a <strong>React + Vite + TypeScript + Tailwind + shadcn/ui</strong> frontend bundled as a static single-page app, talking to a <strong>Supabase</strong> backend over public HTTPS. Supabase gives Lovable four primitives — Postgres database, Auth, file Storage, and Edge Functions — and Lovable orchestrates all four from the same chat prompt.</p>
+                <p>As of May 2026, new Lovable apps default to <strong>TanStack Start (SSR)</strong> on non-Enterprise plans; older apps and Enterprise apps still use the React + Vite SPA pattern. Either way, the architectural shape is the same: frontend code shipped to the browser, backend logic in Supabase Edge Functions.</p>
+
+                <div class="diagram" aria-label="Architecture of a Lovable app: browser SPA, Supabase, Edge Functions">
+                    <svg viewBox="0 0 880 240" xmlns="http://www.w3.org/2000/svg" role="img">
+                        <title>Lovable application architecture</title>
+
+                        <!-- Browser / SPA -->
+                        <rect x="40" y="80" width="180" height="80" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="130" y="115" font-family="Outfit, sans-serif" font-size="14" font-weight="600" fill="#333333" text-anchor="middle">Browser SPA</text>
+                        <text x="130" y="135" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">React + Vite + Tailwind</text>
+
+                        <!-- Arrow -->
+                        <line x1="220" y1="120" x2="318" y2="120" stroke="#333333" stroke-width="2"/>
+                        <polygon points="318,115 328,120 318,125" fill="#333333"/>
+                        <text x="269" y="108" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">public HTTPS</text>
+
+                        <!-- Supabase -->
+                        <rect x="340" y="40" width="280" height="160" rx="12" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="480" y="68" font-family="League Gothic, sans-serif" font-size="20" fill="#333333" letter-spacing="1" text-anchor="middle">SUPABASE</text>
+
+                        <rect x="360" y="84" width="116" height="48" rx="6" fill="#F0EBE3" stroke="#E5DED4"/>
+                        <text x="418" y="106" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#333333" text-anchor="middle">Postgres</text>
+                        <text x="418" y="121" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">RLS-enforced</text>
+
+                        <rect x="484" y="84" width="116" height="48" rx="6" fill="#F0EBE3" stroke="#E5DED4"/>
+                        <text x="542" y="106" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#333333" text-anchor="middle">Auth</text>
+                        <text x="542" y="121" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">email · OAuth</text>
+
+                        <rect x="360" y="140" width="116" height="48" rx="6" fill="#F0EBE3" stroke="#E5DED4"/>
+                        <text x="418" y="162" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#333333" text-anchor="middle">Storage</text>
+                        <text x="418" y="177" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">file buckets</text>
+
+                        <rect x="484" y="140" width="116" height="48" rx="6" fill="#F0EBE3" stroke="#E5DED4"/>
+                        <text x="542" y="162" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#333333" text-anchor="middle">Edge Functions</text>
+                        <text x="542" y="177" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">Deno · short-lived</text>
+
+                        <!-- External callouts -->
+                        <line x1="620" y1="120" x2="718" y2="120" stroke="#8a8279" stroke-width="1.5" stroke-dasharray="4,4"/>
+                        <polygon points="718,115 728,120 718,125" fill="#8a8279"/>
+                        <text x="669" y="108" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">outbound HTTP</text>
+
+                        <rect x="730" y="92" width="120" height="56" rx="8" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
+                        <text x="790" y="118" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#333333" text-anchor="middle">External APIs</text>
+                        <text x="790" y="134" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">public internet</text>
+                    </svg>
+                </div>
+
+                <p>The Supabase backend itself comes in two flavors that are the same technology underneath:</p>
+                <ul>
+                    <li><strong>Lovable Cloud</strong> — a Supabase instance managed entirely by Lovable. One-click setup, limited control. Good for prototyping.</li>
+                    <li><strong>Bring-your-own Supabase project</strong> — Lovable connects to a Supabase project the team owns. More control, real SQL access, separate dashboard.</li>
+                </ul>
+                <p>Lovable's own recommendation is to prototype on Lovable Cloud and migrate to a dedicated Supabase project for production.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">The architecture: between 2-tier and 3-tier</h3>
+                <p>A classic <strong>three-tier</strong> architecture has <code>Browser → Application Server → Database</code>, with the application server enforcing business logic and access control. A classic <strong>two-tier</strong> has <code>Browser → Database</code> directly, with the database enforcing access control. <strong>Lovable lands between the two.</strong></p>
+                <p>The browser talks directly to Supabase's auto-generated REST, storage, and auth endpoints — a thin managed middle layer Lovable doesn't write code for. Edge Functions are provisioned only when you need server-side logic: calling an external API, handling secrets, multi-step workflows. Two consequences flow from this shape:</p>
+                <ul>
+                    <li><strong>Authorization lives in the database, not in application code.</strong> Supabase uses Row Level Security (RLS) policies — SQL-level rules that say "row X is visible to user Y." Lovable generates these policies, which means an LLM is writing security rules. Misconfigured RLS is a well-known source of data leaks and has its own CVE class.</li>
+                    <li><strong>The "backend" is Edge Functions, not a server.</strong> Edge Functions are short-lived, stateless TypeScript/JavaScript functions running on Deno. They are <em>not</em> a place to host a long-running process.</li>
+                </ul>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Edge Functions — what they are and aren't</h3>
+                <p>Lovable's backend story is: when you need server-side logic, Lovable writes a Supabase Edge Function for it and wires the frontend to invoke it. The constraints are tight and worth knowing concretely:</p>
+                <ul>
+                    <li><strong>Deno-flavored TypeScript only.</strong> Not Python. Not Node. Not Go.</li>
+                    <li><strong>Hard caps per request.</strong> 2 seconds of CPU time. 150-second idle timeout. 150s wall clock on Free, 400s on Paid. 256MB memory per function.</li>
+                    <li><strong>Stateless.</strong> No in-memory state survives across requests. No background threads. No long-lived connections to external systems.</li>
+                    <li><strong>No Node multithreading libraries.</strong> Things like <code>sharp</code> or <code>libvips</code> that rely on multithreading are unsupported — relevant for heavier image and data work.</li>
+                </ul>
+                <p>This is the shape any backend code in a Lovable app takes. <strong>It is not a place to run a FastAPI or Fastify server.</strong> It's a place to run individual request handlers, with the same operational model as AWS Lambda.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">Deploy and export model</h3>
+                <p>Lovable hosts the SPA on Lovable Cloud's CDN, with automatic SSL and SOC 2 / ISO certifications, and supports custom domains on paid plans. The Supabase backend runs on Supabase's infrastructure — whether managed by Lovable Cloud or owned directly.</p>
+                <p><strong>Code export is real and useful:</strong></p>
+                <ul>
+                    <li><strong>GitHub two-way sync</strong> is the recommended path. Lovable can push to a connected GitHub repo, and commits in the repo flow back into Lovable.</li>
+                    <li><strong>Direct codebase download</strong> is also available on paid plans.</li>
+                </ul>
+                <p>The exported code is real React + Vite + TypeScript that runs anywhere you can serve a static site. Supabase migrations and Edge Functions come with it. What you <em>own</em> is the code; what stays Lovable's is the build/runtime environment, which you replace with whatever deploy target you choose once you've moved off Lovable.</p>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">The Collisions</div>
+            <h2 class="section-title">Where this meets SA's needs</h2>
+            <p class="section-lede">The architecture above is excellent for prototyping. It collides with several things SA needs in production. Each collision below is real, well-documented, and not a knock against Lovable — it's that Lovable's deploy model and SA's production needs live in categorically different places.</p>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">1 — No long-running backend servers</h3>
+                <p>This is the deepest mismatch. SA's apps frequently need a real backend server — FastAPI in Python, Fastify in Node — running inside a long-lived process. Companion-app patterns at SA today are an obvious example: Python pipelines that read spreadsheets, transform data with pandas, and periodically refresh an S3 bundle. Many rebuilds end up needing a "real" backend once they hit auth, data warehouse connectivity, or scale.</p>
+                <p>Lovable's deploy model can't host any of that. <strong>Concrete things you can't do inside Lovable:</strong></p>
+                <ul>
+                    <li>Run a long-lived <code>uvicorn</code> or <code>node</code> process.</li>
+                    <li>Run a Celery, RQ, or similar background job worker.</li>
+                    <li>Host a bespoke websocket app server.</li>
+                    <li>Hold a JDBC/ODBC connection to Redshift open for the lifetime of a service.</li>
+                    <li>Run cron jobs <em>inside</em> the application (Supabase has <code>pg_cron</code> at the database level, but it triggers SQL, not arbitrary Python or Node).</li>
+                    <li>Use pandas, openpyxl, NumPy, or any Python data stack from inside the Lovable app.</li>
+                </ul>
+                <p>Heavy data work has to happen outside Lovable — today that means a developer's laptop or, in the most-evolved case, a sidecar EC2 container, with the Lovable app reading a pre-baked JSON bundle from S3. The mismatch isn't a design failure on either side; it's that two different runtimes are needed for two different jobs.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">2 — Data access is bounded by what Supabase can reach</h3>
+                <p>Lovable apps see data through Supabase: the Postgres database in Supabase, the storage buckets in Supabase, and whatever HTTP calls an Edge Function can make to the outside world from Supabase's infrastructure. <strong>What that excludes for SA specifically:</strong></p>
+                <ul>
+                    <li><strong>The Data Warehouse (Redshift).</strong> Lovable / Supabase have no native connector. An Edge Function can call out over HTTP, but maintaining a Redshift connection inside a 2-second CPU budget is not viable for any real query workload.</li>
+                    <li><strong>Internal systems behind SA's network.</strong> Anything that requires being inside SA's VPC is out of reach by default — Supabase runs on its own infrastructure and talks to the public internet.</li>
+                    <li><strong>RPA-driven legacy systems.</strong> Same story: any integration that needs to reach into SA-internal infrastructure has to be brokered by something outside Lovable.</li>
+                </ul>
+                <p>In practice these are the most common reasons a Product prototype triggers an Engineering rebuild today.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">3 — Auth beyond Supabase Auth needs to be wired outside Lovable</h3>
+                <p>Supabase Auth handles email/password, Google, Apple, and a handful of other OAuth providers cleanly. For SA's reality — SSO/Okta, role-based access with audit logging that has to be tamper-resistant — it's not a comfortable fit. Supabase can do SSO via SAML on its Enterprise tier, but at that point the work is being done at the Supabase project level, not by prompting Lovable. The Lovable chat doesn't meaningfully help with "wire up Okta and our RBAC matrix."</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">4 — Network isolation and SA's AWS deploy target are incompatible by default</h3>
+                <p>Supabase services are public HTTPS endpoints by default. Row-Level Security controls <em>who</em> can read a row, but it doesn't control <em>where the request comes from</em> — meaning a Lovable app's data plane is, by design, on the public internet.</p>
+                <p>For internal-only SA tools expected to live inside the VPC, integrate with internal services, and meet SA's security review, the default Lovable posture is the wrong starting point. The fix is usually either to keep the Lovable frontend and rehost the backend on SA's AWS (with the rebuild work that implies), or to keep moving away from the Lovable–Supabase axis once the app reaches production.</p>
+            </div>
+
+            <div class="subsection">
+                <h3 class="subsection-title major">5 — Code is exportable, but Lovable owns the build environment</h3>
+                <p>Code export is genuinely good. But four things are worth being honest about:</p>
+                <ul>
+                    <li><strong>Lovable apps aren't designed to be deployed on AWS from day one.</strong> The build / runtime defaults (Lovable Cloud or Supabase project) are baked in; switching deploy targets is an Engineering rebuild task, not a config flag.</li>
+                    <li><strong>Migrations sprawl.</strong> Lovable emits a lot of small migrations during the prototype phase — repos with 40+ migrations after a few months are common. Engineering usually wants to baseline these on takeover.</li>
+                    <li><strong>Round-trip risk.</strong> Once Lovable has exported and Engineering has modified the code in GitHub, letting both push to the same repo is a recipe for clobbered changes.</li>
+                    <li><strong>Imports are one-way.</strong> Lovable can export code, but per its own FAQ there's no supported way to <em>start</em> a Lovable project from an existing GitHub repo — only by prompt or by remixing a Lovable-side template. That limits how much SA-owned scaffolding the framework can pre-seed inside Lovable; any shared boilerplate must live in Lovable as a remix-able template, not as a vendored repo.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="appendix-section">
+            <div class="section-label">Implications</div>
+            <h2 class="section-title">What this implies for the framework</h2>
+            <p class="section-lede">The proposal handles the design response. Three implications from this analysis are worth naming here so the framework decisions stay grounded in what Lovable actually does — and doesn't do.</p>
+
+            <div class="subsection">
+                <p><strong>1. The deploy gap is the problem.</strong> Lovable is a fine prototyping tool. The reason prototypes don't graduate cleanly is that SA's production runtimes — long-running Python services, AWS-native deploys, warehouse-adjacent compute — live in a categorically different place from Lovable's deploy model. The framework's job is to make the path <em>from</em> Lovable export <em>to</em> SA's AWS targets a known, paved road, not a per-app rebuild.</p>
+                <p><strong>2. The "real backend" path needs a first-class home.</strong> When Product needs a companion service (Python ETL, scheduled job, agent loop), there should be a sanctioned scaffold and deploy path that isn't "run it on the developer's laptop." This is what the template's <code>apps/api</code> and <code>apps/python-api</code> slots are for.</p>
+                <p><strong>3. The handoff itself should be cheaper.</strong> A lot of rebuild work — baselining migrations, hardening Edge Functions, swapping Supabase Auth for SSO, replacing Supabase Postgres with Aurora, wiring CI — is the same from one project to the next. The framework can ship that as a template plus shared tooling so Engineering doesn't reinvent it each time.</p>
+
+                <div class="callout">
+                    <p><strong>Posture.</strong> None of this is a recommendation to abandon Lovable. SA has real investment in it, and for the prototyping and lightweight-app cases it covers well, it's appropriate. The framework's design works <em>with</em> Lovable's shape — see the Lovable bridge in §2.5 of the main proposal and the testing detail in Appendix B.</p>
+                </div>
+            </div>
+
+            <div class="sources">
+                <div class="sources-label">Sources</div>
+                <ul>
+                    <li>Lovable Docs — <a href="https://docs.lovable.dev/introduction/faq">FAQ</a>, <a href="https://docs.lovable.dev/integrations/supabase">Connect to Supabase</a>, <a href="https://docs.lovable.dev/integrations/github">Connect to GitHub</a>, <a href="https://docs.lovable.dev/features/custom-domain">Custom Domain</a>, <a href="https://docs.lovable.dev/integrations/cloud">Lovable Cloud</a></li>
+                    <li>Supabase Docs — <a href="https://supabase.com/docs/guides/functions">Edge Functions</a>, <a href="https://supabase.com/docs/guides/functions/limits">Edge Function Limits</a>, <a href="https://supabase.com/features/deno-edge-functions">Deno Edge Functions</a></li>
+                    <li>Supabase Blog — <a href="https://supabase.com/blog/lovable-cloud-launch">Lovable Cloud + Supabase launch</a></li>
+                    <li>ML6 — <a href="https://www.ml6.eu/en/blog/the-anatomy-of-a-lovable-app-and-its-boundaries-in-enterprise-software">The Anatomy of a Lovable App</a> (the most thorough outside breakdown)</li>
+                    <li>Till Freitag — <a href="https://till-freitag.com/en/blog/lovable-cloud-vs-supabase-en">Lovable Cloud vs. Supabase</a></li>
+                </ul>
+            </div>
+        </section>
+
+        <footer>
+            <div class="copyright">&copy; 2026 64 Interactive, LLC &mdash; Hellertown, PA</div>
+            <div class="contact-line">Questions on this draft: <a href="mailto:info@64i.dev">info@64i.dev</a></div>
+        </footer>
+    </div>
+</body>
+</html>

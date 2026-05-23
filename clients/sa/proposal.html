@@ -1,0 +1,2631 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Success Academy — Architecture Sprint Proposal (Draft v2)</title>
+    <meta
+      name="description"
+      content="First-draft proposal for Success Academy's product framework engagement. Two phases: process & org changes, and the framework itself."
+    />
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⬡</text></svg>"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="shared.css" />
+    <style>
+      /* Tabbed layout — scoped to this page */
+      .tabbar {
+        position: sticky;
+        top: 0;
+        z-index: 20;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 14px 0;
+        background: var(--bg);
+        border-bottom: 1px solid var(--border);
+      }
+      .tabbar button {
+        font-family: "Outfit", sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: none;
+        border: none;
+        padding: 9px 16px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition:
+          color 0.15s ease,
+          background 0.15s ease;
+      }
+      .tabbar button:hover {
+        color: var(--text, #333333);
+      }
+      .tabbar button.active {
+        color: var(--text, #333333);
+        background: var(--bg-card);
+      }
+      section.phase {
+        display: none;
+        border-bottom: none;
+      }
+      section.phase.active {
+        display: block;
+      }
+      .step {
+        scroll-margin-top: 90px;
+      }
+      .flow-jump {
+        cursor: pointer;
+      }
+      .flow-jump:hover {
+        fill: rgba(51, 51, 51, 0.05);
+      }
+      .flow-hint {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-align: center;
+        font-style: italic;
+        margin: 12px 0 0;
+      }
+      @keyframes stepflash {
+        0% {
+          background: var(--bg-card);
+        }
+        100% {
+          background: transparent;
+        }
+      }
+      .step.flash {
+        animation: stepflash 1.8s ease-out;
+        border-radius: 10px;
+      }
+      .process-grid {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 40px;
+        align-items: start;
+        margin-top: 8px;
+      }
+      .process-diagram-sticky {
+        position: sticky;
+        top: 80px;
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        padding: 20px 16px;
+      }
+      .process-diagram-sticky svg {
+        width: 100%;
+        height: auto;
+        display: block;
+      }
+      .dstep .box {
+        fill: #faf7f2;
+        stroke: #e5ded4;
+        stroke-width: 1;
+        transition:
+          fill 0.25s ease,
+          stroke 0.25s ease;
+      }
+      .dstep .dribox {
+        stroke-dasharray: 5 4;
+      }
+      .dstep .t {
+        fill: #333333;
+        transition: fill 0.25s ease;
+      }
+      .dstep .tm {
+        fill: #8a8279;
+        transition: fill 0.25s ease;
+      }
+      .dstep .person {
+        fill: #8a8279;
+        transition: fill 0.25s ease;
+      }
+      .dstep.active .box {
+        fill: #333333;
+        stroke: #333333;
+      }
+      .dstep.active .t,
+      .dstep.active .tm,
+      .dstep.active .person {
+        fill: #faf7f2;
+      }
+      @media (max-width: 860px) {
+        .process-grid {
+          grid-template-columns: 1fr;
+        }
+        .process-diagram {
+          display: none;
+        }
+      }
+      .process-steps .step {
+        padding-block: 40px;
+        scroll-margin-top: 100px;
+      }
+      .process-steps .step {
+        display: none;
+      }
+      .process-steps .step.active {
+        display: block;
+        animation: fadeInUp 0.4s ease both;
+      }
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(14px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .dstep {
+        cursor: pointer;
+        transform-box: fill-box;
+        transform-origin: center;
+      }
+      .dstep:hover .box {
+        stroke: #333333;
+      }
+      .dstep.active {
+        animation: dstepPop 0.35s ease;
+      }
+      @keyframes dstepPop {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+      @media (max-width: 860px) {
+        .process-steps .step {
+          display: block;
+        }
+      }
+      .process-steps .step {
+        border-top: none;
+      }
+      .dstep {
+        opacity: 0.45;
+        transition:
+          opacity 0.25s ease,
+          transform 0.25s ease;
+      }
+      .dstep.active {
+        opacity: 1;
+      }
+      .dstep:hover {
+        opacity: 1;
+      }
+      .dstep:focus {
+        outline: none;
+      }
+      .dstep:focus-visible .box {
+        stroke: #333333;
+        stroke-width: 2;
+      }
+      /* override shared.css overflow-x:hidden which breaks position:sticky */
+      body {
+        overflow-x: clip;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <nav>
+        <a href="/" class="logo" aria-label="64 Interactive">
+          <svg viewBox="0 0 295 420" xmlns="http://www.w3.org/2000/svg">
+            <!-- White shadow layer (3 circles) -->
+            <path
+              fill="#FFFFFF"
+              d="M166.266,286.816c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-4.842,147.318-4.842,119.307,23.17c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,291.83,159.486,288.67,166.266,286.816"
+            />
+            <!-- Dark main shape (3 circles) -->
+            <path
+              fill="#333333"
+              d="M166.266,284.656c2.121,2.875,4.479,5.635,7.082,8.236c28.014,28.012,73.43,28.01,101.441-0.006 c28.012-28.012,28.012-73.42,0-101.432c-18.66-18.66-45.031-24.871-68.844-18.674c-4.059-5.02-7.289-10.793-9.389-17.244 c-1.738-5.359-2.562-10.795-2.629-16.174c9.791-3.455,18.98-9.092,26.811-16.922c28.014-28.01,28.021-73.428,0.008-101.438 C192.74-7.002,147.318-7.002,119.307,21.01c-28.01,28.012-28.004,73.43,0,101.436c15.914,15.912,37.447,22.771,58.213,20.602 c2.807,4.129,5.104,8.688,6.717,13.656c2.645,8.129,3.244,16.451,2.123,24.467c-4.623,2.861-8.994,6.275-13.006,10.285 c-20.096,20.1-25.773,49.15-17.035,74.305c-3.49,6.557-8.303,12.475-14.475,17.285c-5.543,4.316-11.674,7.377-18.076,9.266 c-0.441-0.461-0.869-0.934-1.324-1.391c-28.01-28.012-73.42-28.016-101.432-0.004c-28.01,28.02-28.02,73.43-0.006,101.445 c28.004,28.002,73.428,28.002,101.438-0.014c22.928-22.926,27.072-57.506,12.471-84.66c3.223-5.033,7.277-9.602,12.223-13.463 C152.984,289.67,159.486,286.51,166.266,284.656"
+            />
+            <!-- White "6" in top circle -->
+            <path
+              fill="#FFFFFF"
+              d="M186.188,92.802c0,3.687-0.948,16.748-14.852,16.748s-14.852-13.061-14.852-16.748V48.773 c0-5.477,0.632-18.328,14.852-18.328s14.852,12.851,14.852,18.328v4.845h-11.376c0-10.428-0.21-13.271-3.476-13.271 c-2.844,0-3.476,2.528-3.476,8.426v13.798c1.896-1.159,3.687-1.896,5.688-1.896c11.692,0,12.64,12.008,12.64,16.327V92.802z M171.335,99.648c2.423,0,3.476-2.528,3.476-3.476V73c0-0.948-1.053-3.476-3.476-3.476c-2.422,0-3.371,2.106-3.476,3.16v23.489 C167.86,97.121,168.702,99.648,171.335,99.648z"
+            />
+            <!-- White "4" in right circle -->
+            <path
+              fill="#FFFFFF"
+              d="M223.683,263.639h-17.591v-10.006l16.643-50.559h11.376v50.559h5.267v10.006h-5.267v16.854h-10.428 V263.639z M215.782,253.633h7.9v-24.227v-2.317h-0.632l-0.632,2.317L215.782,253.633z"
+            />
+            <!-- White "i." in left circle -->
+            <path
+              fill="#FFFFFF"
+              d="M66.622,304.591H77.26v10.639H66.622V304.591z M66.622,382.01v-57.616H77.26v57.616H66.622z"
+            />
+          </svg>
+        </a>
+      </nav>
+
+      <section class="hero">
+        <div class="doc-meta">
+          <span>Draft v2</span>
+          <span>For Saroj Adhikari</span>
+          <span>May 26, 2026</span>
+        </div>
+        <h1>Success Academy<br />Architecture Sprint Proposal</h1>
+        <p class="hero-lede">
+          Three parts: process changes SA can adopt now, the framework we'd
+          build, and where the teams stand with AI today.
+        </p>
+      </section>
+
+      <div class="tabbar" role="tablist" aria-label="Proposal sections">
+        <button class="active" data-target="phase-1">Process</button>
+        <button data-target="phase-2">Systems</button>
+        <button data-target="phase-3">People</button>
+        <button data-target="appendix">Appendix</button>
+      </div>
+
+      <!-- PHASE 1 -->
+      <section class="phase active" id="phase-1">
+        <div class="section-label">Process &amp; Org Changes</div>
+        <h2 class="section-title">What SA adopts now</h2>
+        <div class="subsection">
+          <h3 class="subsection-title major">The problem</h3>
+          <p>
+            Today, a project moves through the three teams one after another
+            &mdash; Product hands to AI Engineering, which hands to Cloud
+            Engineering. Each team waits on the one before it, so work starts
+            late and the crunch compounds onto whoever's last in line. When the
+            deadline slips, it lands on Tech, even though the delay started
+            upstream.
+          </p>
+          <div
+            class="diagram"
+            aria-label="Today — a project moves through the three teams in sequence"
+          >
+            <svg
+              viewBox="0 0 840 270"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <title>Today — sequential handoff across the three teams</title>
+              <g transform="translate(220, 0)">
+                <text
+                  x="0"
+                  y="32"
+                  font-family="League Gothic, sans-serif"
+                  font-size="28"
+                  fill="#333333"
+                  letter-spacing="1.5"
+                >
+                  TODAY
+                </text>
+                <text
+                  x="0"
+                  y="54"
+                  font-family="Outfit, sans-serif"
+                  font-size="12.5"
+                  fill="#5a5249"
+                >
+                  Sequential. Work starts late, compounds onto Infra.
+                </text>
+
+                <text
+                  x="0"
+                  y="106"
+                  font-family="Outfit, sans-serif"
+                  font-size="13"
+                  fill="#333333"
+                  font-weight="500"
+                >
+                  Product
+                </text>
+                <rect
+                  x="120"
+                  y="92"
+                  width="170"
+                  height="22"
+                  rx="3"
+                  fill="#333333"
+                />
+
+                <text
+                  x="0"
+                  y="146"
+                  font-family="Outfit, sans-serif"
+                  font-size="13"
+                  fill="#333333"
+                  font-weight="500"
+                >
+                  AI Engineering
+                </text>
+                <rect
+                  x="275"
+                  y="132"
+                  width="80"
+                  height="22"
+                  rx="3"
+                  fill="#7a7269"
+                />
+
+                <text
+                  x="0"
+                  y="186"
+                  font-family="Outfit, sans-serif"
+                  font-size="13"
+                  fill="#333333"
+                  font-weight="500"
+                >
+                  Cloud Eng
+                </text>
+                <rect
+                  x="345"
+                  y="172"
+                  width="55"
+                  height="22"
+                  rx="3"
+                  fill="#b8b0a5"
+                />
+
+                <line
+                  x1="120"
+                  y1="220"
+                  x2="400"
+                  y2="220"
+                  stroke="#E5DED4"
+                  stroke-width="1"
+                />
+                <line
+                  x1="120"
+                  y1="216"
+                  x2="120"
+                  y2="224"
+                  stroke="#E5DED4"
+                  stroke-width="1"
+                />
+                <line
+                  x1="400"
+                  y1="216"
+                  x2="400"
+                  y2="224"
+                  stroke="#E5DED4"
+                  stroke-width="1"
+                />
+                <text
+                  x="120"
+                  y="244"
+                  font-family="Outfit, sans-serif"
+                  font-size="11"
+                  fill="#8a8279"
+                >
+                  Project start
+                </text>
+                <text
+                  x="400"
+                  y="244"
+                  font-family="Outfit, sans-serif"
+                  font-size="11"
+                  fill="#8a8279"
+                  text-anchor="end"
+                >
+                  Deadline
+                </text>
+              </g>
+            </svg>
+            <div class="legend">
+              <span class="item"
+                ><span class="swatch" style="background: #333333"></span
+                >Product</span
+              >
+              <span class="item"
+                ><span class="swatch" style="background: #7a7269"></span>AI
+                Engineering</span
+              >
+              <span class="item"
+                ><span class="swatch" style="background: #b8b0a5"></span>Cloud
+                Engineering</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">The recommendation</h3>
+          <p>
+            None of this needs new tooling or a new framework &mdash; just a
+            standing weekly meeting and a shift in discipline that lets the
+            three teams work in parallel instead of waiting in line. That alone
+            compresses the Product → AI Engineering → Cloud Engineering
+            timeline. The point is to get the three teams overlapping instead of
+            running one after another.
+          </p>
+          <div
+            class="diagram"
+            aria-label="Proposed — the three teams run in parallel"
+          >
+            <svg
+              viewBox="0 0 840 270"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <title>Proposed — the three teams run in parallel</title>
+              <g transform="translate(220, 0)">
+                <text
+                  x="0"
+                  y="32"
+                  font-family="League Gothic, sans-serif"
+                  font-size="28"
+                  fill="#333333"
+                  letter-spacing="1.5"
+                >
+                  PROPOSED
+                </text>
+                <text
+                  x="0"
+                  y="54"
+                  font-family="Outfit, sans-serif"
+                  font-size="12.5"
+                  fill="#5a5249"
+                >
+                  Parallel. Three teams running concurrently from early on.
+                </text>
+
+                <text
+                  x="0"
+                  y="106"
+                  font-family="Outfit, sans-serif"
+                  font-size="13"
+                  fill="#333333"
+                  font-weight="500"
+                >
+                  Product
+                </text>
+                <rect
+                  x="120"
+                  y="92"
+                  width="270"
+                  height="22"
+                  rx="3"
+                  fill="#333333"
+                />
+
+                <text
+                  x="0"
+                  y="146"
+                  font-family="Outfit, sans-serif"
+                  font-size="13"
+                  fill="#333333"
+                  font-weight="500"
+                >
+                  AI Engineering
+                </text>
+                <rect
+                  x="145"
+                  y="132"
+                  width="240"
+                  height="22"
+                  rx="3"
+                  fill="#7a7269"
+                />
+
+                <text
+                  x="0"
+                  y="186"
+                  font-family="Outfit, sans-serif"
+                  font-size="13"
+                  fill="#333333"
+                  font-weight="500"
+                >
+                  Cloud Eng
+                </text>
+                <rect
+                  x="160"
+                  y="172"
+                  width="225"
+                  height="22"
+                  rx="3"
+                  fill="#b8b0a5"
+                />
+
+                <line
+                  x1="120"
+                  y1="220"
+                  x2="400"
+                  y2="220"
+                  stroke="#E5DED4"
+                  stroke-width="1"
+                />
+                <line
+                  x1="120"
+                  y1="216"
+                  x2="120"
+                  y2="224"
+                  stroke="#E5DED4"
+                  stroke-width="1"
+                />
+                <line
+                  x1="400"
+                  y1="216"
+                  x2="400"
+                  y2="224"
+                  stroke="#E5DED4"
+                  stroke-width="1"
+                />
+                <text
+                  x="120"
+                  y="244"
+                  font-family="Outfit, sans-serif"
+                  font-size="11"
+                  fill="#8a8279"
+                >
+                  Project start
+                </text>
+                <text
+                  x="400"
+                  y="244"
+                  font-family="Outfit, sans-serif"
+                  font-size="11"
+                  fill="#8a8279"
+                  text-anchor="end"
+                >
+                  Deadline
+                </text>
+              </g>
+            </svg>
+            <div class="legend">
+              <span class="item"
+                ><span class="swatch" style="background: #333333"></span
+                >Product</span
+              >
+              <span class="item"
+                ><span class="swatch" style="background: #7a7269"></span>AI
+                Engineering</span
+              >
+              <span class="item"
+                ><span class="swatch" style="background: #b8b0a5"></span>Cloud
+                Engineering</span
+              >
+            </div>
+          </div>
+
+          <div class="process-grid">
+            <div class="process-steps">
+              <div class="step" id="step-01">
+                <div class="step-num">01</div>
+                <div class="step-body">
+                  <div class="meta">
+                    Recurring weekly · Product + AI Engineering
+                  </div>
+                  <h3>Product &amp; AI Eng Weekly Check-in</h3>
+                  <p>
+                    Same day every week. Both teams walk through every product
+                    currently in flight — in Product's hands or AI Engineering's
+                    — and update each other on what's new or changed since last
+                    week. Each product's <strong>delivery date</strong> is part
+                    of that update, so both teams stay aligned on timelines.
+                  </p>
+                  <p>
+                    New products AI Engineering hasn't seen yet get surfaced
+                    here too. For each, AI Engineering asks high-level questions
+                    — auth, data warehouse access, integrations, scale, anything
+                    Lovable can't carry on its own. If they want to dig deeper,
+                    they schedule a
+                    <strong>Project Briefing</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step" id="step-02">
+                <div class="step-num">02</div>
+                <div class="step-body">
+                  <div class="meta">Per project · Product + Vadim (AI Eng)</div>
+                  <h3>Project Briefing</h3>
+                  <p>
+                    Just the Product person and Vadim from AI Engineering.
+                    Product walks Vadim through what they currently understand
+                    about the project — not a finished spec, and Product isn't
+                    expected to have one yet. Things will change.
+                  </p>
+                  <p>
+                    The point is to give AI Engineering enough of a picture to
+                    start researching and thinking about what the project might
+                    need. Vadim starts the Requirements Doc with whatever
+                    Product knows so far. It evolves from there.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step" id="step-03">
+                <div class="step-num">03</div>
+                <div class="step-body">
+                  <div class="meta">
+                    Per project · Doc + dedicated Slack channel
+                  </div>
+                  <h3>Requirements Doc</h3>
+                  <p>
+                    Every project has one central Requirements Doc. It's the
+                    gold standard — the doc, not the conversation, is the source
+                    of truth.
+                  </p>
+                  <p>
+                    Each project also gets a
+                    <strong>dedicated Slack channel</strong> that both teams use
+                    to discuss the work.
+                    <strong>Claude is in the channel.</strong> When something
+                    said in Slack needs to land in the Doc, anyone can
+                    <code>@claude</code> and the update gets made.
+                  </p>
+                  <p>
+                    Email and in-office conversations are fine too, but those
+                    need to be brought back into the Doc manually.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step" id="step-04">
+                <div class="step-num">04</div>
+                <div class="step-body">
+                  <div class="meta">
+                    After the Project Briefing · AI Eng + Infra
+                  </div>
+                  <h3>Engineering Head Start</h3>
+                  <p>
+                    After the Project Briefing, AI Engineering and Infra have a
+                    high-level read on what the project will need. The Head
+                    Start is the time and space for them to act on that read —
+                    to
+                    <strong>start working in parallel with Product</strong>
+                    instead of waiting until Product is done.
+                  </p>
+                  <p>How they use that time is up to them. Common moves:</p>
+                  <ul>
+                    <li>
+                      <strong>AI Engineering</strong> sets up a branch and
+                      starts an initial iteration of the project.
+                    </li>
+                    <li>
+                      <strong>Infra</strong> stands up the sandbox environment
+                      and gets the CI/CD pipeline ready.
+                    </li>
+                  </ul>
+                  <p>
+                    The high-level reqs could still change. But they tend to be
+                    the core pieces of the project, so the risk of throwaway
+                    work is low — and the timeline savings (the parallelization
+                    shown above) are real.
+                  </p>
+                </div>
+              </div>
+
+              <div class="step" id="step-05">
+                <div class="step-num">05</div>
+                <div class="step-body">
+                  <div class="meta">New role · DRI for delivery</div>
+                  <h3>Delivery Lead</h3>
+                  <p>
+                    The Delivery Lead is the <strong>DRI</strong> — the single
+                    accountable owner — for each project landing on time.
+                    <strong
+                      >This role is filled by a third-party, unbiased person —
+                      not from inside the Product team</strong
+                    >
+                    — so their judgment stays neutral. They don't own scope,
+                    engineering choices, or design. They own <em>delivery</em>.
+                  </p>
+                  <p>
+                    Today, when a project slips, blame lands on Tech (AI
+                    Engineering and Cloud Engineering) because they're always
+                    last in line. Whatever fell behind upstream still has to be
+                    wrapped up by Tech before launch. The Delivery Lead changes
+                    that. Because they're not tied to any one team, they're
+                    incentivized to hold
+                    <em>each</em> team — Product, AI Engineering, Cloud
+                    Engineering — to its part of the timeline, and to flag
+                    slippage early enough to do something about it.
+                  </p>
+                  <div class="callout">
+                    <p>
+                      <strong>Open question.</strong> Reporting line is an
+                      SA-leadership call. Whoever it reports into, the role has
+                      to be measured on outcomes for all three teams — otherwise
+                      the independence breaks down.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <aside class="process-diagram">
+              <div class="process-diagram-sticky">
+                <svg
+                  viewBox="0 0 300 332"
+                  xmlns="http://www.w3.org/2000/svg"
+                  role="img"
+                  aria-label="The weekly rhythm, with the Delivery Lead overseeing it"
+                >
+                  <title>
+                    The weekly rhythm, overseen by the Delivery Lead (DRI)
+                  </title>
+                  <g class="dstep" data-step="step-01">
+                    <rect
+                      class="box"
+                      x="30"
+                      y="8"
+                      width="240"
+                      height="44"
+                      rx="10"
+                    />
+                    <text
+                      class="t"
+                      x="48"
+                      y="35"
+                      font-family="Outfit, sans-serif"
+                      font-size="13"
+                      font-weight="700"
+                    >
+                      01
+                    </text>
+                    <text
+                      class="t"
+                      x="74"
+                      y="35"
+                      font-family="Outfit, sans-serif"
+                      font-size="12.5"
+                      font-weight="600"
+                    >
+                      Weekly Check-in
+                    </text>
+                  </g>
+                  <line
+                    x1="150"
+                    y1="52"
+                    x2="150"
+                    y2="66"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="146,66 154,66 150,72" fill="#8a8279" />
+                  <g class="dstep" data-step="step-02">
+                    <rect
+                      class="box"
+                      x="30"
+                      y="74"
+                      width="240"
+                      height="44"
+                      rx="10"
+                    />
+                    <text
+                      class="t"
+                      x="48"
+                      y="101"
+                      font-family="Outfit, sans-serif"
+                      font-size="13"
+                      font-weight="700"
+                    >
+                      02
+                    </text>
+                    <text
+                      class="t"
+                      x="74"
+                      y="101"
+                      font-family="Outfit, sans-serif"
+                      font-size="12.5"
+                      font-weight="600"
+                    >
+                      Project Briefing
+                    </text>
+                  </g>
+                  <line
+                    x1="150"
+                    y1="118"
+                    x2="150"
+                    y2="132"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="146,132 154,132 150,138" fill="#8a8279" />
+                  <g class="dstep" data-step="step-03">
+                    <rect
+                      class="box"
+                      x="30"
+                      y="140"
+                      width="240"
+                      height="44"
+                      rx="10"
+                    />
+                    <text
+                      class="t"
+                      x="48"
+                      y="167"
+                      font-family="Outfit, sans-serif"
+                      font-size="13"
+                      font-weight="700"
+                    >
+                      03
+                    </text>
+                    <text
+                      class="t"
+                      x="74"
+                      y="167"
+                      font-family="Outfit, sans-serif"
+                      font-size="12.5"
+                      font-weight="600"
+                    >
+                      Requirements Doc
+                    </text>
+                  </g>
+                  <line
+                    x1="150"
+                    y1="184"
+                    x2="150"
+                    y2="198"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="146,198 154,198 150,204" fill="#8a8279" />
+                  <g class="dstep" data-step="step-04">
+                    <rect
+                      class="box"
+                      x="30"
+                      y="206"
+                      width="240"
+                      height="44"
+                      rx="10"
+                    />
+                    <text
+                      class="t"
+                      x="48"
+                      y="233"
+                      font-family="Outfit, sans-serif"
+                      font-size="13"
+                      font-weight="700"
+                    >
+                      04
+                    </text>
+                    <text
+                      class="t"
+                      x="74"
+                      y="233"
+                      font-family="Outfit, sans-serif"
+                      font-size="12.5"
+                      font-weight="600"
+                    >
+                      Engineering Head Start
+                    </text>
+                  </g>
+                  <line
+                    x1="150"
+                    y1="252"
+                    x2="150"
+                    y2="266"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                    stroke-dasharray="3,3"
+                  />
+                  <g class="dstep" data-step="step-05">
+                    <rect
+                      class="box dribox"
+                      x="20"
+                      y="268"
+                      width="260"
+                      height="54"
+                      rx="12"
+                    />
+                    <circle class="person" cx="48" cy="290" r="7" />
+                    <path class="person" d="M36 311 C36 300 60 300 60 311 Z" />
+                    <text
+                      class="t"
+                      x="78"
+                      y="289"
+                      font-family="Outfit, sans-serif"
+                      font-size="12.5"
+                      font-weight="700"
+                    >
+                      Delivery Lead
+                    </text>
+                    <text
+                      class="tm"
+                      x="78"
+                      y="306"
+                      font-family="Outfit, sans-serif"
+                      font-size="10"
+                    >
+                      the DRI &mdash; oversees the whole flow
+                    </text>
+                  </g>
+                </svg>
+              </div>
+            </aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- PHASE 2 -->
+      <section class="phase" id="phase-2">
+        <div class="section-label">Systems</div>
+        <h2 class="section-title">What we'd build</h2>
+
+        <!-- §2.0a — The problem -->
+        <!-- §2.0a — The problem -->
+        <div class="subsection">
+          <h3 class="subsection-title major">The problem</h3>
+          <p>
+            Today, Product hands off work built in Lovable that Engineering
+            can't ship as-is &mdash; and getting it to production creates a
+            string of problems:
+          </p>
+          <ul>
+            <li>
+              <strong>Off-standard from the start.</strong> Supabase, weak auth,
+              no infrastructure code &mdash; none of it meets the bar for
+              production.
+            </li>
+            <li>
+              <strong>Engineering has to scramble.</strong> They rework what
+              they're handed into something shippable, almost always against a
+              tight deadline.
+            </li>
+            <li>
+              <strong>That forces compromises.</strong> To hit the date, they
+              ship shortcuts &mdash; like the stack on EC2 with Supabase baked
+              in instead of standing it up the right way on RDS and ECS.
+            </li>
+            <li>
+              <strong>Two sources of truth.</strong> Product keeps iterating on
+              the Lovable version while Engineering owns the reworked one, and
+              keeping the two in sync is a constant, losing battle.
+            </li>
+          </ul>
+          <div
+            class="diagram"
+            aria-label="Today — Product hands off off-standard work to Engineering"
+          >
+            <svg
+              viewBox="0 0 760 200"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <title>
+                Today — Product hands off off-standard work to Engineering
+              </title>
+              <text
+                x="0"
+                y="34"
+                font-family="League Gothic, sans-serif"
+                font-size="28"
+                fill="#333333"
+                letter-spacing="1.5"
+              >
+                TODAY
+              </text>
+              <text
+                x="0"
+                y="56"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                fill="#5a5249"
+              >
+                Same flow &mdash; but Product starts off-standard.
+              </text>
+              <text
+                x="235"
+                y="94"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#b8b0a5"
+                text-anchor="middle"
+                font-style="italic"
+              >
+                no shared template
+              </text>
+              <rect
+                x="120"
+                y="104"
+                width="230"
+                height="68"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="235"
+                y="138"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Product in Lovable
+              </text>
+              <text
+                x="235"
+                y="158"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                off-standard build
+              </text>
+              <text
+                x="400"
+                y="126"
+                font-family="Outfit, sans-serif"
+                font-size="10"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                hand off
+              </text>
+              <line
+                x1="355"
+                y1="138"
+                x2="443"
+                y2="138"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <polygon points="443,134 451,138 443,142" fill="#8a8279" />
+              <rect
+                x="455"
+                y="104"
+                width="230"
+                height="68"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="570"
+                y="138"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Engineering
+              </text>
+              <text
+                x="570"
+                y="158"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                scramble to ship
+              </text>
+              <text
+                x="400"
+                y="192"
+                font-family="Outfit, sans-serif"
+                font-size="11.5"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Tight timelines force compromises
+              </text>
+            </svg>
+          </div>
+        </div>
+
+        <!-- §2.0b — The recommendation -->
+        <div class="subsection">
+          <h3 class="subsection-title major">The recommendation</h3>
+          <p>
+            What we're proposing is that every Lovable project starts from an
+            engineering-approved template. Anyone spinning up a project in
+            Lovable begins with the right standards already in place. That takes
+            most of the scramble off Engineering's plate &mdash; far less
+            rework, no compromises forced by the clock, and no two-way sync to
+            fight. Most of all, it gives the Engineering team a lot of their
+            time and energy back.
+          </p>
+          <div
+            class="diagram"
+            aria-label="Proposed — Product starts from the engineering-approved template"
+          >
+            <svg
+              viewBox="0 0 760 200"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <title>
+                Proposed — Product starts from the engineering-approved template
+              </title>
+              <text
+                x="0"
+                y="34"
+                font-family="League Gothic, sans-serif"
+                font-size="28"
+                fill="#333333"
+                letter-spacing="1.5"
+              >
+                PROPOSED
+              </text>
+              <text
+                x="0"
+                y="56"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                fill="#5a5249"
+              >
+                Product starts from the template. Clean hand off.
+              </text>
+              <rect
+                x="15"
+                y="104"
+                width="190"
+                height="68"
+                rx="10"
+                fill="#333333"
+              />
+              <text
+                x="110"
+                y="135"
+                font-family="Outfit, sans-serif"
+                font-size="12.5"
+                font-weight="600"
+                fill="#FAF7F2"
+                text-anchor="middle"
+              >
+                Eng-approved
+              </text>
+              <text
+                x="110"
+                y="153"
+                font-family="Outfit, sans-serif"
+                font-size="12.5"
+                font-weight="600"
+                fill="#FAF7F2"
+                text-anchor="middle"
+              >
+                template
+              </text>
+              <line
+                x1="205"
+                y1="138"
+                x2="268"
+                y2="138"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <polygon points="268,134 276,138 268,142" fill="#8a8279" />
+              <rect
+                x="280"
+                y="104"
+                width="190"
+                height="68"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="375"
+                y="138"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Product in Lovable
+              </text>
+              <text
+                x="375"
+                y="158"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                starts on standard
+              </text>
+              <text
+                x="510"
+                y="126"
+                font-family="Outfit, sans-serif"
+                font-size="10"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                hand off
+              </text>
+              <line
+                x1="470"
+                y1="138"
+                x2="538"
+                y2="138"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <polygon points="538,134 546,138 538,142" fill="#8a8279" />
+              <rect
+                x="545"
+                y="104"
+                width="190"
+                height="68"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="640"
+                y="138"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Engineering
+              </text>
+              <text
+                x="640"
+                y="158"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                lighter lift
+              </text>
+              <text
+                x="380"
+                y="192"
+                font-family="Outfit, sans-serif"
+                font-size="11.5"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Less scramble, more time for Engineering
+              </text>
+            </svg>
+          </div>
+          <p>The engineering-approved template itself is two pieces.</p>
+          <h3 class="subsection-title">The monorepo</h3>
+          <p>
+            We already know what a good monorepo for a web application looks
+            like. This one is organized into three areas:
+          </p>
+          <ul>
+            <li>
+              <strong>Frontend.</strong> <code>apps/web</code> &mdash; Vite +
+              React, Lovable's native target &mdash; plus the shared
+              <code>@sa/ui</code> design system, so every project renders with
+              SA's components and tokens.
+            </li>
+            <li>
+              <strong>Backend.</strong> Two runtimes:
+              <code>apps/api</code> (Fastify) for CRUD and general backend work,
+              and <code>apps/python-api</code> (FastAPI) for LLM and AI-specific
+              work, with shared business logic in <code>@sa/api-sdk</code>.
+            </li>
+            <li>
+              <strong>Infrastructure.</strong> <code>infra/</code> as AWS CDK
+              &mdash; every new repo deploys to its own sandbox on the first
+              push, with CI/CD, auth, and a shared sandbox database wired in
+              from day one.
+            </li>
+          </ul>
+          <h3 class="subsection-title">The Lovable wiring</h3>
+          <p>
+            The newer part &mdash; what we had to work out on this project
+            &mdash; is the wiring that gets Lovable building inside the template
+            instead of around it:
+          </p>
+          <ul>
+            <li>
+              <strong>Scoped rules.</strong> A layered ruleset (a root
+              <code>RULES.md</code> for every agent, plus a Lovable-only
+              <code>.lovable/RULES.md</code>) tells Lovable which directories it
+              can touch, what it can't import, and how to name endpoints.
+            </li>
+            <li>
+              <strong>The adapter pattern.</strong> The web client hits either
+              Lovable's Supabase functions or the real Fastify backend by
+              swapping a base URL &mdash; so engineering never has to rip
+              Supabase out later.
+            </li>
+            <li>
+              <strong>Design-system sync.</strong> Lovable is fed SA's
+              <code>@sa/ui</code> tokens and components (kept current by a CI
+              check), so it builds with SA's design system instead of re-rolling
+              its own.
+            </li>
+            <li>
+              <strong>Mechanical enforcement.</strong> ESLint blocks what the
+              rules can't catch by convention &mdash; like importing the
+              Supabase SDK into the web app.
+            </li>
+          </ul>
+          <p>
+            The full build-out &mdash; folder structure, packages, and the
+            Lovable rules &mdash; is in the appendix.
+          </p>
+        </div>
+      </section>
+
+      <!-- PHASE 3 -->
+      <section class="phase" id="phase-3">
+        <div class="section-label">People</div>
+        <h2 class="section-title">Where the teams stand</h2>
+        <p class="section-lede">
+          Saroj asked for a read on how well three of his teams are using AI in
+          their coding. Here's what came out of those conversations &mdash; and
+          what would get them all on the same page.
+        </p>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">The review</h3>
+          <p>
+            Each team walked through how they're actually using AI day today
+            &mdash; what's set up, what's working, and where the gaps are.
+            They're all on the same line, just at different spots on it.
+          </p>
+
+          <div
+            class="diagram"
+            aria-label="Context engineering maturity across the three teams"
+          >
+            <svg
+              viewBox="0 0 880 200"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <title>
+                Where the three teams sit on context engineering maturity
+              </title>
+              <text
+                x="10"
+                y="32"
+                font-family="League Gothic, sans-serif"
+                font-size="28"
+                fill="#333333"
+                letter-spacing="1.5"
+              >
+                CONTEXT ENGINEERING MATURITY
+              </text>
+              <text
+                x="10"
+                y="54"
+                font-family="Outfit, sans-serif"
+                font-size="12.5"
+                fill="#8a8279"
+              >
+                Same line, different spots &mdash; and the same gaps at every
+                stop.
+              </text>
+
+              <line
+                x1="70"
+                y1="128"
+                x2="810"
+                y2="128"
+                stroke="#E5DED4"
+                stroke-width="2"
+              />
+              <text
+                x="70"
+                y="152"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+              >
+                Just getting started
+              </text>
+              <text
+                x="810"
+                y="152"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="end"
+              >
+                Context engineering clicking
+              </text>
+
+              <circle cx="180" cy="128" r="8" fill="#b8b0a5" />
+              <text
+                x="180"
+                y="96"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Salesforce
+              </text>
+              <text
+                x="180"
+                y="112"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Joe Jung
+              </text>
+              <text
+                x="180"
+                y="182"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Cursor rules only
+              </text>
+
+              <circle cx="445" cy="128" r="8" fill="#7a7269" />
+              <text
+                x="445"
+                y="96"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                AI Engineering
+              </text>
+              <text
+                x="445"
+                y="112"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Priti's team
+              </text>
+              <text
+                x="445"
+                y="182"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Skills started, no subagents
+              </text>
+
+              <circle cx="710" cy="128" r="8" fill="#333333" />
+              <text
+                x="710"
+                y="96"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Data Engineering
+              </text>
+              <text
+                x="710"
+                y="112"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                Carlos &amp; Srikar
+              </text>
+              <text
+                x="710"
+                y="182"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                CLAUDE.md + skills, but personal
+              </text>
+            </svg>
+          </div>
+
+          <div class="block">
+            <div class="block-label">Salesforce &middot; Joe Jung</div>
+            <p>
+              Joe's the newest to this. He's set up some rules in Cursor, which
+              is a start &mdash; but he hasn't gone past it. No context files
+              spread through the repo (a CLAUDE.md living next to the code), no
+              subagents to keep the context window clean, no skills. There's
+              real upside here once the fundamentals click.
+            </p>
+          </div>
+
+          <div class="block">
+            <div class="block-label">AI Engineering &middot; Priti's team</div>
+            <p>
+              They're all in Cursor and they've started writing skills, which is
+              good. No subagents yet, though. They haven't set up
+              directory-level context files either &mdash; but to be fair, their
+              projects are small enough that those might not earn their keep
+              yet.
+            </p>
+            <p>
+              Where subagents would really pay off for this team is the
+              repetitive work: spinning up the same kind of component, endpoint,
+              or service over and over. That's exactly what a subagent is good
+              at.
+            </p>
+          </div>
+
+          <div class="block">
+            <div class="block-label">
+              Data Engineering &middot; Carlos &amp; Srikar
+            </div>
+            <p>
+              This team's the furthest along &mdash; Carlos especially. He's
+              using CLAUDE.md files and context engineering has clearly started
+              to click for him. The gap is that it's all personal. Everyone's
+              running their own home-directory CLAUDE.md files and skills, with
+              no shared repo behind it &mdash; so the good work one person does
+              doesn't carry across the team. No subagents yet, and no context
+              files living inside the repos themselves.
+            </p>
+          </div>
+
+          <div class="callout">
+            <p>
+              <strong>What's true across all three.</strong> Two things.
+              Nobody's using subagents &mdash; the idea makes sense to people,
+              but the <em>why</em> and the <em>when</em> haven't landed. And
+              almost none of the context lives in the codebase: it's in personal
+              setups and Cursor rules, not committed to the repo where the whole
+              team &mdash; and the AI &mdash; can actually use it. Even the team
+              that's furthest ahead keeps all of it personal.
+            </p>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">The recommendation</h3>
+          <p>
+            The teams are at different spots, but the gaps rhyme. So the answer
+            isn't three different plans &mdash; it's getting everyone on the
+            same baseline first.
+          </p>
+          <p>
+            The recommendation is a single context engineering session for the
+            whole org. One room, same starting point for all three teams. It
+            would cover:
+          </p>
+          <ul>
+            <li>
+              <strong
+                >How the context window actually works &mdash; and what context
+                rot is.</strong
+              >
+              Why stuffing everything into one window makes the model worse, not
+              better.
+            </li>
+            <li>
+              <strong>The three tools, and when to reach for each.</strong>
+              Context files (CLAUDE.md) for what's always true, skills for
+              repeatable procedures, and subagents for isolating messy or
+              repetitive work in its own clean window.
+            </li>
+            <li>
+              <strong>Directory-level context files.</strong> How to get the
+              knowledge your developers already carry &mdash; code gotchas, how
+              the product is supposed to behave &mdash; into the codebase
+              itself, so the AI is sharper everywhere it works.
+            </li>
+          </ul>
+          <p>
+            Then 1-1s &mdash; open to anyone who wants to sit down and work
+            through their own codebase one-on-one. That's where the session
+            turns into something real for each team: Carlos can push further
+            than the room goes, Priti's team can stand up their first subagents
+            for the repetitive stuff, and Joe can get the fundamentals solid.
+          </p>
+          <div class="callout">
+            <p>
+              <strong>This sets up the framework, too.</strong> The shared
+              context layer in the framework &mdash; the committed CLAUDE.md
+              files, agents, and skills &mdash; is exactly where this knowledge
+              is meant to live. The session teaches the teams how to use it and
+              add to it, so it keeps paying off as they build.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- APPENDIX -->
+      <section class="phase" id="appendix">
+        <div class="section-label">Appendix</div>
+        <h2 class="section-title">Technical detail</h2>
+        <p class="section-lede">
+          Reference for the engineering reader &mdash; how the template is
+          actually built. Skip it if you just want the shape of the
+          recommendation.
+        </p>
+        <!-- §2.1 — The system at a glance -->
+        <div class="subsection">
+          <h3 class="subsection-title major">The system at a glance</h3>
+          <p>
+            One template repo at the center, with four substrates attached. Each
+            project SA spins up inherits all of them on day one — independent of
+            which tool the person creating the project is using.
+          </p>
+
+          <div
+            class="diagram"
+            aria-label="Template repo at the center with four substrates: shared packages, AI context layer, Lovable bridge, sandbox infra and CI/CD"
+          >
+            <svg
+              viewBox="0 0 880 380"
+              xmlns="http://www.w3.org/2000/svg"
+              role="img"
+            >
+              <title>The system at a glance</title>
+
+              <!-- Center: template repo -->
+              <rect
+                x="320"
+                y="150"
+                width="240"
+                height="80"
+                rx="12"
+                fill="#333333"
+                stroke="#333333"
+                stroke-width="1"
+              />
+              <text
+                x="440"
+                y="184"
+                font-family="Outfit, sans-serif"
+                font-size="15"
+                font-weight="600"
+                fill="#FAF7F2"
+                text-anchor="middle"
+              >
+                Template repo
+              </text>
+              <text
+                x="440"
+                y="204"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#c4bdb3"
+                text-anchor="middle"
+              >
+                monorepo · SA conventions baked in
+              </text>
+
+              <!-- Top-left: shared packages -->
+              <rect
+                x="40"
+                y="40"
+                width="220"
+                height="74"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="150"
+                y="70"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Shared packages
+              </text>
+              <text
+                x="150"
+                y="90"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                @sa/auth · @sa/ui · @sa/data-warehouse-sdk
+              </text>
+              <text
+                x="150"
+                y="104"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                design tokens · service SDKs
+              </text>
+
+              <!-- Top-right: AI context layer -->
+              <rect
+                x="620"
+                y="40"
+                width="220"
+                height="74"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="730"
+                y="70"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                AI context layer
+              </text>
+              <text
+                x="730"
+                y="90"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                rules · agents · skills
+              </text>
+              <text
+                x="730"
+                y="104"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                for Claude Code &amp; Lovable both
+              </text>
+
+              <!-- Bottom-left: Lovable bridge -->
+              <rect
+                x="40"
+                y="266"
+                width="220"
+                height="74"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="150"
+                y="296"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Lovable bridge
+              </text>
+              <text
+                x="150"
+                y="316"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                rules · adapter pattern · clean
+              </text>
+              <text
+                x="150"
+                y="330"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                handoff to engineering
+              </text>
+
+              <!-- Bottom-right: sandbox infra -->
+              <rect
+                x="620"
+                y="266"
+                width="220"
+                height="74"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="730"
+                y="296"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Sandbox infra + CI/CD
+              </text>
+              <text
+                x="730"
+                y="316"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                CDK · shared sandbox DB
+              </text>
+              <text
+                x="730"
+                y="330"
+                font-family="Outfit, sans-serif"
+                font-size="11"
+                fill="#8a8279"
+                text-anchor="middle"
+              >
+                deploys on first push
+              </text>
+
+              <!-- Lines from center to corners -->
+              <line
+                x1="320"
+                y1="170"
+                x2="260"
+                y2="100"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <line
+                x1="560"
+                y1="170"
+                x2="620"
+                y2="100"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <line
+                x1="320"
+                y1="210"
+                x2="260"
+                y2="280"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <line
+                x1="560"
+                y1="210"
+                x2="620"
+                y2="280"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+            </svg>
+          </div>
+
+          <p>
+            The rest of Phase 2 walks through each piece — what's in it, what's
+            already proven, and what we'd evaluate during the engagement.
+          </p>
+        </div>
+
+        <!-- §2.2 — The template repo -->
+        <div class="subsection">
+          <h3 class="subsection-title major">The template repo</h3>
+          <p>
+            Every new SA project starts as a fresh repo created from one shared
+            template. The template ships everything the project needs to exist
+            inside SA's environment — code structure, infra, CI/CD, a deployed
+            sandbox URL, and SA's conventions baked in. The AI context layer
+            (described below) is wired in throughout, so Claude Code and Lovable
+            are both productive from the first commit.
+          </p>
+
+          <div class="callout">
+            <p>
+              <strong>Status: proven.</strong> The shape is already built and
+              working in <code>sa-ai-loveable-monorepo</code>. We've verified
+              the monorepo layout, the dual-runtime adapter pattern, and the
+              rule-driven Lovable workflow end-to-end. The deeper detail lives
+              in the appendices.
+            </p>
+          </div>
+
+          <p><strong>Shape:</strong></p>
+          <pre><code>sa-&lt;project&gt;/
+├── CLAUDE.md                            <span class="c"># Root context for Claude Code</span>
+├── RULES.md                             <span class="c"># Shared rules — all agents</span>
+├── README.md
+├── package.json                         <span class="c"># Bun + workspaces</span>
+│
+├── .claude/                             <span class="c"># Agents &amp; skills</span>
+│   ├── agents/
+│   └── skills/
+│
+├── .lovable/                            <span class="c"># Lovable-only rules + synced design system prompts</span>
+│   ├── RULES.md
+│   ├── system.md
+│   └── rules/
+│
+├── apps/
+│   ├── web/                             <span class="c"># Vite + React (Lovable target)</span>
+│   ├── api/                             <span class="c"># Fastify — CRUD &amp; general backend</span>
+│   └── python-api/                      <span class="c"># FastAPI — LLM &amp; AI-specific work</span>
+│
+├── packages/                            <span class="c"># Shared workspace packages</span>
+│   ├── api-sdk/                         <span class="c"># Runtime-agnostic business logic</span>
+│   └── ui/                              <span class="c"># @sa/ui — design system</span>
+│
+├── supabase/                            <span class="c"># Edge Functions (Lovable backend)</span>
+│   └── functions/
+│
+└── infra/                               <span class="c"># Project IaC — CDK</span>
+    ├── CLAUDE.md
+    └── stacks/</code></pre>
+
+          <p><strong>What's wired up out of the box:</strong></p>
+          <ul>
+            <li>
+              <strong>Sandbox AWS environment via CDK</strong> — every new repo
+              deploys to its own sandbox on the first push. See §2.7.
+            </li>
+            <li>
+              <strong>CI/CD via <code>.github/workflows</code></strong> — build,
+              test, deploy to sandbox automatically.
+            </li>
+            <li>
+              <strong>Auth</strong> — pulled in from <code>@sa/auth</code> (see
+              §2.4). Google for student-facing apps, Okta for back-office,
+              composable for mixed.
+            </li>
+            <li>
+              <strong>Shared sandbox database</strong> — each project gets its
+              own schema in a hosted Postgres, not a freshly provisioned RDS.
+            </li>
+            <li>
+              <strong>Dual-runtime adapter pattern</strong> — the same web
+              client targets either Lovable's Supabase Edge Functions or the
+              Fastify API by swapping only the base URL. See §2.5.
+            </li>
+          </ul>
+
+          <p>
+            <strong
+              >Stack picks — initial recommendations, to be confirmed during the
+              engagement:</strong
+            >
+          </p>
+          <ul>
+            <li>
+              <code>apps/web</code> — <strong>Vite + React</strong>. Lovable's
+              native target; fast HMR; cleanest fit with the adapter pattern.
+              Alternative to evaluate: Vercel / Next.js if Saroj prefers their
+              deploy story.
+            </li>
+            <li>
+              <code>apps/api</code> — <strong>Fastify</strong>. Lean, fast,
+              ergonomic. Alternative to evaluate: NestJS if SA wants the heavier
+              opinionated framework with built-in DI and module conventions.
+            </li>
+            <li>
+              <code>apps/python-api</code> — <strong>FastAPI</strong>. The
+              default for LLM calls, embeddings, agent orchestration.
+            </li>
+            <li>
+              <strong>Bun</strong> as the package manager — matches Lovable's
+              harness and gives us workspace support out of the box.
+            </li>
+          </ul>
+        </div>
+
+        <!-- §2.3 — Rules Lovable follows -->
+        <div class="subsection">
+          <h3 class="subsection-title major">Rules Lovable follows</h3>
+          <p>
+            The biggest single lever on the handoff from Product to Engineering
+            isn't where Lovable's code lives — it's
+            <strong>what Lovable is told to write</strong>. Every rule Lovable
+            can reliably follow is one less thing engineering has to undo.
+          </p>
+
+          <div class="callout">
+            <p>
+              <strong>Status: proven in initial testing.</strong> Lovable
+              followed the rules we set up in the prototype repo — scoping
+              (which directories it may touch), banned imports (no
+              <code>@supabase/*</code> in the web app), the adapter pattern, the
+              design-system rules, the endpoint naming convention. Open question
+              is sustained adherence under real product-team workload —
+              explicitly something we'd evaluate early in the engagement.
+            </p>
+          </div>
+
+          <p><strong>The mechanism is layered:</strong></p>
+          <ul>
+            <li>
+              <strong><code>RULES.md</code></strong> at the repo root — rules
+              every agent (Lovable, Claude Code, Cursor) follows.
+            </li>
+            <li>
+              <strong><code>.lovable/RULES.md</code></strong> — Lovable-only
+              rules covering scope, naming, the banned-import list, the env-var
+              contract.
+            </li>
+            <li>
+              <strong
+                ><code>.lovable/system.md</code> +
+                <code>.lovable/rules/</code></strong
+              >
+              — the full design-system guidance (Atlas tokens, per-component,
+              per-pattern), generated from <code>packages/ui/lovable/</code> and
+              kept in sync by a CI check.
+            </li>
+            <li>
+              <strong>ESLint enforcement</strong> for the rules that can be
+              enforced mechanically (e.g.
+              <code>no-restricted-imports</code> blocks
+              <code>@supabase/*</code> in the web app).
+            </li>
+          </ul>
+
+          <p>
+            <strong>The kinds of rules that pay off:</strong> use plain
+            <code>fetch</code> instead of the Supabase SDK so engineering
+            doesn't have to swap it later; route all data access through the
+            per-feature client in <code>lib/api/</code>; name endpoints as
+            <code>&lt;feature&gt;-&lt;action&gt;</code> so the same client
+            targets either backend by swapping only the base URL; use
+            <code>@sa/ui</code> primitives instead of re-rolling buttons. Each
+            one shrinks engineering's rebuild surface area.
+          </p>
+
+          <p>
+            The full ruleset and the testing we've done lives in
+            <a href="#appendices">Appendix B — Monorepo &amp; Lovable interop</a
+            >.
+          </p>
+        </div>
+
+        <!-- §2.4 — Shared packages -->
+        <div class="subsection">
+          <h3 class="subsection-title major">Shared packages</h3>
+          <p>
+            Shared packages reduce engineering's rebuild surface area across
+            every project at every tier. A Lovable project that imports
+            <code>@sa/ui</code> for components and
+            <code>@sa/data-warehouse-sdk</code> for warehouse access ships less
+            novel code that engineering has to evaluate — regardless of how
+            aggressively the rest of the system is shaping that project.
+            Packages are the connective tissue that makes SA's standards
+            <em>importable</em>.
+          </p>
+
+          <p>
+            <strong>The hybrid policy:</strong> some things are best served by a
+            shared package; others are cheaper to generate into the app itself.
+            Our recommendation:
+          </p>
+
+          <div class="grid">
+            <div class="pkg">
+              <div class="name">Shared</div>
+              <div class="desc">
+                <code>@sa/auth</code>, service SDKs
+                (<code>@sa/data-warehouse-sdk</code>, etc.),
+                <code>@sa/ui</code>, design tokens, observability. Anything with
+                a security-update obligation or a cross-app consistency
+                requirement.
+              </div>
+            </div>
+            <div class="pkg">
+              <div class="name">Generated</div>
+              <div class="desc">
+                App-specific presentational pieces. The template scaffolds them
+                into the project with SA's tokens already applied — versioning a
+                shared package isn't worth it for a one-off card layout.
+              </div>
+            </div>
+            <div class="pkg">
+              <div class="name">Optionally shared</div>
+              <div class="desc">
+                Higher-level composites. When a third project wants the same
+                composite, that triggers a short extraction conversation.
+                Prevents drift without pre-building libraries no one ends up
+                using.
+              </div>
+            </div>
+          </div>
+
+          <p>
+            <strong>Distribution.</strong> We recommend a private npm registry
+            scoped to the SA org — cleanest consumption story for both Claude
+            Code and Lovable, standard semver, no submodule or path-import
+            gymnastics. Alternatives (GitHub Packages, JSR, git submodules) are
+            evaluated in
+            <a href="#appendices">Appendix C — Infrastructure options</a>.
+          </p>
+
+          <p>
+            <strong>Lovable consumption is proven.</strong> In the prototype,
+            Lovable correctly resolves and uses <code>@sa/ui</code> from a
+            workspace package today. The same mechanism extends to
+            <code>@sa/auth</code> and the service SDKs.
+          </p>
+        </div>
+
+        <!-- §2.5 — Lovable-engineering bridge -->
+        <div class="subsection">
+          <h3 class="subsection-title major">The Lovable–engineering bridge</h3>
+          <p>
+            Business will keep using Lovable. Some of Product will too. The
+            system has to make Lovable's output land closer to where engineering
+            wants it — without depending on anyone changing tools.
+          </p>
+
+          <p>
+            We can definitely improve Lovable's output for engineering. The
+            question is
+            <strong>how far up the ladder we can climb</strong> before the
+            maintenance cost outweighs the value. Most of what we want to do is
+            technically achievable — the prototype demonstrates that. The
+            remaining question, especially at the higher tiers, is per-project
+            economics, not feasibility.
+          </p>
+
+          <div
+            class="tiers"
+            aria-label="Five tiers of Lovable interop, from baseline template to dual-runtime through project life"
+          >
+            <div class="tier">
+              <div class="tier-num">00</div>
+              <div class="tier-body">
+                <h4>Template / starting structure</h4>
+                <p>
+                  Lovable starts from SA's template. Engineering inherits a
+                  familiar skeleton — monorepo shape, naming, file layout, tech
+                  picks — instead of a freeform Lovable project.
+                </p>
+              </div>
+              <div class="tier-status">
+                <span class="label">Proven</span>already working in prototype
+              </div>
+            </div>
+
+            <div class="tier">
+              <div class="tier-num">01</div>
+              <div class="tier-body">
+                <h4>Rules Lovable follows</h4>
+                <p>
+                  On top of the template, Lovable is given an explicit ruleset
+                  (the layered mechanism in §2.3). Each rule Lovable reliably
+                  follows shrinks the engineering rebuild surface area.
+                </p>
+              </div>
+              <div class="tier-status">
+                <span class="label">Proven in initial testing</span>sustained
+                adherence to be evaluated
+              </div>
+            </div>
+
+            <div class="tier">
+              <div class="tier-num">02</div>
+              <div class="tier-body">
+                <h4>Clean handoff</h4>
+                <p>
+                  Lovable hands the project to engineering and stops being a
+                  runtime for it. The handoff is fast and predictable — the
+                  structure and shape are already engineering-ready. We'd
+                  evaluate how much of it can be additionally automated (a
+                  Claude Code skill or subagent that runs the conversion).
+                </p>
+              </div>
+              <div class="tier-status">
+                <span class="label">Architecturally proven</span>automation
+                depth to be scoped
+              </div>
+            </div>
+
+            <div class="tier">
+              <div class="tier-num">03</div>
+              <div class="tier-body">
+                <h4>Dual-runtime through the Product phase</h4>
+                <p>
+                  The project runs in both Lovable (Supabase) and a real deploy
+                  (Fastify / SA infra) until engineering takes over. Product can
+                  keep iterating in Lovable. After engineering picks it up,
+                  Lovable parity is allowed to bit-rot.
+                </p>
+              </div>
+              <div class="tier-status">
+                <span class="label">Architecturally proven</span>per-project
+                maintenance cost to be measured
+              </div>
+            </div>
+
+            <div class="tier">
+              <div class="tier-num">04</div>
+              <div class="tier-body">
+                <h4>Dual-runtime for the project's life</h4>
+                <p>
+                  Both runtimes stay live indefinitely so business and product
+                  can keep prototyping future features in Lovable against a
+                  real, in-production product. Every API change engineering
+                  makes has to be mirrored on the Supabase side — the divergence
+                  cost is real.
+                </p>
+              </div>
+              <div class="tier-status">
+                <span class="label">Architecturally possible</span>per-product
+                judgment call
+              </div>
+            </div>
+          </div>
+
+          <p>
+            <strong>What we'd commit to.</strong> Tiers 0–2 as the baseline
+            outcome of the engagement — every SA project gets all three. Tier 3
+            evaluated per-project, with explicit criteria (how often does
+            Product want to keep prototyping after handoff? how stable are the
+            API contracts?). Tier 4 reserved for specific high-touch products
+            where the value clearly justifies the cost.
+          </p>
+
+          <p>
+            <strong
+              >The technical mechanism that makes Tier 2+ possible.</strong
+            >
+            The prototype's <code>packages/api-sdk/</code> holds
+            runtime-agnostic orchestration. Both Fastify and the Supabase Edge
+            Function pass in their own adapter (a postgres-backed lookup on the
+            Fastify side, a stub or supabase-js-backed lookup on the Supabase
+            side). One piece of business logic, two thin runtime wrappers. This
+            is what prevents the divergence trap: API behavior doesn't drift
+            between runtimes because there is only one implementation of the
+            behavior.
+          </p>
+
+          <p>
+            The full testing report and tier analysis are in
+            <a href="#appendices">Appendix B — Monorepo &amp; Lovable interop</a
+            >.
+          </p>
+        </div>
+
+        <!-- §2.6 — Tools across the system -->
+        <div class="subsection">
+          <h3 class="subsection-title major">Tools across the system</h3>
+          <p>
+            Different teams use different tools. The system has to work that
+            way.
+          </p>
+          <ul>
+            <li>
+              <strong>Business</strong> stays in Lovable. The Lovable bridge
+              (§2.3 + §2.5) is what makes their output usable downstream.
+            </li>
+            <li>
+              <strong>Product</strong> stays in Lovable for now; we expect them
+              to trend toward Claude Code over time, with pairing sessions and
+              training as part of the engagement. The system serves them either
+              way.
+            </li>
+            <li>
+              <strong>AI Engineering</strong> works in Claude Code and their
+              existing IDEs. The AI context layer (§2.8) makes the codebase
+              productive from the first commit.
+            </li>
+            <li>
+              <strong>Cloud Engineering</strong> owns the substrate the
+              template's <code>infra/</code> consumes — VPCs, accounts,
+              baselines, and (longer term) the shared CDK constructs library.
+            </li>
+          </ul>
+          <p>
+            The point isn't to standardize on a single tool. It's that the
+            template, the rules, the packages, and the AI context layer make
+            every project look the same to whoever picks it up — regardless of
+            what tool produced it.
+          </p>
+        </div>
+
+        <!-- §2.7 — Sandbox infra + CI/CD -->
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            Sandbox infra and CI/CD, baked in
+          </h3>
+          <p>
+            One of the biggest handoff costs today is that a fresh project
+            doesn't exist as a running thing until Cloud Engineering provisions
+            it. The template removes that gap entirely.
+          </p>
+
+          <p><strong>What ships in the template:</strong></p>
+          <ul>
+            <li>
+              <strong><code>infra/</code> using CDK.</strong> TypeScript-native,
+              npm-installable shared constructs, no Terraform module-source path
+              gymnastics. Lives alongside app code so a single PR can change
+              both.
+            </li>
+            <li>
+              <strong>Shared sandbox database.</strong> Each project creates its
+              own schema in a hosted Postgres rather than provisioning a fresh
+              RDS instance. Drops the per-project infra tax to near zero.
+            </li>
+            <li>
+              <strong>CI/CD via <code>.github/workflows</code>.</strong> The
+              first push to the repo deploys to a real sandbox URL
+              automatically. No "wait for Cloud Engineering to set up the
+              pipeline" step.
+            </li>
+          </ul>
+
+          <p>
+            <strong>What gets deployed.</strong> A small, consistent set of AWS
+            primitives in every project: shared Aurora (project-scoped schemas),
+            ECS Fargate for the Node and Python APIs, CloudFront + S3 for the
+            SPA, per-project S3 buckets for files, and Lambda + EventBridge for
+            scheduled and async work. Same shape in every project — engineers
+            who've operated one project can operate any other. The full
+            per-primitive rationale, the runtime diagram, and the candid framing
+            of today's bundled-Supabase-on-EC2 pattern (and why we'd move off
+            it) live in
+            <a href="#appendices">Appendix D — Deployment architecture</a>.
+          </p>
+
+          <div class="callout">
+            <p>
+              <strong>Two related-but-distinct decisions.</strong> Appendix C
+              covers
+              <em>where the IaC code lives and which tool writes it</em>
+              (centralized Terraform vs. per-app vs. the hybrid CDK approach we
+              recommend). Appendix D covers
+              <em>what that IaC actually deploys</em> (the runtime topology
+              above). Both need Cloud Engineering's voice; both are framed as
+              the conversation we'd open with Ketan's team early in the
+              engagement.
+            </p>
+            <p>
+              <strong>Scope.</strong> Sandbox is in scope and designed. Pre-prod
+              and prod remain an open evaluation — same shape, different config
+              — covered in Appendix D's "Sandbox vs. Prod" section.
+            </p>
+          </div>
+
+          <p>
+            <strong>Why this matters for both levers.</strong> A real sandbox
+            environment existing the moment a project is created is the single
+            biggest reduction in the cost of starting work. AI Engineering
+            doesn't wait. Cloud Engineering isn't pulled in for routine work.
+            Over time, this is the foundation that makes "Product creates a real
+            project on their own" possible — but we don't have to commit to that
+            endpoint to capture the value today.
+          </p>
+        </div>
+
+        <!-- §2.8 — AI context layer -->
+        <div class="subsection">
+          <h3 class="subsection-title major">AI context layer</h3>
+          <p>
+            Wired throughout the monorepo so any agent — Lovable, Claude Code,
+            Cursor — has the context it needs everywhere it works. This is the
+            connective tissue: the part that makes the codebase productive
+            faster <em>for whoever picks it up</em>, regardless of team or tool.
+          </p>
+          <ul>
+            <li>
+              <strong><code>CLAUDE.md</code> files</strong> at the root and in
+              each app/package. Each one tells the agent how that directory
+              works — conventions, patterns, what's allowed where.
+            </li>
+            <li>
+              <strong>Agents</strong> (<code>.claude/agents/</code>) —
+              ready-to-use workflows for routine tasks: scaffolding a component,
+              adding an endpoint, writing a migration.
+            </li>
+            <li>
+              <strong>Skills</strong> (<code>.claude/skills/</code>) —
+              documented patterns the agent follows when a task matches: adding
+              a page, wiring up a DB table, registering a new module.
+            </li>
+            <li>
+              <strong>Lovable's parallel surface</strong> (<code
+                >.lovable/system.md</code
+              >
+              + <code>.lovable/rules/</code>) — the design-system rules
+              generated from the same source, kept in sync by CI. One source of
+              truth, two consumers.
+            </li>
+          </ul>
+          <p>
+            The result: anyone working in this codebase — SA's team, ours, a
+            future hire, an agent on any of their behalf — is meaningfully more
+            productive than they'd be in an equivalent codebase without this
+            layer.
+          </p>
+        </div>
+
+        <!-- §2.9 — What we'd evaluate -->
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            What we'd evaluate during the engagement
+          </h3>
+          <p>
+            A real consulting engagement gives us time to test rather than
+            guess. The items below are deliberately open — committed to as
+            <em>evaluations</em>, not as decisions we've made and are quietly
+            selling as done.
+          </p>
+
+          <ul>
+            <li>
+              <strong>Stack picks.</strong> Fastify vs. NestJS for the Node API;
+              Vite vs. Next.js for the web app. Initial leans documented in
+              §2.2.
+            </li>
+            <li>
+              <strong>Sustained Lovable rule adherence.</strong> Initial testing
+              is promising. The real question is how well rules hold under
+              sustained product-team workload, multi-week iteration, and the
+              full range of feature shapes SA builds.
+            </li>
+            <li>
+              <strong>Tier 3 economics.</strong> What dual-runtime maintenance
+              actually costs once a real project is in active iteration.
+              Measured, not estimated.
+            </li>
+            <li>
+              <strong>Pre-prod and prod infrastructure.</strong> Sandbox is in
+              scope and designed; pre-prod and prod are explicitly an open
+              conversation with Cloud Engineering. See Appendix C for the
+              framing.
+            </li>
+            <li>
+              <strong>The shared-package roster.</strong> Which packages we
+              build first (after <code>@sa/auth</code>, <code>@sa/ui</code>, and
+              the most-used service SDKs), the versioning discipline, the
+              cross-app composite-extraction policy.
+            </li>
+            <li>
+              <strong>Handoff automation.</strong> How much of the Tier 2 clean
+              handoff can be automated as a Claude Code skill or subagent vs.
+              handled as a documented manual flow.
+            </li>
+          </ul>
+        </div>
+
+        <!-- Appendices -->
+        <div class="subsection" id="appendices">
+          <h3 class="subsection-title major">Appendices</h3>
+          <p>
+            Deeper analysis on some of the larger topics covered in the
+            proposal.
+          </p>
+          <div class="appendix-list">
+            <a href="appendix-a-lovable-analysis.html">
+              <div class="ax-tag">Appendix A</div>
+              <div class="ax-title">
+                Lovable: how it works &amp; where it collides with SA's needs
+              </div>
+            </a>
+            <a href="appendix-b-monorepo-and-interop.html">
+              <div class="ax-tag">Appendix B</div>
+              <div class="ax-title">
+                Monorepo structure &amp; Lovable interop testing
+              </div>
+            </a>
+            <a href="appendix-c-infrastructure-options.html">
+              <div class="ax-tag">Appendix C</div>
+              <div class="ax-title">
+                Infrastructure options &amp; the hybrid CDK case
+              </div>
+            </a>
+            <a href="appendix-d-deployment-architecture.html">
+              <div class="ax-tag">Appendix D</div>
+              <div class="ax-title">Recommended deployment architecture</div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <div class="copyright">
+          &copy; 2026 64 Interactive, LLC &mdash; Hellertown, PA
+        </div>
+        <div class="contact-line">
+          Questions on this draft:
+          <a href="mailto:info@64i.dev">info@64i.dev</a>
+        </div>
+      </footer>
+    </div>
+    <script>
+      (function () {
+        var tabs = document.querySelectorAll(".tabbar button");
+        var panels = document.querySelectorAll("section.phase");
+        function show(id) {
+          panels.forEach(function (p) {
+            p.classList.toggle("active", p.id === id);
+          });
+          tabs.forEach(function (t) {
+            t.classList.toggle("active", t.dataset.target === id);
+          });
+          window.scrollTo({ top: 0 });
+        }
+        tabs.forEach(function (t) {
+          t.addEventListener("click", function () {
+            show(t.dataset.target);
+          });
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        document.querySelectorAll(".flow-jump").forEach(function (el) {
+          el.addEventListener("click", function () {
+            var t = document.getElementById(el.getAttribute("data-step"));
+            if (!t) return;
+            t.scrollIntoView({ behavior: "smooth", block: "start" });
+            t.classList.remove("flash");
+            void t.offsetWidth;
+            t.classList.add("flash");
+          });
+        });
+      })();
+    </script>
+    <script>
+      (function () {
+        var items = document.querySelectorAll(".dstep");
+        if (!items.length) return;
+        var steps = {};
+        document.querySelectorAll(".process-steps .step").forEach(function (s) {
+          if (s.id) steps[s.id] = s;
+        });
+        function select(id) {
+          items.forEach(function (g) {
+            g.classList.toggle("active", g.getAttribute("data-step") === id);
+          });
+          Object.keys(steps).forEach(function (k) {
+            steps[k].classList.toggle("active", k === id);
+          });
+        }
+        items.forEach(function (g) {
+          g.setAttribute("role", "button");
+          g.setAttribute("tabindex", "0");
+          g.addEventListener("click", function () {
+            select(g.getAttribute("data-step"));
+          });
+          g.addEventListener("keydown", function (e) {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              select(g.getAttribute("data-step"));
+            }
+          });
+        });
+        select("step-01");
+      })();
+    </script>
+  </body>
+</html>
