@@ -249,6 +249,86 @@
           opacity: 1;
         }
       }
+
+      /* Diagram modal — reusable */
+      .diagram-modal-link {
+        display: inline-block;
+        margin-top: -8px;
+        margin-bottom: 24px;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.85rem;
+        font-style: italic;
+        font-weight: 700;
+        color: var(--text-muted, #6b6359);
+        text-decoration: none;
+        border-bottom: 1px dotted var(--text-muted, #6b6359);
+        cursor: pointer;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .diagram-modal-link:hover,
+      .diagram-modal-link:focus-visible {
+        color: var(--text, #333333);
+        border-bottom-color: var(--text, #333333);
+      }
+      .diagram-modal-link::before {
+        content: "→ ";
+      }
+
+      dialog.diagram-modal {
+        border: none;
+        border-radius: 12px;
+        padding: 0;
+        max-width: min(960px, calc(100vw - 48px));
+        width: 100%;
+        max-height: calc(100vh - 48px);
+        background: var(--bg, #faf7f2);
+        color: var(--text, #333333);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        inset: 0;
+        margin: auto;
+      }
+      dialog.diagram-modal::backdrop {
+        background: rgba(20, 18, 14, 0.55);
+        backdrop-filter: blur(2px);
+      }
+      dialog.diagram-modal .diagram-modal-inner {
+        padding: 36px;
+        overflow-y: auto;
+        max-height: calc(100vh - 48px);
+      }
+
+      .mb-0 {
+        margin-bottom: 0;
+      }
+
+      dialog.diagram-modal .diagram-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: var(--text-muted, #6b6359);
+        cursor: pointer;
+        border-radius: 6px;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease;
+      }
+      dialog.diagram-modal .diagram-modal-close:hover,
+      dialog.diagram-modal .diagram-modal-close:focus-visible {
+        background: var(--bg-card, #f2eee7);
+        color: var(--text, #333333);
+      }
+      dialog.diagram-modal .subsection-title {
+        margin-top: 0;
+      }
     </style>
   </head>
   <body>
@@ -1150,6 +1230,13 @@
               </text>
             </svg>
           </div>
+          <a
+            class="diagram-modal-link"
+            data-target="dialog-current-state"
+            href="#dialog-current-state"
+            role="button"
+            >See details of the current project structure and flow</a
+          >
         </div>
 
         <!-- §2.0b — The recommendation -->
@@ -1420,1622 +1507,1659 @@
               </text>
             </svg>
           </div>
-
-          <!-- §2.0c — What gets handed off (the artifact) -->
-          <h3 class="subsection-title">Current state</h3>
-          <p>
-            Today, Engineering takes the Lovable build and reworks almost
-            everything underneath the UI.
-          </p>
-
-          <div
-            class="diagram"
-            aria-label="Detailed before: Product hands off a Lovable build; Engineering chooses between a shortcut path and a standards-meeting path"
+          <a
+            class="diagram-modal-link"
+            data-target="dialog-proposed-state"
+            href="#dialog-proposed-state"
+            role="button"
+            >See details of the proposed project structure and flow</a
           >
-            <svg
-              viewBox="0 0 880 690"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-            >
-              <title>
-                Current state: Product hands off a Lovable build; Engineering
-                chooses between a shortcut path and a standards-meeting path
-              </title>
 
-              <text
-                x="20"
-                y="34"
-                font-family="League Gothic, sans-serif"
-                font-size="28"
-                fill="#333333"
-                letter-spacing="1.5"
-                text-transform="uppercase"
-              >
-                Current state
-              </text>
-              <text
-                x="20"
-                y="56"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                fill="#5a5249"
-              >
-                One handoff, two possible paths.
-              </text>
-
-              <!-- =================== LEFT STACK =================== -->
-              <text
-                x="170"
-                y="204"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-                letter-spacing="0.5"
-                text-transform="uppercase"
-              >
-                From product or business using Lovable
-              </text>
-
-              <!-- Supabase Cloud container (top) — DB + Storage -->
-              <rect
-                x="30"
-                y="216"
-                width="280"
-                height="74"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="236"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                Supabase Cloud
-              </text>
-
-              <!-- Postgres glyph (cylinder) inside left half of tile -->
-              <g transform="translate(80,252)">
-                <path
-                  d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="14"
-                  cy="4"
-                  rx="14"
-                  ry="4"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 0 13 Q 14 17 28 13"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1"
-                />
-                <text
-                  x="40"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#333333"
-                  font-weight="600"
-                >
-                  Postgres
-                </text>
-                <text
-                  x="40"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#6b6359"
-                  font-style="italic"
-                >
-                  database
-                </text>
-              </g>
-
-              <!-- Storage glyph (bucket) inside right half of tile -->
-              <g transform="translate(200,252)">
-                <path
-                  d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="16"
-                  cy="6"
-                  rx="14"
-                  ry="3"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 6 4 Q 16 -2 26 4"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1"
-                />
-                <text
-                  x="42"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#333333"
-                  font-weight="600"
-                >
-                  Storage
-                </text>
-                <text
-                  x="42"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#6b6359"
-                  font-style="italic"
-                >
-                  file store
-                </text>
-              </g>
-
-              <!-- Lovable edge functions -->
-              <rect
-                x="30"
-                y="296"
-                width="280"
-                height="44"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="315"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Lovable edge functions
-              </text>
-              <text
-                x="170"
-                y="331"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#6b6359"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                server-side logic
-              </text>
-
-              <!-- Lovable Auth -->
-              <rect
-                x="30"
-                y="344"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="369"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Lovable Auth
-              </text>
-
-              <!-- App code -->
-              <rect
-                x="30"
-                y="388"
-                width="280"
-                height="96"
-                rx="8"
-                fill="#FAF7F2"
-                stroke="#E5DED4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="428"
-                font-family="Outfit, sans-serif"
-                font-size="14"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                App code
-              </text>
-              <text
-                x="170"
-                y="448"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-              >
-                UI · routing · state · data calls
-              </text>
-              <text
-                x="170"
-                y="464"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                wired to Supabase + Lovable Auth
-              </text>
-
-              <!-- =================== FORKING ARROW =================== -->
-              <!-- Main stem leaves left stack center-right -->
-              <line
-                x1="310"
-                y1="350"
-                x2="370"
-                y2="350"
-                stroke="#8a8279"
-                stroke-width="1.5"
-              />
-              <!-- Upper branch to Option 1 -->
-              <path
-                d="M 370 350 Q 400 350 400 220 L 538 220"
-                fill="none"
-                stroke="#8a8279"
-                stroke-width="1.5"
-              />
-              <polygon points="538,215 548,220 538,225" fill="#8a8279" />
-              <!-- Lower branch to Option 2 -->
-              <path
-                d="M 370 350 Q 400 350 400 516 L 538 516"
-                fill="none"
-                stroke="#8a8279"
-                stroke-width="1.5"
-              />
-              <polygon points="538,511 548,516 538,521" fill="#8a8279" />
-
-              <!-- Branch labels -->
-              <text
-                x="455"
-                y="188"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#b85c3c"
-                font-weight="600"
-                text-anchor="middle"
-              >
-                shortcut
-              </text>
-              <text
-                x="455"
-                y="548"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#2f7a4f"
-                font-weight="600"
-                text-anchor="middle"
-              >
-                do it right
-              </text>
-
-              <!-- Handoff label on stem -->
-              <text
-                x="340"
-                y="342"
-                font-family="Outfit, sans-serif"
-                font-size="10"
-                fill="#5a5249"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                handoff
-              </text>
-
-              <!-- =================== OPTION 1 (top right) =================== -->
-              <text
-                x="700"
-                y="92"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                OPTION 1 &mdash; SHORTCUT
-              </text>
-
-              <!-- Supabase self-hosted with App container (top) — Postgres + Storage -->
-              <rect
-                x="560"
-                y="104"
-                width="280"
-                height="74"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="124"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                Supabase self-hosted with App
-              </text>
-
-              <!-- Postgres glyph (cylinder) inside left half -->
-              <g transform="translate(610,140)">
-                <path
-                  d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="14"
-                  cy="4"
-                  rx="14"
-                  ry="4"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 0 13 Q 14 17 28 13"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1"
-                />
-                <text
-                  x="40"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#333333"
-                  font-weight="600"
-                >
-                  Postgres
-                </text>
-                <text
-                  x="40"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#6b6359"
-                  font-style="italic"
-                >
-                  database
-                </text>
-              </g>
-
-              <!-- Storage glyph (bucket) inside right half -->
-              <g transform="translate(730,140)">
-                <path
-                  d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="16"
-                  cy="6"
-                  rx="14"
-                  ry="3"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 6 4 Q 16 -2 26 4"
-                  fill="none"
-                  stroke="#333333"
-                  stroke-width="1"
-                />
-                <text
-                  x="42"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#333333"
-                  font-weight="600"
-                >
-                  Storage
-                </text>
-                <text
-                  x="42"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#6b6359"
-                  font-style="italic"
-                >
-                  file store
-                </text>
-              </g>
-
-              <!-- Okta/Google Auth -->
-              <rect
-                x="560"
-                y="184"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="209"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Okta or Google Auth
-              </text>
-
-              <!-- App code (Option 1) — slight tint, minor changes -->
-              <rect
-                x="560"
-                y="228"
-                width="280"
-                height="96"
-                rx="8"
-                fill="#F5EFE3"
-                stroke="#E5DED4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="268"
-                font-family="Outfit, sans-serif"
-                font-size="14"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                App code
-              </text>
-              <text
-                x="700"
-                y="288"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#6b6359"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                minor changes
-              </text>
-              <text
-                x="700"
-                y="304"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-              >
-                auth re-wired, data calls mostly the same
-              </text>
-
-              <!-- Option 1 tradeoff caption -->
-              <text
-                x="700"
-                y="344"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#b85c3c"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                Doesn't meet engineering standards · not scalable
-              </text>
-              <text
-                x="700"
-                y="360"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                shorter turnaround &mdash; the path Engineering usually has to
-                take
-              </text>
-
-              <!-- =================== OPTION 2 (bottom right) =================== -->
-              <text
-                x="700"
-                y="388"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                OPTION 2 &mdash; STANDARDS
-              </text>
-
-              <!-- SA AWS Infra container (top) — RDS + S3 -->
-              <rect
-                x="560"
-                y="400"
-                width="280"
-                height="74"
-                rx="8"
-                fill="#333333"
-              />
-              <text
-                x="700"
-                y="420"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                SA AWS Infra
-              </text>
-
-              <!-- RDS glyph (cylinder) inside left half -->
-              <g transform="translate(610,436)">
-                <path
-                  d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="14"
-                  cy="4"
-                  rx="14"
-                  ry="4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 0 13 Q 14 17 28 13"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1"
-                />
-                <text
-                  x="40"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#FAF7F2"
-                  font-weight="600"
-                >
-                  RDS
-                </text>
-                <text
-                  x="40"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#c4bdb3"
-                  font-style="italic"
-                >
-                  Postgres
-                </text>
-              </g>
-
-              <!-- S3 glyph (bucket) inside right half -->
-              <g transform="translate(730,436)">
-                <path
-                  d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="16"
-                  cy="6"
-                  rx="14"
-                  ry="3"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 6 4 Q 16 -2 26 4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1"
-                />
-                <text
-                  x="42"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#FAF7F2"
-                  font-weight="600"
-                >
-                  S3
-                </text>
-                <text
-                  x="42"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#c4bdb3"
-                  font-style="italic"
-                >
-                  storage
-                </text>
-              </g>
-
-              <!-- SA API on AWS ECS -->
-              <rect
-                x="560"
-                y="480"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#333333"
-              />
-              <text
-                x="700"
-                y="505"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-              >
-                SA API on AWS ECS
-              </text>
-
-              <!-- Okta/Google Auth -->
-              <rect
-                x="560"
-                y="526"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="551"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Okta or Google Auth
-              </text>
-
-              <!-- App code (Option 2) — heavily changed, cooler fill -->
-              <rect
-                x="560"
-                y="572"
-                width="280"
-                height="50"
-                rx="8"
-                fill="#E6E0D3"
-                stroke="#C8BEAB"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="594"
-                font-family="Outfit, sans-serif"
-                font-size="14"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                App code
-              </text>
-              <text
-                x="700"
-                y="612"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#6b6359"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                rewritten significantly &mdash; UI survives, the rest is new
-              </text>
-
-              <!-- Option 2 tradeoff caption (centered under stack) -->
-              <text
-                x="700"
-                y="648"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#2f7a4f"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                Meets engineering standards · scalable
-              </text>
-              <text
-                x="700"
-                y="664"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                longer turnaround &mdash; rarely possible under deadline
-              </text>
-            </svg>
-          </div>
-
-          <!-- §2.0f — Detailed view: After (stubs → real API on ECS) -->
-          <h3 class="subsection-title">Proposed state</h3>
-          <p>
-            In the proposed model, the app Lovable produces already has a thin
-            seam built into it &mdash; an adapter layer &mdash; that lets
-            Engineering swap the backend without touching the app itself.
-          </p>
-          <div
-            class="diagram"
-            aria-label="Detailed after: Product hands off with SA API stubs; Engineering swaps them for the real SA API on AWS ECS"
+          <!-- §2.0c — Current state (detailed) — opens via modal link above -->
+          <dialog
+            id="dialog-current-state"
+            class="diagram-modal"
+            aria-labelledby="dialog-current-state-title"
           >
-            <svg
-              viewBox="0 0 880 620"
-              xmlns="http://www.w3.org/2000/svg"
-              role="img"
-            >
-              <title>
-                Proposed state: Product hands off with SA API stubs; Engineering
-                swaps them for the real SA API on AWS ECS
-              </title>
-
-              <text
-                x="20"
-                y="34"
-                font-family="League Gothic, sans-serif"
-                font-size="28"
-                fill="#333333"
-                letter-spacing="1.5"
-                text-transform="uppercase"
+            <div class="diagram-modal-inner">
+              <button
+                type="button"
+                class="diagram-modal-close"
+                aria-label="Close"
               >
-                PROPOSED STATE
-              </text>
-              <text
-                x="20"
-                y="56"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                fill="#5a5249"
-              >
-                Same stack on both sides. One box swapped at the seam.
-              </text>
+                &times;
+              </button>
 
-              <!-- ==================================================== -->
-              <!-- LEFT STACK: FROM PRODUCT                              -->
-              <!-- ==================================================== -->
-              <text
-                x="170"
-                y="92"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-                letter-spacing="0.5"
+              <div
+                class="diagram mb-0"
+                aria-label="Detailed before: Product hands off a Lovable build; Engineering chooses between a shortcut path and a standards-meeting path"
               >
-                FROM PRODUCT
-              </text>
-
-              <!-- SA AWS Infra (top, dark, with RDS + S3 glyphs) -->
-              <rect
-                x="30"
-                y="104"
-                width="280"
-                height="74"
-                rx="8"
-                fill="#333333"
-              />
-              <text
-                x="170"
-                y="124"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                SA AWS Infra
-              </text>
-
-              <!-- RDS glyph (cylinder) inside left half of tile -->
-              <g transform="translate(80,140)">
-                <!-- Cylinder body -->
-                <path
-                  d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <!-- Top ellipse -->
-                <ellipse
-                  cx="14"
-                  cy="4"
-                  rx="14"
-                  ry="4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <!-- Mid ellipse (suggests stacked disks) -->
-                <path
-                  d="M 0 13 Q 14 17 28 13"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1"
-                />
-                <text
-                  x="40"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#FAF7F2"
-                  font-weight="600"
+                <svg
+                  viewBox="0 0 880 690"
+                  xmlns="http://www.w3.org/2000/svg"
+                  role="img"
                 >
-                  RDS
-                </text>
-                <text
-                  x="40"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#c4bdb3"
-                  font-style="italic"
-                >
-                  Postgres
-                </text>
-              </g>
+                  <title>
+                    Current state: Product hands off a Lovable build;
+                    Engineering chooses between a shortcut path and a
+                    standards-meeting path
+                  </title>
 
-              <!-- S3 glyph (bucket) inside right half of tile -->
-              <g transform="translate(200,140)">
-                <!-- Bucket sides -->
-                <path
-                  d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <!-- Bucket rim -->
-                <ellipse
-                  cx="16"
-                  cy="6"
-                  rx="14"
-                  ry="3"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <!-- Handle hint -->
-                <path
-                  d="M 6 4 Q 16 -2 26 4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1"
-                />
-                <text
-                  x="42"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#FAF7F2"
-                  font-weight="600"
-                >
-                  S3
-                </text>
-                <text
-                  x="42"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#c4bdb3"
-                  font-style="italic"
-                >
-                  storage
-                </text>
-              </g>
+                  <text
+                    x="20"
+                    y="34"
+                    font-family="League Gothic, sans-serif"
+                    font-size="28"
+                    fill="#333333"
+                    letter-spacing="1.5"
+                    text-transform="uppercase"
+                  >
+                    Current state
+                  </text>
+                  <text
+                    x="20"
+                    y="56"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    fill="#5a5249"
+                  >
+                    One handoff, two possible paths.
+                  </text>
 
-              <!-- Split tier: Lovable edge functions | SA API Stubs -->
-              <rect
-                x="30"
-                y="184"
-                width="135"
-                height="50"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="97.5"
-                y="208"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Lovable edge
-              </text>
-              <text
-                x="97.5"
-                y="222"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                functions
-              </text>
+                  <!-- =================== LEFT STACK =================== -->
+                  <text
+                    x="170"
+                    y="204"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                    text-transform="uppercase"
+                  >
+                    From product or business using Lovable
+                  </text>
 
-              <rect
-                x="175"
-                y="184"
-                width="135"
-                height="50"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-                stroke-dasharray="4,3"
-              />
-              <text
-                x="242.5"
-                y="208"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                SA API Stubs
-              </text>
-              <text
-                x="242.5"
-                y="222"
-                font-family="Outfit, sans-serif"
-                font-size="9.5"
-                fill="#6b6359"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                placeholder responses
-              </text>
+                  <!-- Supabase Cloud container (top) — DB + Storage -->
+                  <rect
+                    x="30"
+                    y="216"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="236"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    Supabase Cloud
+                  </text>
 
-              <!-- Shared backend package -->
-              <rect
-                x="30"
-                y="240"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="258"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Shared backend package
-              </text>
-              <text
-                x="170"
-                y="273"
-                font-family="Outfit, sans-serif"
-                font-size="10"
-                fill="#6b6359"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                business logic, data access, validation
-              </text>
+                  <!-- Postgres glyph (cylinder) inside left half of tile -->
+                  <g transform="translate(80,252)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Postgres
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      database
+                    </text>
+                  </g>
 
-              <!-- Adapter -->
-              <rect
-                x="30"
-                y="286"
-                width="280"
-                height="28"
-                rx="6"
-                fill="#F2E6D0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="304"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Adapter layer
-              </text>
+                  <!-- Storage glyph (bucket) inside right half of tile -->
+                  <g transform="translate(200,252)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Storage
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      file store
+                    </text>
+                  </g>
 
-              <!-- Okta or Google Auth -->
-              <rect
-                x="30"
-                y="318"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="343"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Okta or Google Auth
-              </text>
+                  <!-- Lovable edge functions -->
+                  <rect
+                    x="30"
+                    y="296"
+                    width="280"
+                    height="44"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="315"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable edge functions
+                  </text>
+                  <text
+                    x="170"
+                    y="331"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    server-side logic
+                  </text>
 
-              <!-- App code -->
-              <rect
-                x="30"
-                y="362"
-                width="280"
-                height="96"
-                rx="8"
-                fill="#FAF7F2"
-                stroke="#E5DED4"
-                stroke-width="1"
-              />
-              <text
-                x="170"
-                y="402"
-                font-family="Outfit, sans-serif"
-                font-size="14"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                App code
-              </text>
-              <text
-                x="170"
-                y="422"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-              >
-                UI · routing · state · data calls
-              </text>
-              <text
-                x="170"
-                y="438"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                built from approved template
-              </text>
+                  <!-- Lovable Auth -->
+                  <rect
+                    x="30"
+                    y="344"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="369"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable Auth
+                  </text>
 
-              <!-- Left-side caption -->
-              <text
-                x="170"
-                y="482"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#5a5249"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                What Product hands over
-              </text>
-              <text
-                x="170"
-                y="498"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                stubs let Lovable iterate without waiting on the real API
-              </text>
+                  <!-- App code -->
+                  <rect
+                    x="30"
+                    y="388"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#FAF7F2"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="428"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="170"
+                    y="448"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    UI · routing · state · data calls
+                  </text>
+                  <text
+                    x="170"
+                    y="464"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    wired to Supabase + Lovable Auth
+                  </text>
 
-              <!-- ==================================================== -->
-              <!-- ARROW between stacks                                  -->
-              <!-- ==================================================== -->
-              <line
-                x1="320"
-                y1="281"
-                x2="538"
-                y2="281"
-                stroke="#8a8279"
-                stroke-width="1.5"
-              />
-              <polygon points="538,276 548,281 538,286" fill="#8a8279" />
-              <text
-                x="430"
-                y="267"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#5a5249"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                handoff
-              </text>
-              <text
-                x="430"
-                y="301"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#2f7a4f"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                swap stubs for
-              </text>
-              <text
-                x="430"
-                y="315"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#2f7a4f"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                real API
-              </text>
-              <text
-                x="430"
-                y="335"
-                font-family="Outfit, sans-serif"
-                font-size="10"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                nothing else changes
-              </text>
+                  <!-- =================== FORKING ARROW =================== -->
+                  <!-- Main stem leaves left stack center-right -->
+                  <line
+                    x1="310"
+                    y1="350"
+                    x2="370"
+                    y2="350"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <!-- Upper branch to Option 1 -->
+                  <path
+                    d="M 370 350 Q 400 350 400 220 L 538 220"
+                    fill="none"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="538,215 548,220 538,225" fill="#8a8279" />
+                  <!-- Lower branch to Option 2 -->
+                  <path
+                    d="M 370 350 Q 400 350 400 516 L 538 516"
+                    fill="none"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="538,511 548,516 538,521" fill="#8a8279" />
 
-              <!-- ==================================================== -->
-              <!-- RIGHT STACK: WHAT ENGINEERING SHIPS                    -->
-              <!-- ==================================================== -->
-              <text
-                x="700"
-                y="92"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                WHAT ENGINEERING SHIPS
-              </text>
+                  <!-- Branch labels -->
+                  <text
+                    x="455"
+                    y="188"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#b85c3c"
+                    font-weight="600"
+                    text-anchor="middle"
+                  >
+                    shortcut
+                  </text>
+                  <text
+                    x="455"
+                    y="548"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    font-weight="600"
+                    text-anchor="middle"
+                  >
+                    do it right
+                  </text>
 
-              <!-- SA AWS Infra (top, dark, with RDS + S3 glyphs) -->
-              <rect
-                x="560"
-                y="104"
-                width="280"
-                height="74"
-                rx="8"
-                fill="#333333"
-              />
-              <text
-                x="700"
-                y="124"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-                letter-spacing="0.5"
-              >
-                SA AWS Infra
-              </text>
+                  <!-- Handoff label on stem -->
+                  <text
+                    x="340"
+                    y="342"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    handoff
+                  </text>
 
-              <!-- RDS glyph -->
-              <g transform="translate(610,140)">
-                <path
-                  d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="14"
-                  cy="4"
-                  rx="14"
-                  ry="4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 0 13 Q 14 17 28 13"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1"
-                />
-                <text
-                  x="40"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#FAF7F2"
-                  font-weight="600"
-                >
-                  RDS
-                </text>
-                <text
-                  x="40"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#c4bdb3"
-                  font-style="italic"
-                >
-                  Postgres
-                </text>
-              </g>
+                  <!-- =================== OPTION 1 (top right) =================== -->
+                  <text
+                    x="700"
+                    y="92"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    OPTION 1 &mdash; SHORTCUT
+                  </text>
 
-              <!-- S3 glyph -->
-              <g transform="translate(730,140)">
-                <path
-                  d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <ellipse
-                  cx="16"
-                  cy="6"
-                  rx="14"
-                  ry="3"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1.5"
-                />
-                <path
-                  d="M 6 4 Q 16 -2 26 4"
-                  fill="none"
-                  stroke="#FAF7F2"
-                  stroke-width="1"
-                />
-                <text
-                  x="42"
-                  y="20"
-                  font-family="Outfit, sans-serif"
-                  font-size="11"
-                  fill="#FAF7F2"
-                  font-weight="600"
-                >
-                  S3
-                </text>
-                <text
-                  x="42"
-                  y="32"
-                  font-family="Outfit, sans-serif"
-                  font-size="9.5"
-                  fill="#c4bdb3"
-                  font-style="italic"
-                >
-                  storage
-                </text>
-              </g>
+                  <!-- Supabase self-hosted with App container (top) — Postgres + Storage -->
+                  <rect
+                    x="560"
+                    y="104"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="124"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    Supabase self-hosted with App
+                  </text>
 
-              <!-- Split tier: Lovable edge functions | SA API on AWS ECS (dark) -->
-              <rect
-                x="560"
-                y="184"
-                width="135"
-                height="50"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="627.5"
-                y="208"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Lovable edge
-              </text>
-              <text
-                x="627.5"
-                y="222"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                functions
-              </text>
+                  <!-- Postgres glyph (cylinder) inside left half -->
+                  <g transform="translate(610,140)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Postgres
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      database
+                    </text>
+                  </g>
 
-              <rect
-                x="705"
-                y="184"
-                width="135"
-                height="50"
-                rx="8"
-                fill="#333333"
-              />
-              <text
-                x="772.5"
-                y="206"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-              >
-                SA API on
-              </text>
-              <text
-                x="772.5"
-                y="220"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-              >
-                AWS ECS
-              </text>
+                  <!-- Storage glyph (bucket) inside right half -->
+                  <g transform="translate(730,140)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Storage
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      file store
+                    </text>
+                  </g>
 
-              <!-- Shared backend package -->
-              <rect
-                x="560"
-                y="240"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="258"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Shared backend package
-              </text>
-              <text
-                x="700"
-                y="273"
-                font-family="Outfit, sans-serif"
-                font-size="10"
-                fill="#6b6359"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                business logic, data access, validation
-              </text>
+                  <!-- Okta/Google Auth -->
+                  <rect
+                    x="560"
+                    y="184"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="209"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
 
-              <!-- Adapter -->
-              <rect
-                x="560"
-                y="286"
-                width="280"
-                height="28"
-                rx="6"
-                fill="#F2E6D0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="304"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Adapter layer
-              </text>
+                  <!-- App code (Option 1) — slight tint, minor changes -->
+                  <rect
+                    x="560"
+                    y="228"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#F5EFE3"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="268"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="700"
+                    y="288"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    minor changes
+                  </text>
+                  <text
+                    x="700"
+                    y="304"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    auth re-wired, data calls mostly the same
+                  </text>
 
-              <!-- Okta or Google Auth -->
-              <rect
-                x="560"
-                y="318"
-                width="280"
-                height="40"
-                rx="8"
-                fill="#E8DFD0"
-                stroke="#D4C8B4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="343"
-                font-family="Outfit, sans-serif"
-                font-size="13"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                Okta or Google Auth
-              </text>
+                  <!-- Option 1 tradeoff caption -->
+                  <text
+                    x="700"
+                    y="344"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#b85c3c"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    Doesn't meet engineering standards · not scalable
+                  </text>
+                  <text
+                    x="700"
+                    y="360"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    shorter turnaround &mdash; the path Engineering usually has
+                    to take
+                  </text>
 
-              <!-- App code (same fill as left) -->
-              <rect
-                x="560"
-                y="362"
-                width="280"
-                height="96"
-                rx="8"
-                fill="#FAF7F2"
-                stroke="#E5DED4"
-                stroke-width="1"
-              />
-              <text
-                x="700"
-                y="402"
-                font-family="Outfit, sans-serif"
-                font-size="14"
-                font-weight="600"
-                fill="#333333"
-                text-anchor="middle"
-              >
-                App code
-              </text>
-              <text
-                x="700"
-                y="422"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
-                text-anchor="middle"
-              >
-                UI · routing · state · data calls
-              </text>
-              <text
-                x="700"
-                y="438"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#2f7a4f"
-                text-anchor="middle"
-                font-style="italic"
-                font-weight="600"
-              >
-                identical to what Product handed over
-              </text>
+                  <!-- =================== OPTION 2 (bottom right) =================== -->
+                  <text
+                    x="700"
+                    y="388"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    OPTION 2 &mdash; STANDARDS
+                  </text>
 
-              <!-- Right-side caption -->
-              <text
-                x="700"
-                y="482"
-                font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#2f7a4f"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                Production-ready
-              </text>
-              <text
-                x="700"
-                y="498"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                only the API box changes &mdash; everything else carries over
-              </text>
+                  <!-- SA AWS Infra container (top) — RDS + S3 -->
+                  <rect
+                    x="560"
+                    y="400"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="700"
+                    y="420"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    SA AWS Infra
+                  </text>
 
-              <!-- ==================================================== -->
-              <!-- Bottom unifying caption                                -->
-              <!-- ==================================================== -->
-              <text
-                x="440"
-                y="556"
-                font-family="Outfit, sans-serif"
-                font-size="12"
-                fill="#5a5249"
-                text-anchor="middle"
-                font-weight="600"
-              >
-                One handoff, one swap, no rewrite.
-              </text>
-              <text
-                x="440"
-                y="574"
-                font-family="Outfit, sans-serif"
-                font-size="10.5"
-                fill="#8a8279"
-                text-anchor="middle"
-                font-style="italic"
-              >
-                Product can keep iterating against stubs while Engineering
-                builds the real API behind the same adapter.
-              </text>
-            </svg>
-          </div>
-          <p
-            style="
-              font-size: 13px;
-              color: #6b6359;
-              font-style: italic;
-              margin-top: -8px;
-            "
+                  <!-- RDS glyph (cylinder) inside left half -->
+                  <g transform="translate(610,436)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      RDS
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      Postgres
+                    </text>
+                  </g>
+
+                  <!-- S3 glyph (bucket) inside right half -->
+                  <g transform="translate(730,436)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      S3
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      storage
+                    </text>
+                  </g>
+
+                  <!-- SA API on AWS ECS -->
+                  <rect
+                    x="560"
+                    y="480"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="700"
+                    y="505"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                  >
+                    SA API on AWS ECS
+                  </text>
+
+                  <!-- Okta/Google Auth -->
+                  <rect
+                    x="560"
+                    y="526"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="551"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code (Option 2) — heavily changed, cooler fill -->
+                  <rect
+                    x="560"
+                    y="572"
+                    width="280"
+                    height="50"
+                    rx="8"
+                    fill="#E6E0D3"
+                    stroke="#C8BEAB"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="594"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="700"
+                    y="612"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    rewritten significantly &mdash; UI survives, the rest is new
+                  </text>
+
+                  <!-- Option 2 tradeoff caption (centered under stack) -->
+                  <text
+                    x="700"
+                    y="648"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    Meets engineering standards · scalable
+                  </text>
+                  <text
+                    x="700"
+                    y="664"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    longer turnaround &mdash; rarely possible under deadline
+                  </text>
+                </svg>
+              </div>
+            </div>
+          </dialog>
+
+          <!-- §2.0f — Proposed state (detailed) — opens via modal link above -->
+          <dialog
+            id="dialog-proposed-state"
+            class="diagram-modal"
+            aria-labelledby="dialog-proposed-state-title"
           >
-            A small simplification: the shared backend package isn't a separate
-            runtime layer &mdash; it's a code package that gets bundled into the
-            Lovable edge functions <em>and</em> the SA API on AWS ECS. Drawing
-            it as its own tier is the cleanest way to show that the business
-            logic, data access, and validation live in one place and don't get
-            duplicated when the API moves to AWS.
-          </p>
+            <div class="diagram-modal-inner">
+              <button
+                type="button"
+                class="diagram-modal-close"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h3 class="subsection-title" id="dialog-proposed-state-title">
+                Proposed state
+              </h3>
+              <p>
+                In the proposed model, the app Lovable produces already has a
+                thin seam built into it &mdash; an adapter layer &mdash; that
+                lets Engineering swap the backend without touching the app
+                itself.
+              </p>
+              <div
+                class="diagram"
+                aria-label="Detailed after: Product hands off with SA API stubs; Engineering swaps them for the real SA API on AWS ECS"
+              >
+                <svg
+                  viewBox="0 0 880 620"
+                  xmlns="http://www.w3.org/2000/svg"
+                  role="img"
+                >
+                  <title>
+                    Proposed state: Product hands off with SA API stubs;
+                    Engineering swaps them for the real SA API on AWS ECS
+                  </title>
+
+                  <text
+                    x="20"
+                    y="34"
+                    font-family="League Gothic, sans-serif"
+                    font-size="28"
+                    fill="#333333"
+                    letter-spacing="1.5"
+                    text-transform="uppercase"
+                  >
+                    PROPOSED STATE
+                  </text>
+                  <text
+                    x="20"
+                    y="56"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    fill="#5a5249"
+                  >
+                    Same stack on both sides. One box swapped at the seam.
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- LEFT STACK: FROM PRODUCT                              -->
+                  <!-- ==================================================== -->
+                  <text
+                    x="170"
+                    y="92"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    FROM PRODUCT
+                  </text>
+
+                  <!-- SA AWS Infra (top, dark, with RDS + S3 glyphs) -->
+                  <rect
+                    x="30"
+                    y="104"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="170"
+                    y="124"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    SA AWS Infra
+                  </text>
+
+                  <!-- RDS glyph (cylinder) inside left half of tile -->
+                  <g transform="translate(80,140)">
+                    <!-- Cylinder body -->
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Top ellipse -->
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Mid ellipse (suggests stacked disks) -->
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      RDS
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      Postgres
+                    </text>
+                  </g>
+
+                  <!-- S3 glyph (bucket) inside right half of tile -->
+                  <g transform="translate(200,140)">
+                    <!-- Bucket sides -->
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Bucket rim -->
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Handle hint -->
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      S3
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      storage
+                    </text>
+                  </g>
+
+                  <!-- Split tier: Lovable edge functions | SA API Stubs -->
+                  <rect
+                    x="30"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="97.5"
+                    y="208"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable edge
+                  </text>
+                  <text
+                    x="97.5"
+                    y="222"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    functions
+                  </text>
+
+                  <rect
+                    x="175"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                    stroke-dasharray="4,3"
+                  />
+                  <text
+                    x="242.5"
+                    y="208"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    SA API Stubs
+                  </text>
+                  <text
+                    x="242.5"
+                    y="222"
+                    font-family="Outfit, sans-serif"
+                    font-size="9.5"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    placeholder responses
+                  </text>
+
+                  <!-- Shared backend package -->
+                  <rect
+                    x="30"
+                    y="240"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="258"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Shared backend package
+                  </text>
+                  <text
+                    x="170"
+                    y="273"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    business logic, data access, validation
+                  </text>
+
+                  <!-- Adapter -->
+                  <rect
+                    x="30"
+                    y="286"
+                    width="280"
+                    height="28"
+                    rx="6"
+                    fill="#F2E6D0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="304"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Adapter layer
+                  </text>
+
+                  <!-- Okta or Google Auth -->
+                  <rect
+                    x="30"
+                    y="318"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="343"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code -->
+                  <rect
+                    x="30"
+                    y="362"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#FAF7F2"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="402"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="170"
+                    y="422"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    UI · routing · state · data calls
+                  </text>
+                  <text
+                    x="170"
+                    y="438"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    built from approved template
+                  </text>
+
+                  <!-- Left-side caption -->
+                  <text
+                    x="170"
+                    y="482"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    What Product hands over
+                  </text>
+                  <text
+                    x="170"
+                    y="498"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    stubs let Lovable iterate without waiting on the real API
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- ARROW between stacks                                  -->
+                  <!-- ==================================================== -->
+                  <line
+                    x1="320"
+                    y1="281"
+                    x2="538"
+                    y2="281"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="538,276 548,281 538,286" fill="#8a8279" />
+                  <text
+                    x="430"
+                    y="267"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    handoff
+                  </text>
+                  <text
+                    x="430"
+                    y="301"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    swap stubs for
+                  </text>
+                  <text
+                    x="430"
+                    y="315"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    real API
+                  </text>
+                  <text
+                    x="430"
+                    y="335"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    nothing else changes
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- RIGHT STACK: WHAT ENGINEERING SHIPS                    -->
+                  <!-- ==================================================== -->
+                  <text
+                    x="700"
+                    y="92"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    WHAT ENGINEERING SHIPS
+                  </text>
+
+                  <!-- SA AWS Infra (top, dark, with RDS + S3 glyphs) -->
+                  <rect
+                    x="560"
+                    y="104"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="700"
+                    y="124"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    SA AWS Infra
+                  </text>
+
+                  <!-- RDS glyph -->
+                  <g transform="translate(610,140)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      RDS
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      Postgres
+                    </text>
+                  </g>
+
+                  <!-- S3 glyph -->
+                  <g transform="translate(730,140)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      S3
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      storage
+                    </text>
+                  </g>
+
+                  <!-- Split tier: Lovable edge functions | SA API on AWS ECS (dark) -->
+                  <rect
+                    x="560"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="627.5"
+                    y="208"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable edge
+                  </text>
+                  <text
+                    x="627.5"
+                    y="222"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    functions
+                  </text>
+
+                  <rect
+                    x="705"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="772.5"
+                    y="206"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                  >
+                    SA API on
+                  </text>
+                  <text
+                    x="772.5"
+                    y="220"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                  >
+                    AWS ECS
+                  </text>
+
+                  <!-- Shared backend package -->
+                  <rect
+                    x="560"
+                    y="240"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="258"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Shared backend package
+                  </text>
+                  <text
+                    x="700"
+                    y="273"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    business logic, data access, validation
+                  </text>
+
+                  <!-- Adapter -->
+                  <rect
+                    x="560"
+                    y="286"
+                    width="280"
+                    height="28"
+                    rx="6"
+                    fill="#F2E6D0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="304"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Adapter layer
+                  </text>
+
+                  <!-- Okta or Google Auth -->
+                  <rect
+                    x="560"
+                    y="318"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="343"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code (same fill as left) -->
+                  <rect
+                    x="560"
+                    y="362"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#FAF7F2"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="402"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="700"
+                    y="422"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    UI · routing · state · data calls
+                  </text>
+                  <text
+                    x="700"
+                    y="438"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-style="italic"
+                    font-weight="600"
+                  >
+                    identical to what Product handed over
+                  </text>
+
+                  <!-- Right-side caption -->
+                  <text
+                    x="700"
+                    y="482"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    Production-ready
+                  </text>
+                  <text
+                    x="700"
+                    y="498"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    only the API box changes &mdash; everything else carries
+                    over
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- Bottom unifying caption                                -->
+                  <!-- ==================================================== -->
+                  <text
+                    x="440"
+                    y="556"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    One handoff, one swap, no rewrite.
+                  </text>
+                  <text
+                    x="440"
+                    y="574"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    Product can keep iterating against stubs while Engineering
+                    builds the real API behind the same adapter.
+                  </text>
+                </svg>
+              </div>
+              <p
+                style="
+                  font-size: 13px;
+                  color: #6b6359;
+                  font-style: italic;
+                  margin-top: -8px;
+                "
+              >
+                * A small simplification: the shared backend package isn't a
+                separate runtime layer &mdash; it's a code package that gets
+                bundled into the Lovable edge functions <em>and</em> the SA API
+                on AWS ECS. Drawing it as its own tier is the cleanest way to
+                show that the business logic, data access, and validation live
+                in one place and don't get duplicated when the API moves to AWS.
+              </p>
+            </div>
+          </dialog>
 
           <p>The engineering-approved template itself is two pieces.</p>
           <h3 class="subsection-title">The monorepo</h3>
@@ -4359,6 +4483,42 @@
           });
         });
         select("step-01");
+      })();
+    </script>
+    <script>
+      // Diagram modals — open any <dialog class="diagram-modal"> from a
+      // matching <a class="diagram-modal-link" data-target="...">.
+      (function () {
+        document
+          .querySelectorAll("a.diagram-modal-link")
+          .forEach(function (link) {
+            link.addEventListener("click", function (e) {
+              e.preventDefault();
+              var id = link.getAttribute("data-target");
+              var dialog = document.getElementById(id);
+              if (dialog && typeof dialog.showModal === "function") {
+                dialog.showModal();
+              }
+            });
+          });
+        document
+          .querySelectorAll("dialog.diagram-modal")
+          .forEach(function (dialog) {
+            // Close on X button
+            var closeBtn = dialog.querySelector(".diagram-modal-close");
+            if (closeBtn) {
+              closeBtn.addEventListener("click", function () {
+                dialog.close();
+              });
+            }
+            // Close on backdrop click (clicking the dialog element itself, not
+            // its inner content)
+            dialog.addEventListener("click", function (e) {
+              if (e.target === dialog) {
+                dialog.close();
+              }
+            });
+          });
       })();
     </script>
   </body>
