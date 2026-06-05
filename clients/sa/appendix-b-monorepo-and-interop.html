@@ -60,7 +60,7 @@
 │   └── rules/                           <span class="c">#   per-component &amp; per-pattern rules</span>
 │
 ├── apps/
-│   ├── web/                             <span class="c"># React + Vite (Lovable target)</span>
+│   ├── web/                             <span class="c"># Lovable target — React+Vite today; TanStack Start under eval</span>
 │   │   ├── src/lib/api/                 <span class="c">#   adapter pattern lives here</span>
 │   │   └── eslint.config.js             <span class="c">#   bans @supabase/* imports</span>
 │   ├── api/                             <span class="c"># Fastify — CRUD &amp; general backend</span>
@@ -85,7 +85,7 @@
                 <p>A few things worth pointing out:</p>
                 <ul>
                     <li><strong>Two rule surfaces, one source of truth.</strong> <code>RULES.md</code> is shared. <code>.lovable/RULES.md</code> is Lovable-only. <code>.lovable/system.md</code> and <code>.lovable/rules/</code> are <em>generated</em> from <code>packages/ui/lovable/</code> via <code>bun run sync:ui-rules</code>, with <code>check:ui-rules-sync</code> enforcing zero drift in CI. Same pattern for <code>supabase/functions/_shared/sa-api-sdk/</code>, which mirrors <code>packages/api-sdk/src/</code>.</li>
-                    <li><strong>Same endpoint name, two runtimes.</strong> A feature like <code>demo-personal</code> exists in Fastify (<code>apps/api/src/modules/demo/</code>) and in Supabase Functions (<code>supabase/functions/demo-personal/</code>). Both call into <code>@sa/api-sdk</code>. The web client targets either backend by swapping only the base URL.</li>
+                    <li><strong>Same endpoint name, two runtimes.</strong> A feature like <code>demo-personal</code> exists in the prototype's Fastify backend (<code>apps/api/src/modules/demo/</code>) and in Supabase Functions (<code>supabase/functions/demo-personal/</code>). Both call into <code>@sa/api-sdk</code>. The web client targets either backend by swapping only the base URL. (The production runtime — Fastify, NestJS, or TanStack server functions — is the Phase 1 evaluation outcome; the pattern holds regardless of which is chosen.)</li>
                     <li><strong>Bun is the only package manager.</strong> Matches Lovable's harness and gives us workspaces out of the box. The <code>bunfig.toml</code> at the root forces the <code>hoisted</code> linker so Vite + Rollup can resolve transitive dependencies inside the workspace.</li>
                 </ul>
             </div>
@@ -96,12 +96,12 @@
 
                 <div class="grid">
                     <div class="pkg">
-                        <div class="name">apps/web — Vite + React</div>
-                        <div class="desc">Lovable's native target. Fast HMR, lean. Alternative: Vercel / Next.js if Saroj prefers the deploy story.</div>
+                        <div class="name">apps/web — React + Vite (baseline) / TanStack Start</div>
+                        <div class="desc">React + Vite is the prototype baseline — fast HMR, lean. The live alternative is <strong>TanStack Start</strong> SSR, now Lovable's default on current plans; it packages a server layer with the UI, so this pick drives the backend choice below.</div>
                     </div>
                     <div class="pkg">
                         <div class="name">apps/api — Fastify</div>
-                        <div class="desc">Lean, fast, ergonomic. Alternative: NestJS if SA wants the heavier opinionated framework with built-in DI.</div>
+                        <div class="desc">Lean, fast, ergonomic. Alternatives: NestJS if SA wants the heavier opinionated framework with built-in DI; or, if TanStack Start is chosen for the web app, TanStack server functions co-located with the UI rather than a standalone <code>apps/api</code>.</div>
                     </div>
                     <div class="pkg">
                         <div class="name">apps/python-api — FastAPI</div>

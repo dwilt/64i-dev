@@ -32,7 +32,7 @@
                 <span>Supporting analysis</span>
             </div>
             <h1>Recommended<br>deployment architecture</h1>
-            <p class="hero-lede">What the running thing looks like in AWS. Appendix C covered where the IaC code lives and which tool writes it; this appendix is about what that IaC actually deploys.</p>
+            <p class="hero-lede">What the running thing looks like in AWS. Appendix C covered where the IaC code lives and which tool writes it; this appendix is about what that IaC actually deploys. The exact topology depends on the Phase 1 web-stack decision (a static SPA with a separate API, vs. a unified TanStack Start server) — see the variant note below.</p>
         </section>
 
         <section class="appendix-section">
@@ -72,7 +72,11 @@
             <div class="subsection">
                 <h3 class="subsection-title major">The runtime topology</h3>
 
-                <div class="diagram" aria-label="Recommended runtime topology: CloudFront and S3 for the SPA, ALB into two ECS services, shared Aurora, per-project S3, Lambdas for scheduled work">
+                <div class="callout">
+                    <p><strong>Two variants, decided in Phase 1.</strong> The topology below is the shape <em>if</em> the web app is a static SPA with a separate backend API — the pattern Lovable's older React + Vite output produces, and the one the prototype is on today. If Phase 1 selects <strong>TanStack Start</strong> (now Lovable's default on current plans), the UI and a server layer ship as <strong>one unit</strong>: there's no separate static-SPA target on S3, and the "Node service" below becomes the web app itself (UI + server functions in one ECS service) rather than a standalone API. The primitives don't change — Aurora, ECS, ALB, S3, CloudFront, Lambda — but the number and shape of the deploy targets do. We'd lock this with Cloud Engineering once the Phase 1 web-stack decision lands.</p>
+                </div>
+
+                <div class="diagram" aria-label="Recommended runtime topology (SPA variant): CloudFront and S3 for the SPA, ALB into two ECS services, shared Aurora, per-project S3, Lambdas for scheduled work">
                     <svg viewBox="0 0 880 540" xmlns="http://www.w3.org/2000/svg" role="img">
                         <title>Recommended deployment architecture</title>
 
@@ -95,7 +99,7 @@
                         <!-- S3 SPA bucket -->
                         <rect x="280" y="184" width="200" height="56" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
                         <text x="380" y="208" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">S3 — static SPA</text>
-                        <text x="380" y="225" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">Vite build output</text>
+                        <text x="380" y="225" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">static web build · if SPA</text>
 
                         <!-- ALB -->
                         <rect x="500" y="184" width="200" height="56" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
@@ -110,8 +114,8 @@
 
                         <!-- ECS — Node API -->
                         <rect x="460" y="278" width="200" height="64" rx="10" fill="#FAF7F2" stroke="#E5DED4" stroke-width="1"/>
-                        <text x="560" y="302" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">ECS — Node API</text>
-                        <text x="560" y="319" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">Fastify · Fargate</text>
+                        <text x="560" y="302" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#333333" text-anchor="middle">ECS — Node service</text>
+                        <text x="560" y="319" font-family="Outfit, sans-serif" font-size="11" fill="#8a8279" text-anchor="middle">framework TBD · Fargate</text>
                         <text x="560" y="333" font-family="Outfit, sans-serif" font-size="10" fill="#8a8279" text-anchor="middle">autoscaled</text>
 
                         <!-- ECS — Python API -->
@@ -186,7 +190,8 @@
 
             <div class="subsection">
                 <h3 class="subsection-title major">APIs — ECS Fargate with autoscaling</h3>
-                <p>Both the Node API (Fastify) and the Python API (FastAPI, when present) deploy to ECS Fargate. One task definition per service. Application Load Balancer in front, routing by path. Target-tracking autoscaling on CPU and request count.</p>
+                <p>The Node service (framework selected in Phase 1 — Fastify, NestJS, or TanStack Start server functions) and the Python API (FastAPI, when present) deploy to ECS Fargate. One task definition per service. Application Load Balancer in front, routing by path. Target-tracking autoscaling on CPU and request count.</p>
+                <p><strong>Note on the service count.</strong> In the static-SPA variant, the Node API is a service distinct from the web app — two-plus services (web build on S3, Node API on ECS, optional Python API). If Phase 1 selects <strong>TanStack Start</strong>, the web app <em>is</em> the Node service: UI and server functions run together in one ECS task, so there's no separate static-SPA target and the "Node API" and "frontend" collapse into a single web/server service (plus the optional Python API).</p>
                 <p><strong>What this buys:</strong></p>
                 <ul>
                     <li><strong>No instance management.</strong> Fargate runs the container; SA doesn't run the EC2 host underneath. One less operational concern per project.</li>
@@ -199,7 +204,7 @@
 
             <div class="subsection">
                 <h3 class="subsection-title major">Frontend — S3 behind CloudFront (or SA's CDN)</h3>
-                <p>The Vite build output goes to a per-project S3 bucket. CloudFront (or whatever CDN SA already uses) sits in front with TLS, caching, and the project's custom domain.</p>
+                <p><em>This applies in the static-SPA variant.</em> If the web app is a static SPA, its build output goes to a per-project S3 bucket, with CloudFront (or whatever CDN SA already uses) in front for TLS, caching, and the project's custom domain. Under <strong>TanStack Start SSR</strong>, the web app runs as a server (the ECS Node service above), not a static bundle — there's no S3/CloudFront frontend target; CloudFront, if used, sits in front of the ALB for caching.</p>
                 <p><strong>What this buys:</strong></p>
                 <ul>
                     <li><strong>Cheapest possible static hosting.</strong> S3 storage costs are trivial; CloudFront handles the request load.</li>
@@ -259,7 +264,7 @@
                 <h3 class="subsection-title major">What carries forward unchanged</h3>
                 <ul>
                     <li><strong>The primitives.</strong> Aurora, ECS, ALB, S3, CloudFront, Lambda, EventBridge. Same set of building blocks in every environment.</li>
-                    <li><strong>The project's shape.</strong> An app that has a Node API, a Python API, and a frontend in sandbox has the same three things in prod. Engineers operate it the same way.</li>
+                    <li><strong>The project's shape.</strong> Whatever shape an app has in sandbox — a static SPA plus a separate Node API, or a unified TanStack Start web/server, plus an optional Python API — it has the same shape in prod. Engineers operate it the same way.</li>
                     <li><strong>The IaC structure.</strong> Same CDK app, same constructs, same deploy pipeline — just pointed at different environments.</li>
                 </ul>
             </div>
