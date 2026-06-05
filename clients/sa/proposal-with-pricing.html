@@ -3,10 +3,10 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Success Academy — Architecture Sprint Proposal (Draft v2)</title>
+    <title>Success Academy — Architecture Sprint Proposal</title>
     <meta
       name="description"
-      content="First-draft proposal for Success Academy's product framework engagement. Two phases: process & org changes, and the framework itself."
+      content="Proposal for Success Academy's product framework engagement — process changes, the framework we'd build, where the teams stand with AI, and the investment and timeline."
     />
     <link
       rel="icon"
@@ -225,6 +225,166 @@
       body {
         overflow-x: clip;
       }
+      /* pin content height: overlap steps in one cell so switching doesn't reflow the page */
+      .process-steps {
+        display: grid;
+      }
+      .process-steps .step {
+        grid-area: 1 / 1;
+        display: block;
+        visibility: hidden;
+        opacity: 0;
+      }
+      .process-steps .step.active {
+        visibility: visible;
+        opacity: 1;
+      }
+      @media (max-width: 860px) {
+        .process-steps {
+          display: block;
+        }
+        .process-steps .step {
+          grid-area: auto;
+          visibility: visible;
+          opacity: 1;
+        }
+      }
+
+      /* Diagram modal — reusable */
+      .diagram-modal-link {
+        display: inline-block;
+        margin-top: -8px;
+        margin-bottom: 24px;
+        font-family: "Outfit", sans-serif;
+        font-size: 0.85rem;
+        font-style: italic;
+        font-weight: 700;
+        color: var(--text-muted, #6b6359);
+        text-decoration: none;
+        border-bottom: 1px dotted var(--text-muted, #6b6359);
+        cursor: pointer;
+        transition:
+          color 0.15s ease,
+          border-color 0.15s ease;
+      }
+      .diagram-modal-link:hover,
+      .diagram-modal-link:focus-visible {
+        color: var(--text, #333333);
+        border-bottom-color: var(--text, #333333);
+      }
+      .diagram-modal-link::before {
+        content: "→ ";
+      }
+
+      dialog.diagram-modal {
+        border: none;
+        border-radius: 12px;
+        padding: 0;
+        max-width: min(960px, calc(100vw - 48px));
+        width: 100%;
+        max-height: calc(100vh - 48px);
+        background: var(--bg, #faf7f2);
+        color: var(--text, #333333);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.25);
+        overflow: hidden;
+        inset: 0;
+        margin: auto;
+      }
+      dialog.diagram-modal::backdrop {
+        background: rgba(20, 18, 14, 0.55);
+        backdrop-filter: blur(2px);
+      }
+      dialog.diagram-modal .diagram-modal-inner {
+        padding: 36px;
+        overflow-y: auto;
+        max-height: calc(100vh - 48px);
+      }
+
+      .mb-0 {
+        margin-bottom: 0;
+      }
+
+      dialog.diagram-modal .diagram-modal-close {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        width: 32px;
+        height: 32px;
+        border: none;
+        background: transparent;
+        font-size: 1.5rem;
+        line-height: 1;
+        color: var(--text-muted, #6b6359);
+        cursor: pointer;
+        border-radius: 6px;
+        transition:
+          background 0.15s ease,
+          color 0.15s ease;
+      }
+      dialog.diagram-modal .diagram-modal-close:hover,
+      dialog.diagram-modal .diagram-modal-close:focus-visible {
+        background: var(--bg-card, #f2eee7);
+        color: var(--text, #333333);
+      }
+      dialog.diagram-modal .subsection-title {
+        margin-top: 0;
+      }
+      .fee-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0 24px;
+      }
+      .fee-table th,
+      .fee-table td {
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        vertical-align: top;
+      }
+      .fee-table th {
+        font-size: 0.74rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+      .fee-table td {
+        font-size: 0.95rem;
+      }
+      .fee-table tr.total td {
+        background: var(--bg-card);
+        font-size: 1rem;
+      }
+      .sign-cta {
+        margin: 28px 0 8px;
+        text-align: center;
+      }
+      .sign-cta a {
+        display: inline-block;
+        padding: 16px 36px;
+        background: #333333;
+        color: #faf7f2;
+        text-decoration: none;
+        border-radius: 8px;
+        font-family: "Outfit", sans-serif;
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.04em;
+        transition:
+          background 0.2s ease,
+          transform 0.15s ease;
+      }
+      .sign-cta a:hover {
+        background: #1a1a1a;
+        transform: translateY(-1px);
+      }
+      .sign-cta-note {
+        font-size: 0.82rem;
+        color: var(--text-muted);
+        margin-top: 12px;
+        text-align: center;
+        font-style: italic;
+      }
     </style>
   </head>
   <body>
@@ -263,26 +423,27 @@
 
       <section class="hero">
         <div class="doc-meta">
-          <span>Draft v2</span>
-          <span>For Saroj Adhikari</span>
-          <span>May 26, 2026</span>
+          <span>For Saroj Adhikari &amp; Ali Jarvandi</span>
+          <span>June 5, 2026</span>
         </div>
         <h1>Success Academy<br />Architecture Sprint Proposal</h1>
         <p class="hero-lede">
-          Three parts: process changes SA can adopt now, the framework we'd
-          build, and where the teams stand with AI today.
+          Four parts: process changes SA can adopt now, the framework we'd
+          build, where the teams stand with AI today, and the investment and
+          timeline to make it real.
         </p>
       </section>
 
       <div class="tabbar" role="tablist" aria-label="Proposal sections">
-        <button class="active" data-target="phase-1">Process</button>
-        <button data-target="phase-2">Systems</button>
-        <button data-target="phase-3">People</button>
+        <button class="active" data-target="process">Process</button>
+        <button data-target="systems">Systems</button>
+        <button data-target="people">People</button>
+        <button data-target="investment">Investment</button>
         <button data-target="appendix">Appendix</button>
       </div>
 
       <!-- PHASE 1 -->
-      <section class="phase active" id="phase-1">
+      <section class="phase active" id="process">
         <div class="section-label">Process &amp; Org Changes</div>
         <h2 class="section-title">What SA adopts now</h2>
         <div class="subsection">
@@ -956,7 +1117,7 @@
       </section>
 
       <!-- PHASE 2 -->
-      <section class="phase" id="phase-2">
+      <section class="phase" id="systems">
         <div class="section-label">Systems</div>
         <h2 class="section-title">What we'd build</h2>
 
@@ -1126,6 +1287,13 @@
               </text>
             </svg>
           </div>
+          <a
+            class="diagram-modal-link"
+            data-target="dialog-current-state"
+            href="#dialog-current-state"
+            role="button"
+            >See details of the current project structure and flow</a
+          >
         </div>
 
         <!-- §2.0b — The recommendation -->
@@ -1142,108 +1310,155 @@
           </p>
           <div
             class="diagram"
-            aria-label="Proposed — Product starts from the engineering-approved template"
+            aria-label="How a product flows: any creator starts one on the template, hands to a developer, who ships it to a sandbox"
           >
             <svg
-              viewBox="0 0 760 200"
+              viewBox="0 0 880 300"
               xmlns="http://www.w3.org/2000/svg"
               role="img"
             >
               <title>
-                Proposed — Product starts from the engineering-approved template
+                How a product flows — any creator starts one on the template,
+                hands to a developer, who ships to a sandbox
               </title>
               <text
-                x="0"
-                y="34"
+                x="10"
+                y="32"
                 font-family="League Gothic, sans-serif"
                 font-size="28"
                 fill="#333333"
                 letter-spacing="1.5"
               >
-                PROPOSED
+                HOW A PRODUCT FLOWS
               </text>
               <text
-                x="0"
-                y="56"
+                x="10"
+                y="54"
                 font-family="Outfit, sans-serif"
-                font-size="13"
+                font-size="12.5"
                 fill="#5a5249"
               >
-                Product starts from the template. Clean hand off.
+                Anyone can start one &mdash; and it's on the template from the
+                first click.
               </text>
+
               <rect
-                x="15"
-                y="104"
-                width="190"
-                height="68"
-                rx="10"
-                fill="#333333"
-              />
-              <text
-                x="110"
-                y="135"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-              >
-                Eng-approved
-              </text>
-              <text
-                x="110"
-                y="153"
-                font-family="Outfit, sans-serif"
-                font-size="12.5"
-                font-weight="600"
-                fill="#FAF7F2"
-                text-anchor="middle"
-              >
-                template
-              </text>
-              <line
-                x1="205"
-                y1="138"
-                x2="268"
-                y2="138"
-                stroke="#8a8279"
-                stroke-width="1.5"
-              />
-              <polygon points="268,134 276,138 268,142" fill="#8a8279" />
-              <rect
-                x="280"
-                y="104"
-                width="190"
-                height="68"
+                x="20"
+                y="86"
+                width="150"
+                height="46"
                 rx="10"
                 fill="#FAF7F2"
                 stroke="#E5DED4"
                 stroke-width="1"
               />
               <text
-                x="375"
-                y="138"
+                x="95"
+                y="114"
                 font-family="Outfit, sans-serif"
-                font-size="14"
+                font-size="13"
                 font-weight="600"
                 fill="#333333"
                 text-anchor="middle"
               >
-                Product in Lovable
+                Business user
               </text>
+              <rect
+                x="20"
+                y="152"
+                width="150"
+                height="46"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
               <text
-                x="375"
-                y="158"
+                x="95"
+                y="180"
                 font-family="Outfit, sans-serif"
-                font-size="11"
-                fill="#8a8279"
+                font-size="13"
+                font-weight="600"
+                fill="#333333"
                 text-anchor="middle"
               >
-                starts on standard
+                School teacher
+              </text>
+              <rect
+                x="20"
+                y="218"
+                width="150"
+                height="46"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="95"
+                y="246"
+                font-family="Outfit, sans-serif"
+                font-size="13"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Product person
+              </text>
+
+              <path
+                d="M 170 109 C 235 109 235 175 296 175"
+                fill="none"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <path
+                d="M 170 175 L 296 175"
+                fill="none"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <path
+                d="M 170 241 C 235 241 235 175 296 175"
+                fill="none"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <polygon points="296,170 305,175 296,180" fill="#8a8279" />
+
+              <rect
+                x="300"
+                y="142"
+                width="190"
+                height="66"
+                rx="10"
+                fill="#333333"
+              />
+              <text
+                x="395"
+                y="171"
+                font-family="Outfit, sans-serif"
+                font-size="14"
+                font-weight="600"
+                fill="#FAF7F2"
+                text-anchor="middle"
+              >
+                New product
               </text>
               <text
-                x="510"
-                y="126"
+                x="395"
+                y="191"
+                font-family="Outfit, sans-serif"
+                font-size="10"
+                fill="#cfc7bb"
+                text-anchor="middle"
+              >
+                on the eng-approved template
+              </text>
+
+              <text
+                x="521"
+                y="166"
                 font-family="Outfit, sans-serif"
                 font-size="10"
                 fill="#8a8279"
@@ -1252,81 +1467,1809 @@
                 hand off
               </text>
               <line
-                x1="470"
-                y1="138"
-                x2="538"
-                y2="138"
+                x1="490"
+                y1="175"
+                x2="550"
+                y2="175"
                 stroke="#8a8279"
                 stroke-width="1.5"
               />
-              <polygon points="538,134 546,138 538,142" fill="#8a8279" />
+              <polygon points="550,170 559,175 550,180" fill="#8a8279" />
+
               <rect
-                x="545"
-                y="104"
-                width="190"
-                height="68"
+                x="562"
+                y="152"
+                width="138"
+                height="46"
                 rx="10"
                 fill="#FAF7F2"
                 stroke="#E5DED4"
                 stroke-width="1"
               />
               <text
-                x="640"
-                y="138"
+                x="631"
+                y="180"
                 font-family="Outfit, sans-serif"
-                font-size="14"
+                font-size="13"
                 font-weight="600"
                 fill="#333333"
                 text-anchor="middle"
               >
-                Engineering
+                Developer
               </text>
+
               <text
-                x="640"
-                y="158"
+                x="730"
+                y="166"
                 font-family="Outfit, sans-serif"
-                font-size="11"
+                font-size="10"
                 fill="#8a8279"
                 text-anchor="middle"
               >
-                lighter lift
+                launch
+              </text>
+              <line
+                x1="700"
+                y1="175"
+                x2="758"
+                y2="175"
+                stroke="#8a8279"
+                stroke-width="1.5"
+              />
+              <polygon points="758,170 767,175 758,180" fill="#8a8279" />
+
+              <rect
+                x="770"
+                y="148"
+                width="100"
+                height="54"
+                rx="10"
+                fill="#FAF7F2"
+                stroke="#E5DED4"
+                stroke-width="1"
+              />
+              <text
+                x="820"
+                y="170"
+                font-family="Outfit, sans-serif"
+                font-size="12.5"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                Sandbox
               </text>
               <text
-                x="380"
-                y="192"
+                x="820"
+                y="187"
+                font-family="Outfit, sans-serif"
+                font-size="12.5"
+                font-weight="600"
+                fill="#333333"
+                text-anchor="middle"
+              >
+                environment
+              </text>
+
+              <text
+                x="440"
+                y="286"
                 font-family="Outfit, sans-serif"
                 font-size="11.5"
                 fill="#8a8279"
                 text-anchor="middle"
               >
-                Less scramble, more time for Engineering
+                Because it starts on the template, engineering inherits
+                something to ship &mdash; not rebuild.
               </text>
             </svg>
           </div>
-          <p>The engineering-approved template itself is two pieces.</p>
-          <h3 class="subsection-title">The monorepo</h3>
-          <p>
-            We already know what a good monorepo for a web application looks
-            like. This one is organized into three areas:
+          <a
+            class="diagram-modal-link"
+            data-target="dialog-proposed-state"
+            href="#dialog-proposed-state"
+            role="button"
+            >See details of the proposed project structure and flow</a
+          >
+
+          <!-- §2.0c — Current state (detailed) — opens via modal link above -->
+          <dialog
+            id="dialog-current-state"
+            class="diagram-modal"
+            aria-labelledby="dialog-current-state-title"
+          >
+            <div class="diagram-modal-inner">
+              <button
+                type="button"
+                class="diagram-modal-close"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+
+              <div
+                class="diagram mb-0"
+                aria-label="Detailed before: Product hands off a Lovable build; Engineering chooses between a shortcut path and a standards-meeting path"
+              >
+                <svg
+                  viewBox="0 0 880 690"
+                  xmlns="http://www.w3.org/2000/svg"
+                  role="img"
+                >
+                  <title>
+                    Current state: Product hands off a Lovable build;
+                    Engineering chooses between a shortcut path and a
+                    standards-meeting path
+                  </title>
+
+                  <text
+                    x="20"
+                    y="34"
+                    font-family="League Gothic, sans-serif"
+                    font-size="28"
+                    fill="#333333"
+                    letter-spacing="1.5"
+                    text-transform="uppercase"
+                  >
+                    Current state
+                  </text>
+                  <text
+                    x="20"
+                    y="56"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    fill="#5a5249"
+                  >
+                    One handoff, two possible paths.
+                  </text>
+
+                  <!-- =================== LEFT STACK =================== -->
+                  <text
+                    x="170"
+                    y="204"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                    text-transform="uppercase"
+                  >
+                    From product or business using Lovable
+                  </text>
+
+                  <!-- Supabase Cloud container (top) — DB + Storage -->
+                  <rect
+                    x="30"
+                    y="216"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="236"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    Supabase Cloud
+                  </text>
+
+                  <!-- Postgres glyph (cylinder) inside left half of tile -->
+                  <g transform="translate(80,252)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Postgres
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      database
+                    </text>
+                  </g>
+
+                  <!-- Storage glyph (bucket) inside right half of tile -->
+                  <g transform="translate(200,252)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Storage
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      file store
+                    </text>
+                  </g>
+
+                  <!-- Lovable edge functions -->
+                  <rect
+                    x="30"
+                    y="296"
+                    width="280"
+                    height="44"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="315"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable edge functions
+                  </text>
+                  <text
+                    x="170"
+                    y="331"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    server-side logic
+                  </text>
+
+                  <!-- Lovable Auth -->
+                  <rect
+                    x="30"
+                    y="344"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="369"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable Auth
+                  </text>
+
+                  <!-- App code -->
+                  <rect
+                    x="30"
+                    y="388"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#FAF7F2"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="428"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="170"
+                    y="448"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    UI · routing · state · data calls
+                  </text>
+                  <text
+                    x="170"
+                    y="464"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    wired to Supabase + Lovable Auth
+                  </text>
+
+                  <!-- =================== FORKING ARROW =================== -->
+                  <!-- Main stem leaves left stack center-right -->
+                  <line
+                    x1="310"
+                    y1="350"
+                    x2="370"
+                    y2="350"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <!-- Upper branch to Option 1 -->
+                  <path
+                    d="M 370 350 Q 400 350 400 220 L 538 220"
+                    fill="none"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="538,215 548,220 538,225" fill="#8a8279" />
+                  <!-- Lower branch to Option 2 -->
+                  <path
+                    d="M 370 350 Q 400 350 400 516 L 538 516"
+                    fill="none"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="538,511 548,516 538,521" fill="#8a8279" />
+
+                  <!-- Branch labels -->
+                  <text
+                    x="455"
+                    y="188"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#b85c3c"
+                    font-weight="600"
+                    text-anchor="middle"
+                  >
+                    shortcut
+                  </text>
+                  <text
+                    x="455"
+                    y="548"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    font-weight="600"
+                    text-anchor="middle"
+                  >
+                    do it right
+                  </text>
+
+                  <!-- Handoff label on stem -->
+                  <text
+                    x="340"
+                    y="342"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    handoff
+                  </text>
+
+                  <!-- =================== OPTION 1 (top right) =================== -->
+                  <text
+                    x="700"
+                    y="92"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    OPTION 1 &mdash; SHORTCUT
+                  </text>
+
+                  <!-- Supabase self-hosted with App container (top) — Postgres + Storage -->
+                  <rect
+                    x="560"
+                    y="104"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="124"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    Supabase self-hosted with App
+                  </text>
+
+                  <!-- Postgres glyph (cylinder) inside left half -->
+                  <g transform="translate(610,140)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Postgres
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      database
+                    </text>
+                  </g>
+
+                  <!-- Storage glyph (bucket) inside right half -->
+                  <g transform="translate(730,140)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#333333"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#333333"
+                      font-weight="600"
+                    >
+                      Storage
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#6b6359"
+                      font-style="italic"
+                    >
+                      file store
+                    </text>
+                  </g>
+
+                  <!-- Okta/Google Auth -->
+                  <rect
+                    x="560"
+                    y="184"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="209"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code (Option 1) — slight tint, minor changes -->
+                  <rect
+                    x="560"
+                    y="228"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#F5EFE3"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="268"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="700"
+                    y="288"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    minor changes
+                  </text>
+                  <text
+                    x="700"
+                    y="304"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    auth re-wired, data calls mostly the same
+                  </text>
+
+                  <!-- Option 1 tradeoff caption -->
+                  <text
+                    x="700"
+                    y="344"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#b85c3c"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    Doesn't meet engineering standards · not scalable
+                  </text>
+                  <text
+                    x="700"
+                    y="360"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    shorter turnaround &mdash; the path Engineering usually has
+                    to take
+                  </text>
+
+                  <!-- =================== OPTION 2 (bottom right) =================== -->
+                  <text
+                    x="700"
+                    y="388"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    OPTION 2 &mdash; STANDARDS
+                  </text>
+
+                  <!-- SA AWS Infra container (top) — RDS + S3 -->
+                  <rect
+                    x="560"
+                    y="400"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="700"
+                    y="420"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    SA AWS Infra
+                  </text>
+
+                  <!-- RDS glyph (cylinder) inside left half -->
+                  <g transform="translate(610,436)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      RDS
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      Postgres
+                    </text>
+                  </g>
+
+                  <!-- S3 glyph (bucket) inside right half -->
+                  <g transform="translate(730,436)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      S3
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      storage
+                    </text>
+                  </g>
+
+                  <!-- SA API on AWS ECS -->
+                  <rect
+                    x="560"
+                    y="480"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="700"
+                    y="505"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                  >
+                    SA API on AWS ECS
+                  </text>
+
+                  <!-- Okta/Google Auth -->
+                  <rect
+                    x="560"
+                    y="526"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="551"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code (Option 2) — heavily changed, cooler fill -->
+                  <rect
+                    x="560"
+                    y="572"
+                    width="280"
+                    height="50"
+                    rx="8"
+                    fill="#E6E0D3"
+                    stroke="#C8BEAB"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="594"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="700"
+                    y="612"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    rewritten significantly &mdash; UI survives, the rest is new
+                  </text>
+
+                  <!-- Option 2 tradeoff caption (centered under stack) -->
+                  <text
+                    x="700"
+                    y="648"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    Meets engineering standards · scalable
+                  </text>
+                  <text
+                    x="700"
+                    y="664"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    longer turnaround &mdash; rarely possible under deadline
+                  </text>
+                </svg>
+              </div>
+            </div>
+          </dialog>
+
+          <!-- §2.0f — Proposed state (detailed) — opens via modal link above -->
+          <dialog
+            id="dialog-proposed-state"
+            class="diagram-modal"
+            aria-labelledby="dialog-proposed-state-title"
+          >
+            <div class="diagram-modal-inner">
+              <button
+                type="button"
+                class="diagram-modal-close"
+                aria-label="Close"
+              >
+                &times;
+              </button>
+              <h3 class="subsection-title" id="dialog-proposed-state-title">
+                Proposed state
+              </h3>
+              <p>
+                In the proposed model, the app Lovable produces already has a
+                thin seam built into it &mdash; an adapter layer &mdash; that
+                lets Engineering swap the backend without touching the app
+                itself.
+              </p>
+              <div
+                class="diagram"
+                aria-label="Detailed after: Product hands off with SA API stubs; Engineering swaps them for the real SA API on AWS ECS"
+              >
+                <svg
+                  viewBox="0 0 880 620"
+                  xmlns="http://www.w3.org/2000/svg"
+                  role="img"
+                >
+                  <title>
+                    Proposed state: Product hands off with SA API stubs;
+                    Engineering swaps them for the real SA API on AWS ECS
+                  </title>
+
+                  <text
+                    x="20"
+                    y="34"
+                    font-family="League Gothic, sans-serif"
+                    font-size="28"
+                    fill="#333333"
+                    letter-spacing="1.5"
+                    text-transform="uppercase"
+                  >
+                    PROPOSED STATE
+                  </text>
+                  <text
+                    x="20"
+                    y="56"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    fill="#5a5249"
+                  >
+                    Same stack on both sides. One box swapped at the seam.
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- LEFT STACK: FROM PRODUCT                              -->
+                  <!-- ==================================================== -->
+                  <text
+                    x="170"
+                    y="92"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    FROM PRODUCT
+                  </text>
+
+                  <!-- SA AWS Infra (top, dark, with RDS + S3 glyphs) -->
+                  <rect
+                    x="30"
+                    y="104"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="170"
+                    y="124"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    SA AWS Infra
+                  </text>
+
+                  <!-- RDS glyph (cylinder) inside left half of tile -->
+                  <g transform="translate(80,140)">
+                    <!-- Cylinder body -->
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Top ellipse -->
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Mid ellipse (suggests stacked disks) -->
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      RDS
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      Postgres
+                    </text>
+                  </g>
+
+                  <!-- S3 glyph (bucket) inside right half of tile -->
+                  <g transform="translate(200,140)">
+                    <!-- Bucket sides -->
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Bucket rim -->
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <!-- Handle hint -->
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      S3
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      storage
+                    </text>
+                  </g>
+
+                  <!-- Split tier: Lovable edge functions | SA API Stubs -->
+                  <rect
+                    x="30"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="97.5"
+                    y="208"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable edge
+                  </text>
+                  <text
+                    x="97.5"
+                    y="222"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    functions
+                  </text>
+
+                  <rect
+                    x="175"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                    stroke-dasharray="4,3"
+                  />
+                  <text
+                    x="242.5"
+                    y="208"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    SA API Stubs
+                  </text>
+                  <text
+                    x="242.5"
+                    y="222"
+                    font-family="Outfit, sans-serif"
+                    font-size="9.5"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    placeholder responses
+                  </text>
+
+                  <!-- Shared backend package -->
+                  <rect
+                    x="30"
+                    y="240"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="258"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Shared backend package
+                  </text>
+                  <text
+                    x="170"
+                    y="273"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    business logic, data access, validation
+                  </text>
+
+                  <!-- Adapter -->
+                  <rect
+                    x="30"
+                    y="286"
+                    width="280"
+                    height="28"
+                    rx="6"
+                    fill="#F2E6D0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="304"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Adapter layer
+                  </text>
+
+                  <!-- Okta or Google Auth -->
+                  <rect
+                    x="30"
+                    y="318"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="343"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code -->
+                  <rect
+                    x="30"
+                    y="362"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#FAF7F2"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="170"
+                    y="402"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="170"
+                    y="422"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    UI · routing · state · data calls
+                  </text>
+                  <text
+                    x="170"
+                    y="438"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    built from approved template
+                  </text>
+
+                  <!-- Left-side caption -->
+                  <text
+                    x="170"
+                    y="482"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    What Product hands over
+                  </text>
+                  <text
+                    x="170"
+                    y="498"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    stubs let Lovable iterate without waiting on the real API
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- ARROW between stacks                                  -->
+                  <!-- ==================================================== -->
+                  <line
+                    x1="320"
+                    y1="281"
+                    x2="538"
+                    y2="281"
+                    stroke="#8a8279"
+                    stroke-width="1.5"
+                  />
+                  <polygon points="538,276 548,281 538,286" fill="#8a8279" />
+                  <text
+                    x="430"
+                    y="267"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    handoff
+                  </text>
+                  <text
+                    x="430"
+                    y="301"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    swap stubs for
+                  </text>
+                  <text
+                    x="430"
+                    y="315"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    real API
+                  </text>
+                  <text
+                    x="430"
+                    y="335"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    nothing else changes
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- RIGHT STACK: WHAT ENGINEERING SHIPS                    -->
+                  <!-- ==================================================== -->
+                  <text
+                    x="700"
+                    y="92"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    WHAT ENGINEERING SHIPS
+                  </text>
+
+                  <!-- SA AWS Infra (top, dark, with RDS + S3 glyphs) -->
+                  <rect
+                    x="560"
+                    y="104"
+                    width="280"
+                    height="74"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="700"
+                    y="124"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                    letter-spacing="0.5"
+                  >
+                    SA AWS Infra
+                  </text>
+
+                  <!-- RDS glyph -->
+                  <g transform="translate(610,140)">
+                    <path
+                      d="M 0 4 L 0 22 Q 0 28 14 28 Q 28 28 28 22 L 28 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="14"
+                      cy="4"
+                      rx="14"
+                      ry="4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 0 13 Q 14 17 28 13"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="40"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      RDS
+                    </text>
+                    <text
+                      x="40"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      Postgres
+                    </text>
+                  </g>
+
+                  <!-- S3 glyph -->
+                  <g transform="translate(730,140)">
+                    <path
+                      d="M 2 6 L 6 30 L 26 30 L 30 6 Z"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <ellipse
+                      cx="16"
+                      cy="6"
+                      rx="14"
+                      ry="3"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1.5"
+                    />
+                    <path
+                      d="M 6 4 Q 16 -2 26 4"
+                      fill="none"
+                      stroke="#FAF7F2"
+                      stroke-width="1"
+                    />
+                    <text
+                      x="42"
+                      y="20"
+                      font-family="Outfit, sans-serif"
+                      font-size="11"
+                      fill="#FAF7F2"
+                      font-weight="600"
+                    >
+                      S3
+                    </text>
+                    <text
+                      x="42"
+                      y="32"
+                      font-family="Outfit, sans-serif"
+                      font-size="9.5"
+                      fill="#c4bdb3"
+                      font-style="italic"
+                    >
+                      storage
+                    </text>
+                  </g>
+
+                  <!-- Split tier: Lovable edge functions | SA API on AWS ECS (dark) -->
+                  <rect
+                    x="560"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="627.5"
+                    y="208"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Lovable edge
+                  </text>
+                  <text
+                    x="627.5"
+                    y="222"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    functions
+                  </text>
+
+                  <rect
+                    x="705"
+                    y="184"
+                    width="135"
+                    height="50"
+                    rx="8"
+                    fill="#333333"
+                  />
+                  <text
+                    x="772.5"
+                    y="206"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                  >
+                    SA API on
+                  </text>
+                  <text
+                    x="772.5"
+                    y="220"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#FAF7F2"
+                    text-anchor="middle"
+                  >
+                    AWS ECS
+                  </text>
+
+                  <!-- Shared backend package -->
+                  <rect
+                    x="560"
+                    y="240"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="258"
+                    font-family="Outfit, sans-serif"
+                    font-size="12.5"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Shared backend package
+                  </text>
+                  <text
+                    x="700"
+                    y="273"
+                    font-family="Outfit, sans-serif"
+                    font-size="10"
+                    fill="#6b6359"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    business logic, data access, validation
+                  </text>
+
+                  <!-- Adapter -->
+                  <rect
+                    x="560"
+                    y="286"
+                    width="280"
+                    height="28"
+                    rx="6"
+                    fill="#F2E6D0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="304"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Adapter layer
+                  </text>
+
+                  <!-- Okta or Google Auth -->
+                  <rect
+                    x="560"
+                    y="318"
+                    width="280"
+                    height="40"
+                    rx="8"
+                    fill="#E8DFD0"
+                    stroke="#D4C8B4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="343"
+                    font-family="Outfit, sans-serif"
+                    font-size="13"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    Okta or Google Auth
+                  </text>
+
+                  <!-- App code (same fill as left) -->
+                  <rect
+                    x="560"
+                    y="362"
+                    width="280"
+                    height="96"
+                    rx="8"
+                    fill="#FAF7F2"
+                    stroke="#E5DED4"
+                    stroke-width="1"
+                  />
+                  <text
+                    x="700"
+                    y="402"
+                    font-family="Outfit, sans-serif"
+                    font-size="14"
+                    font-weight="600"
+                    fill="#333333"
+                    text-anchor="middle"
+                  >
+                    App code
+                  </text>
+                  <text
+                    x="700"
+                    y="422"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                  >
+                    UI · routing · state · data calls
+                  </text>
+                  <text
+                    x="700"
+                    y="438"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-style="italic"
+                    font-weight="600"
+                  >
+                    identical to what Product handed over
+                  </text>
+
+                  <!-- Right-side caption -->
+                  <text
+                    x="700"
+                    y="482"
+                    font-family="Outfit, sans-serif"
+                    font-size="11"
+                    fill="#2f7a4f"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    Production-ready
+                  </text>
+                  <text
+                    x="700"
+                    y="498"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    only the API box changes &mdash; everything else carries
+                    over
+                  </text>
+
+                  <!-- ==================================================== -->
+                  <!-- Bottom unifying caption                                -->
+                  <!-- ==================================================== -->
+                  <text
+                    x="440"
+                    y="556"
+                    font-family="Outfit, sans-serif"
+                    font-size="12"
+                    fill="#5a5249"
+                    text-anchor="middle"
+                    font-weight="600"
+                  >
+                    One handoff, one swap, no rewrite.
+                  </text>
+                  <text
+                    x="440"
+                    y="574"
+                    font-family="Outfit, sans-serif"
+                    font-size="10.5"
+                    fill="#8a8279"
+                    text-anchor="middle"
+                    font-style="italic"
+                  >
+                    Product can keep iterating against stubs while Engineering
+                    builds the real API behind the same adapter.
+                  </text>
+                </svg>
+              </div>
+              <p
+                style="
+                  font-size: 13px;
+                  color: #6b6359;
+                  font-style: italic;
+                  margin-top: -8px;
+                "
+              >
+                * A small simplification: the shared backend package isn't a
+                separate runtime layer &mdash; it's a code package that gets
+                bundled into the Lovable edge functions <em>and</em> the SA API
+                on AWS ECS. Drawing it as its own tier is the cleanest way to
+                show that the business logic, data access, and validation live
+                in one place and don't get duplicated when the API moves to AWS.
+              </p>
+            </div>
+          </dialog>
+
+          <p style="margin-top: 16px">
+            The engineering-approved template itself is two pieces: a monorepo
+            structure and Lovable wiring.
           </p>
+          <h3 class="subsection-title">The monorepo</h3>
+          <div class="callout">
+            A monorepo is a repository that contains multiple applications and
+            code libraries. Typically, this means that your frontend, backend
+            and infrastructure code are all in the same repository and on the
+            same version. This is in contrast to the repository structure
+            created by Lovable today, which is organized to manage a single
+            application (the web app) at the root of the repository.
+          </div>
+          <p>Our proposed monorepo structure is organized as follows:</p>
           <ul>
             <li>
-              <strong>Frontend.</strong> <code>apps/web</code> &mdash; Vite +
-              React, Lovable's native target &mdash; plus the shared
+              <strong>Frontend.</strong> <code>apps/web</code> &mdash; today's
+              Lovable target (React + Vite for older/Enterprise plans,
+              <strong>TanStack Start</strong> SSR as Lovable's current default),
+              confirmed in Phase 1 &mdash; plus the shared
               <code>@sa/ui</code> design system, so every project renders with
               SA's components and tokens.
             </li>
             <li>
-              <strong>Backend.</strong> Two runtimes:
-              <code>apps/api</code> (Fastify) for CRUD and general backend work,
-              and <code>apps/python-api</code> (FastAPI) for LLM and AI-specific
-              work, with shared business logic in <code>@sa/api-sdk</code>.
+              <strong>Backend Node server</strong>
+              <code>apps/api</code> &mdash; framework selected in Phase 1
+              (Fastify, NestJS, or TanStack Start server functions). The web app
+              connects to it with an auth token, and both share business logic
+              in <code>@sa/api-sdk</code>. If TanStack Start is selected for the
+              web app, the Node server co-locates with the UI as server
+              functions rather than living as a separate <code>apps/api</code>.
             </li>
             <li>
-              <strong>Infrastructure.</strong> <code>infra/</code> as AWS CDK
-              &mdash; every new repo deploys to its own sandbox on the first
-              push, with CI/CD, auth, and a shared sandbox database wired in
-              from day one.
+              <strong>Backend Python server (FastAPI)</strong>
+              <code>apps/python-api</code> This provides LLM and AI-specific
+              functionality where Python is the preferred language. This server
+              will typically be called from the Node server and not directly by
+              the Frontend web app. Certain scheduled tasks may also run on this
+              server. *May not be needed in all projects.
+            </li>
+            <li>
+              <strong>Infrastructure.</strong> <code>infra/</code> This provides
+              instructions to automate deployment of the project to AWS using
+              AWS CDK and works in conjunction with a CI/CD pipeline that is
+              automatically wired into the project to automate deployment as
+              changes are made.
+            </li>
+            <li>
+              <strong>Shared project code (packages).</strong>
+              <code>packages/</code> contains any code that is shared between
+              the frontend and backend OR between the Lovable edge functions and
+              the Node server or Python server.
             </li>
           </ul>
           <h3 class="subsection-title">The Lovable wiring</h3>
@@ -1344,7 +3287,7 @@
             </li>
             <li>
               <strong>The adapter pattern.</strong> The web client hits either
-              Lovable's Supabase functions or the real Fastify backend by
+              Lovable's Supabase functions or the real production backend by
               swapping a base URL &mdash; so engineering never has to rip
               Supabase out later.
             </li>
@@ -1368,7 +3311,7 @@
       </section>
 
       <!-- PHASE 3 -->
-      <section class="phase" id="phase-3">
+      <section class="phase" id="people">
         <div class="section-label">People</div>
         <h2 class="section-title">Where the teams stand</h2>
         <p class="section-lede">
@@ -1653,6 +3596,390 @@
               add to it, so it keeps paying off as they build.
             </p>
           </div>
+        </div>
+      </section>
+
+      <!-- INVESTMENT -->
+      <section class="phase" id="investment">
+        <div class="section-label">Investment</div>
+        <h2 class="section-title">Fees and timeline</h2>
+        <p class="section-lede">
+          This is the program priced. Three fixed-price phases of systems work
+          to build out the template and monorepo, plus a context engineering
+          training program that runs alongside the build. Every engagement is a
+          defined scope at a fixed price &mdash; we don't bill by the hour.
+          Timeframes assume both partners delivering actively against the
+          program. They are working-duration estimates and don't include SA-side
+          review cycles or gaps between phases.
+        </p>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">At a glance</h3>
+          <table class="fee-table">
+            <thead>
+              <tr>
+                <th>Engagement</th>
+                <th>Scope</th>
+                <th>Fixed price</th>
+                <th>Timeframe</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>People</td>
+                <td>Context engineering training &amp; 1-1 coaching</td>
+                <td>$30,000</td>
+                <td>Parallel with Phase 1 &amp; 2 (~3 months availability)</td>
+              </tr>
+              <tr>
+                <td>Systems Phase 1</td>
+                <td>Template &amp; monorepo foundation</td>
+                <td>$96,000</td>
+                <td>~6 weeks</td>
+              </tr>
+              <tr>
+                <td>Systems Phase 2</td>
+                <td>Auth, data, Aurora</td>
+                <td>$76,800</td>
+                <td>~5 weeks</td>
+              </tr>
+              <tr>
+                <td>Systems Phase 3</td>
+                <td>Deployment &amp; shared libraries</td>
+                <td>$133,200</td>
+                <td>~7 weeks</td>
+              </tr>
+              <tr>
+                <td>Ongoing support <em>(optional)</em></td>
+                <td>Senior advisory retainer, post-handoff</td>
+                <td>$10,000 / month</td>
+                <td>Month-to-month, cancel anytime</td>
+              </tr>
+              <tr class="total">
+                <td colspan="2"><strong>Total program</strong></td>
+                <td><strong>$336,000</strong></td>
+                <td><strong>~5&ndash;6 months calendar</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            People &mdash; Context engineering training &amp; coaching
+          </h3>
+          <p>
+            <strong>$30,000</strong> &middot; runs parallel with Systems Phase 1
+            &amp; 2 (~3 months availability)
+          </p>
+          <p>
+            The training program described in the People section, delivered as
+            one concentrated org-wide session plus extended 1-1 coaching
+            availability through the systems build.
+          </p>
+          <ul>
+            <li>
+              <strong>Org-wide context engineering session.</strong> How the
+              context window works, what context rot is, and when to reach for
+              context files vs. skills vs. subagents.
+            </li>
+            <li>
+              <strong>Up to ~40 hours of 1-1 coaching</strong> across the three
+              engineering teams &mdash; sitting in their codebases on real
+              problems, building shared patterns as we go.
+            </li>
+          </ul>
+          <p>
+            <strong>Invoicing.</strong> Billed in full at engagement kickoff:
+            <strong>$30,000</strong>.
+          </p>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            Systems Phase 1 &mdash; Template &amp; monorepo foundation
+          </h3>
+          <p><strong>$96,000</strong> &middot; ~6 weeks</p>
+          <div class="callout">
+            <p>
+              <strong>Hands-on with SA's team by week 4.</strong> SA's team
+              won't be waiting until Phase 1 acceptance to see something real.
+              By around week 4, SA will have its first usable artifact: an
+              initial monorepo template built on the proven
+              <code>sa-ai-loveable-monorepo</code> shape, plus the backend
+              recommendation. Fork it, spin up a new product, kick the tires.
+              The production-ready version with CI, rules, and testing baked in
+              lands at Phase 1 acceptance, ~6 weeks in.
+            </p>
+          </div>
+          <p>
+            A template, selectable in Lovable, that is the single starting point
+            for a new app &mdash; backed by a monorepo with an
+            engineering-approved structure and a chosen primary-backend approach
+            implemented end to end.
+          </p>
+          <ul>
+            <li>
+              Review of a representative set of SA's current applications
+              &mdash; reading the code, talking to the team &mdash; to ground
+              every downstream decision in SA's reality.
+            </li>
+            <li>
+              Hardened monorepo structure (<code>apps/*</code> +
+              <code>packages/*</code>) that coexists with Lovable's
+              single-app-at-the-root expectations.
+            </li>
+            <li>
+              Template instantiation proven against Lovable's non-deterministic
+              generation (or the best-available workaround if it can't be made
+              fully reliable).
+            </li>
+            <li>
+              Backend evaluation against SA's real needs &mdash;
+              <strong>TanStack Start</strong>, <strong>Fastify</strong>, or
+              <strong>NestJS</strong> &mdash; and the chosen backend implemented
+              in the template.
+            </li>
+            <li>
+              <code>apps/web</code> with the backend-switch pattern so the same
+              client can target either Lovable's backend or the production
+              backend.
+            </li>
+            <li>
+              CI: build, lint, test, and the sync checks that keep vendored
+              copies of shared code from drifting.
+            </li>
+            <li>
+              Initial <code>.lovable/rules</code>, <code>RULES.md</code>, and
+              per-agent pointers (e.g. <code>CLAUDE.md</code>).
+            </li>
+            <li>
+              Testing framework baked into the template &mdash; it ships
+              <em>with</em> tests, not without.
+            </li>
+          </ul>
+          <p>
+            <strong>Invoicing.</strong> Billed in full at phase kickoff:
+            <strong>$96,000</strong>.
+          </p>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            Systems Phase 2 &mdash; Auth, data, Aurora
+          </h3>
+          <p><strong>$76,800</strong> &middot; ~5 weeks</p>
+          <p>
+            Bring in the two biggest pain points &mdash; authentication and
+            getting off the Supabase cloud database &mdash; with a sandbox
+            Aurora + S3 setup wired into the monorepo.
+          </p>
+          <ul>
+            <li>
+              <code>@sa/auth</code> &mdash; Okta + Google authentication on the
+              new (non-Supabase) stack.
+            </li>
+            <li>
+              Aurora schema management from Lovable (or the best-available
+              workaround if Lovable can't carry it directly &mdash; e.g. a
+              companion app or a git workflow).
+            </li>
+            <li>
+              Aurora sandbox setup, wired against SA's existing infrastructure
+              modules.
+            </li>
+            <li>
+              S3 sandbox setup, including how Lovable's existing S3 integration
+              behaves against it.
+            </li>
+            <li>
+              Secrets management &mdash; the moment there's a real DB connection
+              string and Okta credentials, Lovable's plain env vars aren't an
+              adequate store.
+            </li>
+            <li>
+              Local-dev parity so engineers can run the Aurora version of a
+              project on their machines.
+            </li>
+            <li>
+              <code>.lovable/rules</code> for the new DB access pattern (no
+              Supabase cloud DB; standard <code>pg</code>-style connectivity
+              against Aurora).
+            </li>
+          </ul>
+          <p>
+            <strong>Invoicing.</strong> Billed in full at phase kickoff:
+            <strong>$76,800</strong>.
+          </p>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            Systems Phase 3 &mdash; Deployment &amp; shared libraries
+          </h3>
+          <p><strong>$133,200</strong> &middot; ~7 weeks</p>
+          <p>
+            Make sandbox deployment turnkey, set the template as the default in
+            Lovable, and ship the first round of shared libraries.
+          </p>
+          <ul>
+            <li>
+              Reusable CDK constructs for the sandbox topology (S3 + CloudFront,
+              ECS/Fargate, ALB, IAM, Aurora). The exact shape depends on the
+              Phase 1 backend decision &mdash; either two deploy targets (web +
+              API) or one unified service.
+            </li>
+            <li>
+              Deploy scripts / pipeline that make one-command sandbox deploy
+              real, including schema migration on deploy.
+            </li>
+            <li>
+              Constructs and deploy scripts packaged as a versioned dependency
+              each project depends on, rather than copy-pasted.
+            </li>
+            <li>Template set as the default starting point in Lovable.</li>
+            <li>
+              <code>@sa/ui</code> &mdash; a real shared design system, built
+              from scratch to reflect SA's actual patterns (tokens, components,
+              layouts).
+            </li>
+            <li>
+              Data-warehouse access SDK for student info, gated on Data
+              Engineering granting access.
+            </li>
+            <li>
+              Observability baseline: log groups + retention, standard
+              application metrics, per-project dashboards.
+            </li>
+            <li>
+              Full ephemeral end-to-end testing setup with Playwright &mdash;
+              runnable locally or in CI, with the infrastructure to spin up a
+              clean environment per test run.
+            </li>
+            <li>
+              Hello world reference app that exercises every piece of the
+              template end-to-end &mdash; auth (Okta + Google), Aurora
+              read/write, S3, deployed to its own sandbox URL via the
+              constructs, with the e2e suite covering the happy path. Serves as
+              both a working demo SA can poke at and a reference implementation
+              for SA teams starting new projects.
+            </li>
+          </ul>
+          <p>
+            <strong>Invoicing.</strong> Billed in full at phase kickoff:
+            <strong>$133,200</strong>.
+          </p>
+          <div class="callout">
+            <p>
+              <strong>Sandbox-only scope.</strong> This phase makes
+              <em>sandbox</em> deployment turnkey. It stops short of pre-prod
+              and production on purpose &mdash; that path is owned by SA's
+              infrastructure team, whose setup serves the whole org, not just AI
+              Engineering. There's real opportunity there: the current infra has
+              redundancy that well-defined higher-order constructs would clean
+              up considerably. But the team also has good reasons for the shape
+              it's in &mdash; org-wide consistency, deep Terraform expertise,
+              and a single repo as one audit surface &mdash; and those are worth
+              respecting rather than working around.
+            </p>
+            <p>
+              Scoping that work honestly means two things first: the Phase
+              1&ndash;3 stack fully built out, so we know exactly what's being
+              deployed, and time collaborating with the infra team to learn
+              their constraints first-hand. We'd rather name it as a deliberate
+              follow-on than guess at a number now. It's a conversation we're
+              glad to have once the framework is real.
+            </p>
+          </div>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">
+            Ongoing support &mdash; Senior advisory retainer
+          </h3>
+          <p>
+            <strong>$10,000 / month</strong> &middot; month-to-month, cancel
+            anytime
+          </p>
+          <p>
+            After Phase 3 wraps and the framework is in SA's hands, we stay on
+            as a senior advisory relationship for as long as SA needs us &mdash;
+            and SA can end it the moment the team feels they've got it.
+          </p>
+          <ul>
+            <li>
+              <strong>Up to ~30 hours per month</strong> of senior advisory time
+              &mdash; architecture questions, code review on new framework
+              patterns, debugging help on framework-shaped issues.
+            </li>
+            <li>
+              <strong>Priority async access</strong> via a shared Slack channel,
+              with a 1-business-day response SLA.
+            </li>
+            <li>
+              <strong>Triage</strong> when Lovable changes behavior and breaks
+              something downstream.
+            </li>
+          </ul>
+          <p>
+            <strong>What it's not:</strong> net-new feature builds (those would
+            be a separate engagement), production oncall (SA's team owns
+            operations), or major architectural pivots (new scope).
+          </p>
+          <p>
+            <strong>Invoicing.</strong> Month-to-month &mdash; no minimum
+            commitment. Renews automatically each month until cancelled. 30 days
+            notice to wind down cleanly. Invoiced monthly, Net 15.
+          </p>
+        </div>
+
+        <div class="subsection">
+          <h3 class="subsection-title major">Payment terms</h3>
+          <ul>
+            <li>
+              <strong>People</strong> is billed in full at engagement kickoff.
+            </li>
+            <li>
+              <strong>Each Systems phase</strong> is billed in full at phase
+              kickoff.
+            </li>
+            <li>
+              <strong>Ongoing support</strong> is invoiced monthly.
+              Month-to-month, no minimum commitment, cancel anytime with 30 days
+              notice.
+            </li>
+            <li><strong>Net 15</strong> on each invoice.</li>
+            <li>
+              <strong>If something comes up outside this scope,</strong> we'll
+              write up a small add-on with its own fixed price &mdash; agreed
+              before we start on it.
+            </li>
+            <li>
+              <strong>Travel and out-of-pocket expenses</strong> are billed at
+              cost. The engagement runs remote-first; any on-site visits are
+              scheduled by mutual agreement.
+            </li>
+          </ul>
+        </div>
+        <div class="subsection">
+          <h3 class="subsection-title major">How we work together</h3>
+          <p>
+            Each phase has a clear scope and a fixed price, but the details of
+            what works best evolve as we discover things in the work &mdash; and
+            when we find a better path mid-flight, we'll come to you with what
+            we found and what we'd do about it. We're going to do good work and
+            be honest when something's harder than we thought. We trust SA to be
+            the same on the other side.
+          </p>
+        </div>
+        <!-- REPLACE PASTE_DOCUSIGN_URL_HERE with the DocuSign signing URL -->
+        <div class="sign-cta">
+          <a href="PASTE_DOCUSIGN_URL_HERE" target="_blank" rel="noopener"
+            >Sign on DocuSign &rarr;</a
+          >
+          <p class="sign-cta-note">
+            Opens the agreement in DocuSign in a new tab.
+          </p>
         </div>
       </section>
 
@@ -1971,8 +4298,8 @@
 │   └── rules/
 │
 ├── apps/
-│   ├── web/                             <span class="c"># Vite + React (Lovable target)</span>
-│   ├── api/                             <span class="c"># Fastify — CRUD &amp; general backend</span>
+│   ├── web/                             <span class="c"># Lovable target (React+Vite / TanStack Start)</span>
+│   ├── api/                             <span class="c"># Node backend — framework TBD (may fold into web/ under TanStack)</span>
 │   └── python-api/                      <span class="c"># FastAPI — LLM &amp; AI-specific work</span>
 │
 ├── packages/                            <span class="c"># Shared workspace packages</span>
@@ -2008,7 +4335,7 @@
             <li>
               <strong>Dual-runtime adapter pattern</strong> — the same web
               client targets either Lovable's Supabase Edge Functions or the
-              Fastify API by swapping only the base URL. See §2.5.
+              production backend by swapping only the base URL. See §2.5.
             </li>
           </ul>
 
@@ -2020,15 +4347,19 @@
           </p>
           <ul>
             <li>
-              <code>apps/web</code> — <strong>Vite + React</strong>. Lovable's
-              native target; fast HMR; cleanest fit with the adapter pattern.
-              Alternative to evaluate: Vercel / Next.js if Saroj prefers their
-              deploy story.
+              <code>apps/web</code> — <strong>React + Vite</strong> (the
+              prototype baseline; fast HMR, clean fit with the adapter pattern)
+              vs. <strong>TanStack Start</strong> SSR, now Lovable's default on
+              current plans. The main axis to settle in Phase 1 — and the one
+              the backend choice cascades from, since TanStack Start packages a
+              server layer with the UI.
             </li>
             <li>
               <code>apps/api</code> — <strong>Fastify</strong>. Lean, fast,
-              ergonomic. Alternative to evaluate: NestJS if SA wants the heavier
-              opinionated framework with built-in DI and module conventions.
+              ergonomic. Alternatives to evaluate: NestJS if SA wants the
+              heavier opinionated framework with built-in DI; or, if TanStack
+              Start is selected for the web app, TanStack server functions
+              co-located with the UI rather than a standalone Node service.
             </li>
             <li>
               <code>apps/python-api</code> — <strong>FastAPI</strong>. The
@@ -2254,9 +4585,9 @@
                 <h4>Dual-runtime through the Product phase</h4>
                 <p>
                   The project runs in both Lovable (Supabase) and a real deploy
-                  (Fastify / SA infra) until engineering takes over. Product can
-                  keep iterating in Lovable. After engineering picks it up,
-                  Lovable parity is allowed to bit-rot.
+                  (the production backend on SA infra) until engineering takes
+                  over. Product can keep iterating in Lovable. After engineering
+                  picks it up, Lovable parity is allowed to bit-rot.
                 </p>
               </div>
               <div class="tier-status">
@@ -2386,13 +4717,14 @@
           <p>
             <strong>What gets deployed.</strong> A small, consistent set of AWS
             primitives in every project: shared Aurora (project-scoped schemas),
-            ECS Fargate for the Node and Python APIs, CloudFront + S3 for the
-            SPA, per-project S3 buckets for files, and Lambda + EventBridge for
-            scheduled and async work. Same shape in every project — engineers
-            who've operated one project can operate any other. The full
-            per-primitive rationale, the runtime diagram, and the candid framing
-            of today's bundled-Supabase-on-EC2 pattern (and why we'd move off
-            it) live in
+            ECS Fargate for the Node and Python services, CloudFront + S3 for
+            the web app where it's a static SPA (or the web server on ECS under
+            TanStack Start), per-project S3 buckets for files, and Lambda +
+            EventBridge for scheduled and async work. Same shape in every
+            project — engineers who've operated one project can operate any
+            other. The full per-primitive rationale, the runtime diagram, and
+            the candid framing of today's bundled-Supabase-on-EC2 pattern (and
+            why we'd move off it) live in
             <a href="#appendices">Appendix D — Deployment architecture</a>.
           </p>
 
@@ -2482,9 +4814,11 @@
 
           <ul>
             <li>
-              <strong>Stack picks.</strong> Fastify vs. NestJS for the Node API;
-              Vite vs. Next.js for the web app. Initial leans documented in
-              §2.2.
+              <strong>Stack picks.</strong> Vite SPA vs.
+              <strong>TanStack Start</strong> SSR for the web app — the decision
+              the backend choice cascades from — and, for the Node backend,
+              Fastify vs. NestJS vs. TanStack server functions. Initial leans
+              documented in §2.2.
             </li>
             <li>
               <strong>Sustained Lovable rule adherence.</strong> Initial testing
@@ -2556,7 +4890,7 @@
           &copy; 2026 64 Interactive, LLC &mdash; Hellertown, PA
         </div>
         <div class="contact-line">
-          Questions on this draft:
+          Questions on this proposal:
           <a href="mailto:info@64i.dev">info@64i.dev</a>
         </div>
       </footer>
@@ -2565,19 +4899,34 @@
       (function () {
         var tabs = document.querySelectorAll(".tabbar button");
         var panels = document.querySelectorAll("section.phase");
+        var validIds = Array.prototype.map.call(panels, function (p) {
+          return p.id;
+        });
         function show(id) {
+          if (validIds.indexOf(id) === -1) return;
           panels.forEach(function (p) {
             p.classList.toggle("active", p.id === id);
           });
           tabs.forEach(function (t) {
             t.classList.toggle("active", t.dataset.target === id);
           });
+          if (location.hash !== "#" + id) {
+            history.replaceState(null, "", "#" + id);
+          }
           window.scrollTo({ top: 0 });
         }
         tabs.forEach(function (t) {
           t.addEventListener("click", function () {
             show(t.dataset.target);
           });
+        });
+        // open the tab named in the URL hash (e.g. #investment)
+        var initial = (location.hash || "").slice(1);
+        if (validIds.indexOf(initial) !== -1) show(initial);
+        // respond to back/forward + external nav
+        window.addEventListener("hashchange", function () {
+          var id = location.hash.slice(1);
+          if (validIds.indexOf(id) !== -1) show(id);
         });
       })();
     </script>
@@ -2625,6 +4974,42 @@
           });
         });
         select("step-01");
+      })();
+    </script>
+    <script>
+      // Diagram modals — open any <dialog class="diagram-modal"> from a
+      // matching <a class="diagram-modal-link" data-target="...">.
+      (function () {
+        document
+          .querySelectorAll("a.diagram-modal-link")
+          .forEach(function (link) {
+            link.addEventListener("click", function (e) {
+              e.preventDefault();
+              var id = link.getAttribute("data-target");
+              var dialog = document.getElementById(id);
+              if (dialog && typeof dialog.showModal === "function") {
+                dialog.showModal();
+              }
+            });
+          });
+        document
+          .querySelectorAll("dialog.diagram-modal")
+          .forEach(function (dialog) {
+            // Close on X button
+            var closeBtn = dialog.querySelector(".diagram-modal-close");
+            if (closeBtn) {
+              closeBtn.addEventListener("click", function () {
+                dialog.close();
+              });
+            }
+            // Close on backdrop click (clicking the dialog element itself, not
+            // its inner content)
+            dialog.addEventListener("click", function (e) {
+              if (e.target === dialog) {
+                dialog.close();
+              }
+            });
+          });
       })();
     </script>
   </body>
