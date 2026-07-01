@@ -27,7 +27,7 @@
 <style>
   :root{ --bg:#1b1916; --bg-2:#23201b; --line:#3a352d; --text:#f4efe7; --muted:#a39a8c; --gold:#E0A93C; }
   *{box-sizing:border-box;margin:0;padding:0;}
-  html{scroll-behavior:smooth;}
+  html{scroll-behavior:smooth; overflow-x:hidden;}
   body{background:var(--bg); color:var(--text); font-family:'Outfit',sans-serif; font-size:17px; line-height:1.6; -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative;}
   body::before{content:""; position:absolute; top:-30vh; left:50%; transform:translateX(-50%); width:120vw; height:90vh; pointer-events:none; z-index:0;
     background:radial-gradient(closest-side, rgba(224,169,60,.15), rgba(224,169,60,0) 70%); animation:breathe 7s ease-in-out infinite;}
