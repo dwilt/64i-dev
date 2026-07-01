@@ -82,9 +82,9 @@
   .draftnote{font-size:12px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-top:14px;}
 
   /* BOLD CTA */
-  .cta{position:relative; margin:40px 0; border-radius:26px; padding:72px 48px; overflow:hidden; text-align:center;
+  .cta{position:relative; transform:translateZ(0); margin:40px 0; border-radius:26px; padding:72px 48px; overflow:hidden; text-align:center;
     background:linear-gradient(135deg,#1b1a3e 0%,#23224d 100%); border:1px solid var(--line);}
-  .cta::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(59,99,230,.55), transparent 60%); animation:breathe 6s ease-in-out infinite;}
+  .cta::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(59,99,230,.55), transparent 60%); animation:ctaPulse 6s ease-in-out infinite;}
   .cta .mark{position:absolute; right:-30px; bottom:-80px; font-family:'League Gothic',sans-serif; font-size:340px; line-height:1; color:#fff; opacity:.04; pointer-events:none;}
   .cta h2{position:relative; font-size:clamp(40px,6vw,82px); margin-bottom:8px; color:#fff;}
   .cta h2 .g{color:var(--accent);}
@@ -114,6 +114,7 @@
   .form-result .msg{font-family:'League Gothic',sans-serif; text-transform:uppercase; font-size:30px; color:#fff; letter-spacing:1px;}
   .form-result .sub{color:#9ea6cf; font-size:15px; margin-top:6px;}
   @media(max-width:640px){ /* CTA mobile fix */ .cta{padding:56px 24px;} .cta .mark{display:none;} .cta::before{background:radial-gradient(circle at 50% 114%, rgba(59,99,230,.32), transparent 52%);} }
+  @keyframes ctaPulse{0%,100%{opacity:.72;}50%{opacity:1;}}
 </style>
 </head>
 <body>

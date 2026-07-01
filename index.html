@@ -96,8 +96,8 @@
   .cs.air:hover{box-shadow:0 30px 70px rgba(47,109,246,.30);}
   .cs.air .logo svg{height:40px;}
 
-  .cta{position:relative; margin-top:40px; border-radius:26px; padding:84px 48px; overflow:hidden; text-align:center; background:linear-gradient(135deg,#211e18,#2c2820); border:1px solid var(--line);}
-  .cta::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(224,169,60,.5), transparent 60%); animation:breathe 6s ease-in-out infinite;}
+  .cta{position:relative; transform:translateZ(0); margin-top:40px; border-radius:26px; padding:84px 48px; overflow:hidden; text-align:center; background:linear-gradient(135deg,#211e18,#2c2820); border:1px solid var(--line);}
+  .cta::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(224,169,60,.5), transparent 60%); animation:ctaPulse 6s ease-in-out infinite;}
   .cta .mark{position:absolute; right:-30px; bottom:-95px; font-family:'League Gothic',sans-serif; font-size:360px; line-height:1; color:#fff; opacity:.04; pointer-events:none;}
   .cta h2{position:relative; font-family:'League Gothic',sans-serif; font-weight:400; text-transform:uppercase; font-size:clamp(44px,7vw,96px); letter-spacing:1px; line-height:.9; margin-bottom:10px; color:#fff;}
   .cta h2 .g{color:var(--gold);}
@@ -149,6 +149,7 @@
   .form-result .msg{font-family:'League Gothic',sans-serif; text-transform:uppercase; font-size:30px; color:#fff; letter-spacing:1px;}
   .form-result .sub{color:#a39a8c; font-size:15px; margin-top:6px;}
   @media(max-width:640px){ /* CTA mobile fix */ .cta{padding:56px 24px;} .cta .mark{display:none;} .cta::before{background:radial-gradient(circle at 50% 114%, rgba(224,169,60,.30), transparent 52%);} }
+  @keyframes ctaPulse{0%,100%{opacity:.72;}50%{opacity:1;}}
 </style>
 </head>
 <body>
