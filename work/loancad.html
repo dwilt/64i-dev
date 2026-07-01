@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LoanCAD — Case Study | 64 Interactive</title>
+<meta name="description" content="How we co-founded and built LoanCAD — a self-hosted, SOC 2-compliant loan-processing platform — from zero to $1.2M profitable ARR, in production at tier-1 U.S. and Canadian banks.">
+<link rel="canonical" href="https://64i.dev/work/loancad.html">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="64 Interactive">
+<meta property="og:title" content="LoanCAD — Fintech Case Study | 64 Interactive">
+<meta property="og:description" content="Co-founded and built a SOC 2-compliant loan-processing platform from zero to $1.2M profitable ARR, in production at tier-1 U.S. and Canadian banks.">
+<meta property="og:url" content="https://64i.dev/work/loancad.html">
+<meta property="og:image" content="https://64i.dev/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LoanCAD — Fintech Case Study | 64 Interactive">
+<meta name="twitter:description" content="$0 → $1.2M profitable ARR. SOC 2-compliant fintech software, built for banks.">
+<meta name="twitter:image" content="https://64i.dev/assets/og-image.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=League+Gothic&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{ --bg:#14132a; --panel:#1c1b38; --line:#2e2c52; --text:#eef0fb; --muted:#9ea6cf; --accent:#7e9bff; --electric:#3b63e6; }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--text); font-family:'Outfit',sans-serif; font-size:17px; line-height:1.65; -webkit-font-smoothing:antialiased; overflow-x:hidden; position:relative;}
+  body::before{content:""; position:absolute; top:-25vh; right:-10vw; width:70vw; height:80vh; pointer-events:none; z-index:0;
+    background:radial-gradient(closest-side, rgba(59,99,230,.22), transparent 70%); animation:breathe 8s ease-in-out infinite;}
+  @keyframes breathe{0%,100%{opacity:.7;}50%{opacity:1;}}
+  .wrap{max-width:920px; margin:0 auto; padding:0 28px; position:relative; z-index:1;}
+  a{color:inherit;}
+  h1,h2,h3{font-family:'League Gothic',sans-serif; font-weight:400; text-transform:uppercase; letter-spacing:1px; line-height:.96;}
+  h2{font-size:clamp(30px,4.5vw,46px); margin-bottom:14px;}
+  h3{font-size:20px; letter-spacing:.5px; margin-bottom:8px;}
+  p{margin-bottom:16px;} p:last-child{margin-bottom:0;}
+
+  header{display:flex; align-items:center; justify-content:space-between; padding:28px 0; border-bottom:1px solid var(--line); margin-bottom:18px;}
+  .brand svg{height:96px; width:auto; display:block;}
+  .pill{border:1px solid var(--line); color:var(--text); padding:11px 20px; border-radius:50px; font-weight:600; font-size:14px; text-decoration:none; transition:.2s;}
+  .pill:hover{border-color:var(--accent); color:var(--accent);}
+
+  .backlink{display:inline-block; font-size:14px; color:var(--muted); text-decoration:none; margin:18px 0 24px; transition:.2s;}
+  .backlink:hover{color:var(--text);}
+  .label{display:flex; align-items:center; gap:9px; font-size:12px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--accent); margin-bottom:22px;}
+  .clogo{height:34px; width:auto; display:block; margin-bottom:26px;}
+
+  /* transformation metric */
+  .arc{display:flex; align-items:baseline; gap:16px; font-family:'League Gothic',sans-serif; line-height:.82; flex-wrap:wrap;}
+  .arc .from{font-size:clamp(40px,5vw,62px); color:var(--muted);}
+  .arc .ar{font-size:clamp(40px,5vw,62px); color:var(--accent);}
+  .arc .to{font-size:clamp(86px,12vw,150px); color:#fff;}
+  .sublabel{font-size:13px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-top:14px;}
+  .one{font-size:20px; color:var(--muted); max-width:620px; margin-top:24px;}
+
+  .meta{display:flex; gap:26px; flex-wrap:wrap; margin-top:30px; padding-top:24px; border-top:1px solid var(--line); font-size:14px; color:var(--muted);}
+  .meta b{color:var(--text); font-weight:600; display:block; font-size:12px; text-transform:uppercase; letter-spacing:1px; margin-bottom:3px;}
+  .meta a{color:var(--accent);}
+
+  section{padding:42px 0;}
+  section p{font-size:16.5px; color:#d6d9ee;}
+  .pull{background:var(--panel); border-left:3px solid var(--accent); border-radius:0 12px 12px 0; padding:22px 26px;}
+  .pull p{font-size:18px; color:#fff; margin:0;}
+  .stack{display:flex; flex-wrap:wrap; gap:10px; margin-top:6px;}
+  .chip{background:var(--panel); border:1px solid var(--line); border-radius:50px; padding:8px 16px; font-size:14px;}
+  .badges{display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:10px;}
+  .badge{background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:26px;}
+  .badge .ic{width:44px; height:44px; display:flex; align-items:center; justify-content:center; border-radius:11px; background:rgba(126,155,255,.16); margin-bottom:16px;}
+  .badge .ic svg{width:24px; height:24px; stroke:var(--accent); fill:none;}
+  .badge h3{font-size:19px; margin-bottom:6px; color:#fff;}
+  .badge p{font-size:14.5px; color:var(--muted); margin:0;}
+  @media(max-width:720px){ .badges{grid-template-columns:1fr;} }
+  hr.div{border:0; border-top:1px solid var(--line); margin:0;}
+
+  blockquote{background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:30px 34px; margin:0;}
+  blockquote .q{font-size:20px; line-height:1.5; font-style:italic; color:#fff; margin-bottom:16px;}
+  blockquote .who{font-size:14px; color:var(--muted); font-style:normal;} blockquote .who b{color:var(--text);}
+  .draftnote{font-size:12px; color:var(--accent); font-weight:600; text-transform:uppercase; letter-spacing:1px; margin-top:14px;}
+
+  /* BOLD CTA */
+  .cta{position:relative; margin:40px 0; border-radius:26px; padding:72px 48px; overflow:hidden; text-align:center;
+    background:linear-gradient(135deg,#1b1a3e 0%,#23224d 100%); border:1px solid var(--line);}
+  .cta::before{content:""; position:absolute; inset:0; background:radial-gradient(circle at 50% 120%, rgba(59,99,230,.55), transparent 60%); animation:breathe 6s ease-in-out infinite;}
+  .cta .mark{position:absolute; right:-30px; bottom:-80px; font-family:'League Gothic',sans-serif; font-size:340px; line-height:1; color:#fff; opacity:.04; pointer-events:none;}
+  .cta h2{position:relative; font-size:clamp(40px,6vw,82px); margin-bottom:8px; color:#fff;}
+  .cta h2 .g{color:var(--accent);}
+  .cta p{position:relative; color:#b9bfe4; max-width:440px; margin:0 auto 26px;}
+  .cta-btn{position:relative; display:inline-flex; align-items:center; gap:10px; background:#fff; color:#14132a; padding:18px 34px; border-radius:50px; font-weight:700; font-size:16px; text-decoration:none; transition:transform .15s, box-shadow .2s, gap .2s;}
+  .cta-btn:hover{transform:translateY(-3px); box-shadow:0 18px 50px rgba(126,155,255,.5); gap:16px;}
+
+  footer{padding:46px 0; color:var(--muted); font-size:13px; display:flex; justify-content:space-between; border-top:1px solid var(--line); flex-wrap:wrap; gap:10px;}
+  @media(max-width:720px){ .arc .to{font-size:84px;} }
+  .modal-overlay{position:fixed; inset:0; background:rgba(6,6,16,.78); -webkit-backdrop-filter:blur(4px); backdrop-filter:blur(4px); display:none; align-items:center; justify-content:center; z-index:2000; padding:20px;}
+  .modal-overlay.active{display:flex;}
+  .modal-content{background:#1b1a33; border:1px solid #2e2c52; border-radius:20px; width:100%; max-width:520px; padding:40px; position:relative; box-shadow:0 30px 80px rgba(0,0,0,.6); max-height:92vh; overflow:auto;}
+  .modal-close{position:absolute; top:18px; right:18px; background:none; border:0; color:#9ea6cf; cursor:pointer; padding:6px; line-height:0;}
+  .modal-close:hover{color:#fff;}
+  .modal-tag{font-size:12px; font-weight:600; letter-spacing:2px; text-transform:uppercase; color:#7e9bff; margin-bottom:12px;}
+  .modal-title{font-family:'League Gothic',sans-serif; text-transform:uppercase; font-size:40px; letter-spacing:1px; color:#fff; line-height:.95; margin-bottom:8px;}
+  .modal-subtitle{color:#9ea6cf; font-size:15px; margin-bottom:26px;}
+  .contact-form label{display:block; font-size:13px; color:#9ea6cf; margin-bottom:15px;}
+  .contact-form input,.contact-form select,.contact-form textarea{width:100%; margin-top:6px; background:#14132a; border:1px solid #2e2c52; border-radius:10px; padding:12px 14px; color:#eef0fb; font-family:inherit; font-size:15px;}
+  .contact-form input:focus,.contact-form select:focus,.contact-form textarea:focus{outline:none; border-color:#7e9bff;}
+  .contact-form textarea{resize:vertical; min-height:92px;}
+  .cbtn{width:100%; margin-top:4px; background:#fff; color:#14132a; border:0; border-radius:50px; padding:15px; font-weight:700; font-size:15px; cursor:pointer; transition:transform .15s, box-shadow .2s;}
+  .cbtn:hover{transform:translateY(-2px); box-shadow:0 12px 30px rgba(126,155,255,.5);}
+  .cbtn:disabled{opacity:.6; cursor:default; transform:none; box-shadow:none;}
+  .form-result{display:none; text-align:center; padding:22px 0;}
+  .form-result svg{width:46px; height:46px; margin-bottom:14px; color:#7e9bff;}
+  .form-result .msg{font-family:'League Gothic',sans-serif; text-transform:uppercase; font-size:30px; color:#fff; letter-spacing:1px;}
+  .form-result .sub{color:#9ea6cf; font-size:15px; margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <a class="brand" href="../index.html" aria-label="64 Interactive">
+      <svg viewBox="0 0 502.5 472.3" xmlns="http://www.w3.org/2000/svg"><path fill="#14132a" d="M166.2,286.8c2.1,2.8,4.4,5.6,7.0,8.2c28.0,28.0,73.4,28.0,101.4-0.0 c28.0-28.0,28.0-73.4,0-101.4c-18.6-18.6-45.0-24.8-68.8-18.6c-4.0-5.0-7.2-10.7-9.3-17.2 c-1.7-5.3-2.5-10.7-2.6-16.1c9.7-3.4,18.9-9.0,26.8-16.9c28.0-28.0,28.0-73.4,0.0-101.4 C192.7-4.8,147.3-4.8,119.3,23.1c-28.0,28.0-28.0,73.4,0,101.4c15.9,15.9,37.4,22.7,58.2,20.6 c2.8,4.1,5.1,8.6,6.7,13.6c2.6,8.1,3.2,16.4,2.1,24.4c-4.6,2.8-8.9,6.2-13.0,10.2 c-20.0,20.1-25.7,49.1-17.0,74.3c-3.4,6.5-8.3,12.4-14.4,17.2c-5.5,4.3-11.6,7.3-18.0,9.2 c-0.4-0.4-0.8-0.9-1.3-1.3c-28.0-28.0-73.4-28.0-101.4-0.0c-28.0,28.0-28.0,73.4-0.0,101.4 c28.0,28.0,73.4,28.0,101.4-0.0c22.9-22.9,27.0-57.5,12.4-84.6c3.2-5.0,7.2-9.6,12.2-13.4 C152.9,291.8,159.4,288.6,166.2,286.8"></path><path fill="#f4efe7" d="M166.2,284.6c2.1,2.8,4.4,5.6,7.0,8.2c28.0,28.0,73.4,28.0,101.4-0.0 c28.0-28.0,28.0-73.4,0-101.4c-18.6-18.6-45.0-24.8-68.8-18.6c-4.0-5.0-7.2-10.7-9.3-17.2 c-1.7-5.3-2.5-10.7-2.6-16.1c9.7-3.4,18.9-9.0,26.8-16.9c28.0-28.0,28.0-73.4,0.0-101.4 C192.7-7.0,147.3-7.0,119.3,21.0c-28.0,28.0-28.0,73.4,0,101.4c15.9,15.9,37.4,22.7,58.2,20.6 c2.8,4.1,5.1,8.6,6.7,13.6c2.6,8.1,3.2,16.4,2.1,24.4c-4.6,2.8-8.9,6.2-13.0,10.2 c-20.0,20.1-25.7,49.1-17.0,74.3c-3.4,6.5-8.3,12.4-14.4,17.2c-5.5,4.3-11.6,7.3-18.0,9.2 c-0.4-0.4-0.8-0.9-1.3-1.3c-28.0-28.0-73.4-28.0-101.4-0.0c-28.0,28.0-28.0,73.4-0.0,101.4 c28.0,28.0,73.4,28.0,101.4-0.0c22.9-22.9,27.0-57.5,12.4-84.6c3.2-5.0,7.2-9.6,12.2-13.4 C152.9,289.6,159.4,286.5,166.2,284.6"></path><path fill="#14132a" d="M223.6,263.6h-17.5v-10.0l16.6-50.5h11.3v50.5h5.2v10.0h-5.2v16.8h-10.4 V263.6z M215.7,253.6h7.9v-24.2v-2.3h-0.6l-0.6,2.3L215.7,253.6z"></path><path fill="#14132a" d="M186.1,92.8c0,3.6-0.9,16.7-14.8,16.7s-14.8-13.0-14.8-16.7V48.7 c0-5.4,0.6-18.3,14.8-18.3s14.8,12.8,14.8,18.3v4.8h-11.3c0-10.4-0.2-13.2-3.4-13.2 c-2.8,0-3.4,2.5-3.4,8.4v13.7c1.8-1.1,3.6-1.8,5.6-1.8c11.6,0,12.6,12.0,12.6,16.3V92.8z M171.3,99.6c2.4,0,3.4-2.5,3.4-3.4V73c0-0.9-1.0-3.4-3.4-3.4c-2.4,0-3.3,2.1-3.4,3.1v23.4 C167.8,97.1,168.7,99.6,171.3,99.6z"></path><path fill="#14132a" d="M66.6,304.5H77.2v10.6H66.6V304.5z M66.6,382.0v-57.6H77.2v57.6H66.6z"></path><path fill="#f4efe7" d="M178.2,335.4c8.0-0.1,9.3,6.9,9.3,12.0l-6.5,0.6c0-3.0-0.4-6.5-2.6-6.5 c-1.7,0.0-2.2,1.9-2.2,4.5c0,3.0,2.6,6.5,5.2,10.3c3.0,4.6,6.2,9.1,6.2,14.0 c0,6.0-1.9,11.4-9.2,11.4c-8.5,0-9.7-6.4-9.7-13.2l6.5-0.6c0,3.7,0.3,7.7,3.1,7.7 c1.9,0,2.7-2.1,2.7-5.0c0-3.0-2.8-6.6-5.3-10.5c-3.1-4.6-6.1-9.2-6.1-14.1 C169.5,341.1,171.9,335.5,178.2,335.4z"></path><path fill="#f4efe7" d="M191.1,335.9h6.6v45.4h-6.6V335.9z"></path><path fill="#f4efe7" d="M207.3,381.4h-6.5l7.3-23.8l-7.2-21.5h6.5l3.6,11.5l0.1,0.5h0.2l0.1-0.5 l3.6-11.5h6.5l-7.2,21.5l7.3,23.8h-6.5l-3.8-13.5l-0.1-0.5h-0.2l-0.1,0.5L207.3,381.4z"></path><path fill="#f4efe7" d="M222.7,342.8v-6.8h19.3v6.8h-6.3v38.6h-6.6v-38.6H222.7z"></path><path fill="#f4efe7" d="M252.4,350.5l0.1,0.4h0.1l0.1-0.4l3.3-14.5h6.5l-6.8,26.1v19.3h-6.6 v-19.3l-6.8-26.1h6.5L252.4,350.5z"></path><path fill="#f4efe7" d="M313.2,342.8h-9.2v11.9h6.1v6.8h-6.1v19.7h-6.6v-45.4c0,0,0.6,0,15.8,0V342.8z"></path><path fill="#f4efe7" d="M324.4,381.9c-8.9,0-8.9-9.8-8.9-9.8v-26.7c0,0-0.0-9.8,8.9-9.8 s8.9,9.8,8.9,9.8v26.7C333.3,372.0,333.4,381.9,324.4,381.9z M324.4,341.9 c-2.3,0-2.2,3.3-2.2,3.3v26.7c0,0-0.1,3.3,2.2,3.3s2.2-3.3,2.2-3.3v-26.7 C326.6,345.3,326.8,341.9,324.4,341.9z"></path><path fill="#f4efe7" d="M355.6,335.9v36.1c0,0,0.0,9.8-8.9,9.8s-8.9-9.8-8.9-9.8v-36.1h6.6v36.1 c0,0-0.1,3.3,2.2,3.3s2.2-3.3,2.2-3.3v-36.1H355.6z"></path><path fill="#f4efe7" d="M372.4,381.4l-3.4-19.1H367.2v19.1h-6.6v-45.4h6.6c7.9,0,11.3,4.5,11.3,13.1 c0,4.5-1.1,8.5-3.7,10.3l4.2,22.0H372.4z M367.2,342.5v13.4c1.8,0,4.9-0.2,4.9-6.7 S369.0,342.5,367.2,342.5z"></path><path fill="#f4efe7" d="M277.8,357.3c3.1,0,5.6,2.5,5.6,5.6c0,3.2-2.5,5.7-5.6,5.7 c-3.2,0-5.7-2.5-5.7-5.7C272.1,359.8,274.6,357.3,277.8,357.3z"></path><path fill="#f4efe7" d="M171.3,398.3h10.5v71.8h-10.5V398.3z"></path><path fill="#f4efe7" d="M200.9,432.7l-0.8-3.3h-0.5v3.3v37.4h-9.6v-71.8h9.3l10.2,37.4l0.8,3.3h0.5 v-3.3v-37.4h9.6v71.8h-9.3L200.9,432.7z"></path><path fill="#f4efe7" d="M224.6,409.1v-10.8h30.4v10.8h-9.9v60.9h-10.5v-60.9H224.6z"></path><path fill="#f4efe7" d="M259.2,398.3h24.1v10.8h-13.5v18.8h9.7v11.5h-9.7V459.3h13.5v10.8h-24.1V398.3z"></path><path fill="#f4efe7" d="M308.1,470.1l-5.4-30.2h-2.8v30.2H289.2v-71.8h10.5 c12.5,0,17.9,7.2,17.9,20.7c0,7.1-1.8,13.5-5.8,16.3l6.7,34.7H308.1z M299.8,408.7v21.3 c2.9,0,7.8-0.3,7.8-10.6C307.6,409.1,302.7,408.7,299.8,408.7z"></path><path fill="#f4efe7" d="M321.6,470.1l10.8-71.8h12.9l10.8,71.8h-10.2l-1.9-14.6h-10.1l-1.9,14.6H321.6z M339.4,421.6l-0.2-1.8h-0.5l-0.2,1.8l-3.0,22.6h7.2L339.4,421.6z"></path><path fill="#f4efe7" d="M388.5,445.5v9.8c0,0,0.0,15.5-14.0,15.5c-14.1,0-14.0-15.5-14.0-15.5v-42.3 c0,0-0.0-15.5,14.0-15.5c14.1,0,14.0,15.5,14.0,15.5v9.8h-9.8v-9.8c0,0,0.3-5.2-4.0-5.2 c-3.7,0-3.7,5.2-3.7,5.2v42.3c0,0,0,5.2,3.7,5.2c4.3,0,4.0-5.2,4.0-5.2v-9.8H388.5z"></path><path fill="#f4efe7" d="M391.1,409.1v-10.8h30.4v10.8h-9.9v60.9h-10.5v-60.9H391.1z"></path><path fill="#f4efe7" d="M425.7,398.3h10.5v71.8h-10.5V398.3z"></path><path fill="#f4efe7" d="M463.3,398.3h10.2l-10.9,71.8h-10.5l-10.9-71.8H451.4l5.2,39.4l0.3,3.0h0.5 l0.3-3.0L463.3,398.3z"></path><path fill="#f4efe7" d="M478.3,398.3h24.1v10.8h-13.5v18.8h9.7v11.5h-9.7V459.3h13.5v10.8h-24.1V398.3z"></path></svg>
+    </a>
+    <a class="pill" href="javascript:void(0)" onclick="openContactModal()">Get in touch</a>
+  </header>
+
+  <a class="backlink" href="../index.html">&larr; 64 Interactive</a>
+
+  <img class="clogo" src="../assets/loancad-logo-white.svg" alt="LoanCAD">
+  <div class="label">Case Study · Fintech / Lending</div>
+
+  <div class="arc">
+    <span class="from">$0</span><span class="ar">&rarr;</span><span class="to">$1.2M</span>
+  </div>
+  <div class="sublabel">Profitable ARR · built from zero in 2 years</div>
+
+  <p class="one">A self-hosted loan-processing platform for the institutions that move serious volumes of loans — co-founded and built front-to-back to production-grade for some of the largest banks in North America.</p>
+
+  <div class="meta">
+    <div><b>Role</b>Co-founder &amp; engineering lead</div>
+    <div><b>Timeline</b>2024 – 2026 (2 yrs)</div>
+    <div><b>Domain</b>Lending / financial services</div>
+    <div><b>Website</b><a href="https://www.loancad.com" target="_blank" rel="noopener">loancad.com &#8599;</a></div>
+  </div>
+
+  <section>
+    <h2>The situation</h2>
+    <p>Financial institutions that process loans at scale still run enormous amounts of that work through spreadsheets — brittle, error-prone, impossible to audit or customize safely. LoanCAD set out to replace that with real software institutions could self-host and configure into their own workflows.</p>
+    <p>The hard part is the bar. Selling into banks means meeting their standards for security, data handling, reliability, and on-prem deployment from day one. There's no "ship a rough MVP and fix it later" when your buyer is a regulated financial institution — it had to be production-grade <em>before</em> it could win a single client.</p>
+  </section>
+
+  <hr class="div">
+
+  <section>
+    <h2>What we did</h2>
+    <p>64 Interactive co-founded LoanCAD and owned the entire engineering effort — building the platform front-to-back from the first line of code: the architecture, the data model, the workflow engine, the deployment story, and the security posture, designed as one coherent system for the demands of enterprise finance.</p>
+    <div class="pull"><p>This is exactly the work AI tools and junior teams can't do alone: the architecture, security, and data engineering that make software trustworthy enough for a bank to run it.</p></div>
+
+    <div class="label" style="margin-top:34px;">Built for regulated finance</div>
+    <div class="badges">
+      <div class="badge">
+        <span class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z"></path><path d="M9 12l2 2 4-4"></path></svg></span>
+        <h3>SOC 2 Compliant</h3>
+        <p>We took LoanCAD through SOC 2 — the security controls, processes, and audit posture enterprise finance demands before it'll trust a vendor.</p>
+      </div>
+      <div class="badge">
+        <span class="ic"><svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg></span>
+        <h3>PII &amp; Sensitive Data</h3>
+        <p>Hands-on experience handling personal and financial data safely — storage, access, and compliance done to the bar regulated buyers expect.</p>
+      </div>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <section>
+    <h2>Fast — without lowering the bar</h2>
+    <p>About eighteen months in, we leaned heavily into AI-assisted development to accelerate the build — and held the production bar banks require. AI sped up the work; senior judgment kept the architecture, security, and data handling sound. That combination is the entire premise of how we work.</p>
+    <h3 style="margin-top:22px;">The stack</h3>
+    <div class="stack">
+      <span class="chip">Next.js</span><span class="chip">NestJS</span><span class="chip">Python (large-scale data)</span><span class="chip">Self-hosted / on-prem</span><span class="chip">AI-accelerated</span>
+    </div>
+  </section>
+
+  <hr class="div">
+
+  <section>
+    <h2>The outcome</h2>
+    <p>In two years, LoanCAD went from zero to a <b style="color:#fff;">profitable business at $1.2M ARR</b> — with a client roster that included one of the largest financial institutions in the United States (under NDA) and a major Canadian financial institution, both running the platform on their own infrastructure. Reaching profitability that fast, with that caliber of client, on self-hosted financial software, is the clearest proof of what senior engineering buys you.</p>
+  </section>
+
+  <hr class="div">
+
+  <section>
+    <h2>In their words</h2>
+    <blockquote>
+      <!-- DRAFT — confirm exact wording with Sean before publishing. -->
+      <p class="q">"I met Dan and knew right away he was the engineer we needed — he brought in Jeremiah, and together they built a platform the most demanding financial institutions in North America now trust with their core operations. But the architecture was only half of it: Dan got our whole team genuinely adopting AI — pushing it hard, and showing us where it was real and where it was hype. That judgment was as valuable as the code."</p>
+      <p class="who"><b>Sean</b>, CEO &amp; Co-founder, LoanCAD</p>
+      <p class="draftnote">Draft — pending Sean's sign-off</p>
+    </blockquote>
+  </section>
+
+  <div class="cta">
+    <span class="mark" aria-hidden="true">&rarr;</span>
+    <h2>Building something that<br>has to be <span class="g">right?</span></h2>
+    <p>Production-grade software for high-stakes, regulated work — we've done exactly that.</p>
+    <a class="cta-btn" href="javascript:void(0)" onclick="openContactModal()">Start a project &rarr;</a>
+  </div>
+
+  <footer>
+    <span>© 2026 64 Interactive, LLC — Hellertown, PA</span>
+    <a href="../index.html">64i.dev</a>
+  </footer>
+
+</div>
+
+<div class="modal-overlay" id="contact-modal" onclick="if(event.target===this)closeContactModal()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeContactModal()" aria-label="Close"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 14 14" width="15" height="15"><path d="M2 2L12 12M12 2L2 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+    <div class="modal-tag">Start a project</div>
+    <div class="modal-title">Let's make it real</div>
+    <div class="modal-subtitle">Tell us about your product — we'll get back to you within a day.</div>
+    <form class="contact-form" id="contact-form" onsubmit="return handleContactSubmit(event)">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+      <input type="hidden" name="_subject" value="New inquiry from 64i.dev (LoanCAD case study)">
+      <label>Name<input type="text" name="name" placeholder="Your name" required></label>
+      <label>Email<input type="email" name="_replyto" placeholder="you@company.com" required></label>
+      <label>Company<input type="text" name="company" placeholder="Company (optional)"></label>
+      <label>What do you need?
+        <select name="need" required>
+          <option value="" disabled selected>Select one</option>
+          <option>Take an AI-built product to production</option>
+          <option>Build something new</option>
+          <option>Rescue or stabilize a project</option>
+          <option>Not sure yet — let's talk</option>
+        </select>
+      </label>
+      <label>Tell us about it<textarea name="message" placeholder="What are you building, and what needs to happen?"></textarea></label>
+      <button type="submit" class="cbtn" id="contact-submit-btn">Send message</button>
+    </form>
+    <div class="form-result" id="form-success">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+      <div class="msg">Message sent</div>
+      <div class="sub">We'll be in touch soon.</div>
+    </div>
+    <div class="form-result" id="form-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+      <div class="msg">Something went wrong</div>
+      <div class="sub">Email <a href="mailto:info@64i.dev" style="color:#7e9bff;">info@64i.dev</a> directly.</div>
+    </div>
+  </div>
+</div>
+<script>
+var FORMSPREE_ID='mdarwnka'; /* 64i.dev contact form */
+function openContactModal(){var m=document.getElementById('contact-modal');m.classList.add('active');var f=document.getElementById('contact-form');f.reset();f.style.display='';document.getElementById('form-success').style.display='none';document.getElementById('form-error').style.display='none';var b=document.getElementById('contact-submit-btn');b.disabled=false;b.textContent='Send message';}
+function closeContactModal(){document.getElementById('contact-modal').classList.remove('active');}
+function handleContactSubmit(e){e.preventDefault();var form=e.target,b=document.getElementById('contact-submit-btn');b.disabled=true;b.textContent='Sending…';fetch('https://formspree.io/f/'+FORMSPREE_ID,{method:'POST',body:new FormData(form),headers:{'Accept':'application/json'}}).then(function(r){form.style.display='none';document.getElementById(r.ok?'form-success':'form-error').style.display='block';}).catch(function(){form.style.display='none';document.getElementById('form-error').style.display='block';});return false;}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeContactModal();});
+</script>
+</body>
+</html>
